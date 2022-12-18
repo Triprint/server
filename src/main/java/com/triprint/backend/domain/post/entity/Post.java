@@ -21,8 +21,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Post {
 	@Id
 	@GeneratedValue(
@@ -73,62 +77,4 @@ public class Post {
 	)
 	private List<Like> likes = new ArrayList();
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public String getContents() {
-		return this.contents;
-	}
-
-	public Double getLatitude() {
-		return this.latitude;
-	}
-
-	public Double getLongitude() {
-		return this.longitude;
-	}
-
-	public Timestamp getCreatedAt() {
-		return this.createdAt;
-	}
-
-	public Timestamp getUpdatedAt() {
-		return this.updatedAt;
-	}
-
-	public PostGroup getPostGroup() {
-		return this.postGroup;
-	}
-
-	public Member getMember() {
-		return this.member;
-	}
-
-	public Location getLocation() {
-		return this.location;
-	}
-
-	public List<Comment> getComments() {
-		return this.comments;
-	}
-
-	public List<PostHashtag> getPostHashtag() {
-		return this.postHashtag;
-	}
-
-	public List<Bookmark> getBookmarks() {
-		return this.bookmarks;
-	}
-
-	public List<Like> getLikes() {
-		return this.likes;
-	}
-
-	public Post() {
-	}
 }

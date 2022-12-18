@@ -25,8 +25,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Member {
 	@Id
 	@GeneratedValue(
@@ -74,66 +78,4 @@ public class Member {
 	)
 	private List<Member> children;
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getUsername() {
-		return this.username;
-	}
-
-	public String getPassword() {
-		return this.password;
-	}
-
-	public String getEmail() {
-		return this.email;
-	}
-
-	public UserRole getRole() {
-		return this.role;
-	}
-
-	public String getProfileImg() {
-		return this.profileImg;
-	}
-
-	public Timestamp getCreatedAt() {
-		return this.createdAt;
-	}
-
-	public Timestamp getUpdatedAt() {
-		return this.updatedAt;
-	}
-
-	public List<Post> getPosts() {
-		return this.posts;
-	}
-
-	public List<Bookmark> getBookmarks() {
-		return this.bookmarks;
-	}
-
-	public List<PostGroup> getPostGroup() {
-		return this.postGroup;
-	}
-
-	public List<Like> getLikes() {
-		return this.likes;
-	}
-
-	public List<Comment> getComments() {
-		return this.comments;
-	}
-
-	public Member getParent() {
-		return this.parent;
-	}
-
-	public List<Member> getChildren() {
-		return this.children;
-	}
-
-	public Member() {
-	}
 }

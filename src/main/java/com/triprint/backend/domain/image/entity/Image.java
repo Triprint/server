@@ -14,8 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Image {
 	@Id
 	@GeneratedValue(
@@ -33,26 +37,4 @@ public class Image {
 	)
 	private Post post;
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getPath() {
-		return this.path;
-	}
-
-	public Timestamp getCreatedAt() {
-		return this.createdAt;
-	}
-
-	public Timestamp getUpdatedAt() {
-		return this.updatedAt;
-	}
-
-	public Post getPost() {
-		return this.post;
-	}
-
-	public Image() {
-	}
 }

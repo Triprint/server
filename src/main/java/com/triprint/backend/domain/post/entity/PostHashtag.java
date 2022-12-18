@@ -13,8 +13,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class PostHashtag {
 	@Id
 	@GeneratedValue(
@@ -36,18 +40,4 @@ public class PostHashtag {
 	)
 	private Hashtag hashtag;
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public Post getPost() {
-		return this.post;
-	}
-
-	public Hashtag getHashtag() {
-		return this.hashtag;
-	}
-
-	public PostHashtag() {
-	}
 }

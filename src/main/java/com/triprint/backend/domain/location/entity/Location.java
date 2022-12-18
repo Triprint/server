@@ -13,8 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Location {
 	@Id
 	@GeneratedValue(
@@ -28,22 +32,4 @@ public class Location {
 	)
 	private List<Post> posts = new ArrayList();
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public String getLocation() {
-		return this.location;
-	}
-
-	public List<Post> getPosts() {
-		return this.posts;
-	}
-
-	public Location() {
-	}
 }

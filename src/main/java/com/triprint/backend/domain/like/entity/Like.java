@@ -14,8 +14,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Like {
 	@Id
 	@GeneratedValue(
@@ -38,22 +42,4 @@ public class Like {
 	)
 	private Post post;
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public int getStatus() {
-		return this.status;
-	}
-
-	public Member getMember() {
-		return this.member;
-	}
-
-	public Post getPost() {
-		return this.post;
-	}
-
-	public Like() {
-	}
 }

@@ -15,8 +15,12 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class PostGroup {
 	@Id
 	@GeneratedValue(
@@ -35,26 +39,4 @@ public class PostGroup {
 	)
 	private List<Post> posts = new ArrayList();
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getTitle() {
-		return this.title;
-	}
-
-	public String getLocation() {
-		return this.location;
-	}
-
-	public Member getMember() {
-		return this.member;
-	}
-
-	public List<Post> getPosts() {
-		return this.posts;
-	}
-
-	public PostGroup() {
-	}
 }

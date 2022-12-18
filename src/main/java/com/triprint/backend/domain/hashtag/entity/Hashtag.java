@@ -13,8 +13,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Hashtag {
 	@Id
 	@GeneratedValue(
@@ -27,18 +31,4 @@ public class Hashtag {
 	)
 	private List<PostHashtag> postHashtag = new ArrayList();
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getContents() {
-		return this.contents;
-	}
-
-	public List<PostHashtag> getPostHashtag() {
-		return this.postHashtag;
-	}
-
-	public Hashtag() {
-	}
 }

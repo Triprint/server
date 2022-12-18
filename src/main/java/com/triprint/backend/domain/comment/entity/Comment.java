@@ -15,8 +15,12 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Entity
+@Getter
+@NoArgsConstructor
 public class Comment {
 	@Id
 	@GeneratedValue(
@@ -41,30 +45,4 @@ public class Comment {
 	)
 	private Member member;
 
-	public Long getId() {
-		return this.id;
-	}
-
-	public String getContents() {
-		return this.contents;
-	}
-
-	public Timestamp getCreatedAt() {
-		return this.createdAt;
-	}
-
-	public Timestamp getUpdatedAt() {
-		return this.updatedAt;
-	}
-
-	public Post getPost() {
-		return this.post;
-	}
-
-	public Member getMember() {
-		return this.member;
-	}
-
-	public Comment() {
-	}
 }

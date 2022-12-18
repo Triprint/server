@@ -9,6 +9,4 @@ public enum UserRole {
 	ADMIN,
 	USER;
 
-	private UserRole() {
-	}
 }
