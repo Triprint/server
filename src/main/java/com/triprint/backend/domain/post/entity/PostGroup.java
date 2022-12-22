@@ -39,4 +39,6 @@ public class PostGroup {
 	)
 	private List<Post> posts = new ArrayList();
 
+
+
 }
