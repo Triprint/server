@@ -90,6 +90,13 @@ public class Member {
 		this.profileImg = profileImg;
 	}
 
+	public Member update(String name, String picture) {
+		this.username = name;
+		this.profileImg = picture;
+
+		return this;
+	}
+
 	public void editProfileImg(String profileImg) {
 		this.profileImg = profileImg;
 	}
