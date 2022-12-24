@@ -6,8 +6,8 @@ spring:
 #    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
     url: jdbc:mysql://localhost:3306/test
-    username: root
-    password: jwl970518+
+    username: ${LOCAL_DB_NAME}
+    password: ${LOCAL_DB_PASSWORD}
 
   jpa:
     hibernate:
