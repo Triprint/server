@@ -3,7 +3,7 @@ package com.triprint.backend.domain.member.dto;
 import lombok.Getter;
 
 @Getter
-public class MyProfileRequestDto {
+public class MyProfileRequest {
 
-	private String email;
+	private String username;
 }
