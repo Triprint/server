@@ -8,5 +8,4 @@ package com.triprint.backend.domain.member.status;
 public enum UserRole {
 	ADMIN,
 	USER;
-
 }
