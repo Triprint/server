@@ -48,27 +48,27 @@ public class User {
     private String kakaoId;
 
     @OneToMany(
-            mappedBy = "member"
+            mappedBy = "user"
     )
     private List<Post> posts = new ArrayList();
 
     @OneToMany(
-            mappedBy = "member"
+            mappedBy = "user"
     )
     private List<Bookmark> bookmarks = new ArrayList();
 
     @OneToMany(
-            mappedBy = "member"
+            mappedBy = "user"
     )
     private List<PostGroup> postGroup = new ArrayList();
 
     @OneToMany(
-            mappedBy = "member"
+            mappedBy = "user"
     )
     private List<Like> likes = new ArrayList();
 
     @OneToMany(
-            mappedBy = "member"
+            mappedBy = "user"
     )
     private List<Comment> comments = new ArrayList();
 
@@ -76,13 +76,15 @@ public class User {
             fetch = FetchType.LAZY
     )
     @JoinColumn(
-            name = "parent_member_id"
+            name = "parent_user_id"
     )
+    public User parent;
+
     @OneToMany(
             mappedBy = "parent",
             cascade = {CascadeType.ALL}
     )
-    public User parent;
+    public List<User> children;
 
     @Builder
     public User(String kakaoId, String kakaoProfileImg, String kakaoNickname,
@@ -94,9 +96,6 @@ public class User {
         this.email = kakaoEmail;
         this.role = userRole;
     }
-
-    public List<User> children;
-
 
 }
 

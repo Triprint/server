@@ -32,9 +32,9 @@ public class Like {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "member_id"
+		name = "user_id"
 	)
-	private User member;
+	private User user;
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)

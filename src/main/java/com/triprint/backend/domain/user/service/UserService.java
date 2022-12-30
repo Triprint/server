@@ -121,9 +121,9 @@ public class UserService {
     }
 
     public User getUser(HttpServletRequest request) {
-        Long userCode = (Long) request.getAttribute("userCode");
+        String userCode = (String) request.getAttribute("userCode");
 
-        User user = userRepository.findByUserCode(userCode);
+        User user = userRepository.findBykakaoId(userCode);
 
         return user;
     }
@@ -131,7 +131,7 @@ public class UserService {
     public String SaveUserAndGetToken(String token) {
         KakaoProfile profile = findProfile(token);
 
-        User user = userRepository.findByKakaoEmail(profile.getKakao_account().getEmail());
+        User user = userRepository.findByEmail(profile.getKakao_account().getEmail());
         if (user == null) {
             user = User.builder()
                     .kakaoId(profile.getId().toString())

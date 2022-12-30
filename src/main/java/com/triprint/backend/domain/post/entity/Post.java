@@ -54,7 +54,7 @@ public class Post {
 	@JoinColumn(
 		name = "author_id"
 	)
-	private User member;
+	private User user;
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)

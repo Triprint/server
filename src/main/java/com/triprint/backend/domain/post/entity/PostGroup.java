@@ -32,9 +32,9 @@ public class PostGroup {
 	private String location;
 	@ManyToOne
 	@JoinColumn(
-		name = "member_id"
+		name = "user_id"
 	)
-	private User member;
+	private User user;
 	@OneToMany(
 		mappedBy = "postGroup"
 	)

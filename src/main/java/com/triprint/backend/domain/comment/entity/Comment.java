@@ -42,8 +42,8 @@ public class Comment {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "member_id"
+		name = "user_id"
 	)
-	private User member;
+	private User user;
 
 }

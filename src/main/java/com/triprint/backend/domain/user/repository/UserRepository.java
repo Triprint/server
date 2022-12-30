@@ -9,7 +9,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
 //     JPA findBy 규칙
 //     select * user_master where kakao_id = ?
-    User findByKakaoEmail(String kakaoEmail);
+    User findByEmail(String kakaoEmail);
 
-    User findByUserCode(Long userCode);
+    User findBykakaoId(String userCode);
 }
