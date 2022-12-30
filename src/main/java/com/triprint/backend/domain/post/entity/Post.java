@@ -9,7 +9,7 @@ import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.Location;
-import com.triprint.backend.domain.member.entity.Member;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,6 +21,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+
+import com.triprint.backend.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -52,7 +54,7 @@ public class Post {
 	@JoinColumn(
 		name = "author_id"
 	)
-	private Member member;
+	private User member;
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
