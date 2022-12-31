@@ -1,18 +1,35 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://triprint-db.c5artam0kijr.ap-northeast-2.rds.amazonaws.com:3306/triprint_db
+    username: ${DB_NAME}
+    password: ${DB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: create-drop
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
 logging.level:
   org.hibernate.SQL: debug
   org.springframework.web: trace
-  org.apache: trace
+#  org.apache: trace
   org.hibernate.type: trace
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${ACCESS_KEY}
+      secretKey: ${SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: ${BUCKET_NAME}

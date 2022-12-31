@@ -15,6 +15,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
@@ -25,6 +26,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -78,4 +81,27 @@ public class Member {
 	)
 	private List<Member> children;
 
+	@Builder
+	public Member(String username, String password, String email, UserRole role, String profileImg) {
+		this.username = username;
+		this.password = password;
+		this.email = email;
+		this.role = role;
+		this.profileImg = profileImg;
+	}
+
+	public Member update(String name, String picture) {
+		this.username = name;
+		this.profileImg = picture;
+
+		return this;
+	}
+
+	public void editProfileImg(String profileImg) {
+		this.profileImg = profileImg;
+	}
+
+	public void editUsername(String username) {
+		this.username = username;
+	}
 }
