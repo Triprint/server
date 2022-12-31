@@ -38,8 +38,6 @@ public class AwsS3Service {
 		}
 
 		return amazonS3Client.getUrl(bucketName, fileName).toString();
-
-//		return "random";
 	}
 
 	private void validateFileExists(MultipartFile multipartFile) {
