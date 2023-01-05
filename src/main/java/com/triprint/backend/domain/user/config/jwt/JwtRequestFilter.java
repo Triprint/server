@@ -37,21 +37,21 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         // jwt 토큰을 검증해서 정상적인 사용자인지 확인
         String token = jwtHeader.replace(JwtProperties.TOKEN_PREFIX, "");
 
-        Long userCode = null;
+        Long userId = null;
 
         try {
-            userCode = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+            userId = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
                     .getClaim("id").asLong();
 
         } catch (TokenExpiredException e) {
             e.printStackTrace();
-            request.setAttribute(JwtProperties.HEADER_STRING, "토큰이 만료되었습니다.");
+            request.setAttribute(JwtProperties.HEADER_STRING, "토큰이 만료되었습니다."); //에러 메세지를 달고 에러처리 Http status code
         } catch (JWTVerificationException e) {
             e.printStackTrace();
             request.setAttribute(JwtProperties.HEADER_STRING, "유효하지 않은 토큰입니다.");
         }
 
-        request.setAttribute("userCode", userCode);
+        request.setAttribute("userId", userId);
 
         filterChain.doFilter(request, response);
     }

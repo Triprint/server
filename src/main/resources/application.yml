@@ -1,9 +1,9 @@
 spring:
   datasource:
-    driver-class-name: org.h2.Driver
-    url: jdbc:h2:mem:testdb;MODE=MySQL;
-    username: sa
-    password:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/triprint
+    username: root
+    password: .:zpWdv9803@
   jpa:
     hibernate:
       ddl-auto: create
@@ -40,5 +40,5 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
   org.springframework.web: trace
-  org.apache: trace
+#  org.apache: trace
   org.hibernate.type: trace

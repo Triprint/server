@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.user.entity.kakaoLoginDto;
+package com.triprint.backend.domain.user.kakaoLoginDto;
 
 import lombok.Data;
 
