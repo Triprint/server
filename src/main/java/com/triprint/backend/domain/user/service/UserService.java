@@ -6,6 +6,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.triprint.backend.domain.user.config.jwt.JwtProperties;
 import com.triprint.backend.domain.user.entity.User;
+import com.triprint.backend.domain.user.entity.UserDto;
 import com.triprint.backend.domain.user.kakaoLoginDto.KakaoProfile;
 import com.triprint.backend.domain.user.kakaoLoginDto.OauthToken;
 import com.triprint.backend.domain.user.repository.UserRepository;
@@ -105,9 +106,16 @@ public class UserService {
         return kakaoProfile;
     }
 
-    public Optional<User> getUser(HttpServletRequest request) {
+    public UserDto getUser(HttpServletRequest request) {
         Long userId = (Long) request.getAttribute("userId");
-        return userRepository.findById(userId); // 1. 이메일과 유저이름, 프로필 이미지 수정
+        User user = userRepository.findById(userId).orElseThrow(() -> {
+            throw new RuntimeException("email에 해당하는 User가 존재하지 않습니다.");
+        });
+        return UserDto.builder()
+                .email(user.getEmail())
+                .username(user.getUsername())
+                .profileImg(user.getProfileImg())
+                .build();
     }
 
     public String SaveUserAndGetToken(String token) {
