@@ -5,7 +5,6 @@
 
 package com.triprint.backend.domain.bookmark.entity;
 
-import com.triprint.backend.domain.member.entity.Member;
 import com.triprint.backend.domain.post.entity.Post;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -14,6 +13,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import com.triprint.backend.domain.user.entity.User;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 @Entity
@@ -31,9 +32,9 @@ public class Bookmark {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "member_id"
+		name = "user_id"
 	)
-	private Member member;
+	private User user;
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)

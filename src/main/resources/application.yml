@@ -1,13 +1,13 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://triprint-db.c5artam0kijr.ap-northeast-2.rds.amazonaws.com:3306/triprint_db
+    url: ${DB_URL}
     username: ${DB_NAME}
     password: ${DB_PASSWORD}
 
   jpa:
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: create
     properties:
       hibernate:
         format_sql: true
@@ -15,6 +15,29 @@ spring:
     multipart:
       max-file-size: 20MB
       max-request-size: 20MB
+
+    # Security OAuth
+    security:
+      oauth2.client:
+        registration:
+          kakao:
+            clientId: ${CLIENT_ID}
+            clientSecret: ${CLIENT_SECRET}
+            clientAuthenticationMethod: post
+            authorizationGrantType: authorization_code
+            redirectUri: "http://localhost:3000/auth/sign-in"
+            scope:
+              - profile_nickname
+              - profile_image
+              - account_email
+            clientName: Kakao
+        # Provider 설정
+        provider:
+          kakao:
+            authorizationUri: https://kauth.kakao.com/oauth/authorize
+            tokenUri: https://kauth.kakao.com/oauth/token
+            userInfoUri: https://kapi.kakao.com/v2/user/me
+            userNameAttribute: id
 
 logging.level:
   org.hibernate.SQL: debug
