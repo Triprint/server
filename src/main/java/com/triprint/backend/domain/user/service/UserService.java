@@ -77,6 +77,7 @@ public class UserService {
     }
 
     public KakaoProfile findProfile(String token) {
+
         RestTemplate rt = new RestTemplate();
 
         HttpHeaders headers = new HttpHeaders();
@@ -129,7 +130,6 @@ public class UserService {
     }
 
     public String createToken(User user) {
-        // Jwt 생성 후 헤더에 추가해서 보내줌
         String jwtToken = JWT.create()
                 .withSubject(user.getEmail())
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
