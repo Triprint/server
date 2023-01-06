@@ -4,12 +4,17 @@ spring:
     url: ${DB_URL}
     username: ${DB_NAME}
     password: ${DB_PASSWORD}
+
   jpa:
     hibernate:
       ddl-auto: create
     properties:
       hibernate:
         format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 20MB
+      max-request-size: 20MB
 
     # Security OAuth
     security:
@@ -34,11 +39,20 @@ spring:
             userInfoUri: https://kapi.kakao.com/v2/user/me
             userNameAttribute: id
 
-
-
-
 logging.level:
   org.hibernate.SQL: debug
   org.springframework.web: trace
 #  org.apache: trace
   org.hibernate.type: trace
+
+cloud:
+  aws:
+    credentials:
+      accessKey: ${ACCESS_KEY}
+      secretKey: ${SECRET_KEY}
+    region:
+      static: ap-northeast-2
+    stack:
+      auto: false
+    s3:
+      bucket: ${BUCKET_NAME}
