@@ -1,16 +1,14 @@
 package com.triprint.backend.domain.user.controller;
 
-import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.entity.UserDto;
-import com.triprint.backend.domain.user.kakaoLoginDto.OauthToken;
-import com.triprint.backend.domain.user.kakaoLoginDto.KakaoDto;
+import com.triprint.backend.domain.user.dto.kakaoLoginDto.OauthToken;
+import com.triprint.backend.domain.user.dto.kakaoLoginDto.KakaoDto;
 import com.triprint.backend.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("auth")

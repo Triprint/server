@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.member.dto;
+package com.triprint.backend.domain.user.dto;
 
 import lombok.Builder;
 

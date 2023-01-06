@@ -97,5 +97,11 @@ public class User {
         this.role = userRole;
     }
 
+    public void editProfileImg(String profileImg) {
+        this.profileImg = profileImg;
+    }
+    public void editUsername(String username) {
+        this.username = username;
+    }
 }
 
