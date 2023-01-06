@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.member.service;
+package com.triprint.backend.domain.user.service;
 
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;

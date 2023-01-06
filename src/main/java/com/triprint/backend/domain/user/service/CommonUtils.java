@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.member.service;
+package com.triprint.backend.domain.user.service;
 
 import java.util.UUID;
 

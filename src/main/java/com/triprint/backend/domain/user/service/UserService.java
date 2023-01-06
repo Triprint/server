@@ -7,8 +7,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.triprint.backend.domain.user.config.jwt.JwtProperties;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.entity.UserDto;
-import com.triprint.backend.domain.user.kakaoLoginDto.KakaoProfile;
-import com.triprint.backend.domain.user.kakaoLoginDto.OauthToken;
+import com.triprint.backend.domain.user.dto.kakaoLoginDto.KakaoProfile;
+import com.triprint.backend.domain.user.dto.kakaoLoginDto.OauthToken;
 import com.triprint.backend.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -23,7 +23,6 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.client.RestTemplate;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 
 import static com.triprint.backend.domain.user.config.SecurityConfig.FRONT_URL;

@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.user.kakaoLoginDto;
+package com.triprint.backend.domain.user.dto.kakaoLoginDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
