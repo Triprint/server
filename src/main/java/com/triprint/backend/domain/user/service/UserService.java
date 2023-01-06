@@ -106,8 +106,7 @@ public class UserService {
         return kakaoProfile;
     }
 
-    public UserDto getUser(HttpServletRequest request) {
-        Long userId = (Long) request.getAttribute("userId");
+    public UserDto getUser(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> {
             throw new RuntimeException("email에 해당하는 User가 존재하지 않습니다.");
         });

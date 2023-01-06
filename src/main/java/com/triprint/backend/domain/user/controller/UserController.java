@@ -1,6 +1,7 @@
 package com.triprint.backend.domain.user.controller;
 
 import com.triprint.backend.domain.user.entity.User;
+import com.triprint.backend.domain.user.entity.UserDto;
 import com.triprint.backend.domain.user.kakaoLoginDto.OauthToken;
 import com.triprint.backend.domain.user.kakaoLoginDto.KakaoDto;
 import com.triprint.backend.domain.user.service.UserService;
@@ -36,12 +37,12 @@ public class UserController {
 
     // jwt 토큰으로 유저정보 요청하기
     @GetMapping("/me")
-    public ResponseEntity<Object> getCurrentUser(HttpServletRequest request) {
-//        Long userId = request.getAttribute("userId");
+    public ResponseEntity<UserDto> getCurrentUser(HttpServletRequest request) {
+        Long userId = (Long) request.getAttribute("userId");
         // 1. 정상적인 동작인 경우(토큰이 생성된 경우) 올바른 처리하기(userService)
         // 2. merge(충돌해결 후)
 
-        Optional<User> user = userService.getUser(request);
+        UserDto user = userService.getUser(userId);
 
         return ResponseEntity.ok().body(user);
     }
