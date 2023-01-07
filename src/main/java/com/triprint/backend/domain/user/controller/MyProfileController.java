@@ -32,10 +32,10 @@ public class MyProfileController {
 
 	@PutMapping("/my/profile-img")
 	ResponseEntity<MyProfileImgResponse> updateMyProfileImg(
-		Long userId,
+//		Long userId,
 		@RequestPart(value = "file") MultipartFile multipartFile
 	) {
-		return ResponseEntity.ok(myProfileService.updateMyProfileImg(userId, multipartFile));
+		return ResponseEntity.ok(myProfileService.updateMyProfileImg(1L, multipartFile));
 	}
 
 }
