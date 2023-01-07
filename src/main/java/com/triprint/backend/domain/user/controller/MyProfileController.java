@@ -38,5 +38,4 @@ public class MyProfileController {
 	) {
 		return ResponseEntity.ok(myProfileService.updateMyProfileImg((Long)request.getAttribute("userId"), multipartFile));
 	}
-
 }
