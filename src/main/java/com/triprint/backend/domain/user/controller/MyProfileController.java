@@ -4,6 +4,7 @@ import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileRequest;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
 import com.triprint.backend.domain.user.service.MyProfileService;
+import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +22,21 @@ public class MyProfileController {
 	private final MyProfileService myProfileService;
 
 	@GetMapping("/my/profile")
-	ResponseEntity<MyProfileResponse> getMyProfile(Long userId) {
-		return new ResponseEntity<>(myProfileService.getMyProfile(userId), HttpStatus.OK);
+	ResponseEntity<MyProfileResponse> getMyProfile(HttpServletRequest request) {
+		return new ResponseEntity<>(myProfileService.getMyProfile((Long)request.getAttribute("userId")), HttpStatus.OK);
 	}
 
 	@PutMapping("/my/profile")
-	ResponseEntity<MyProfileResponse> updateMyProfile(Long userId, @RequestBody MyProfileRequest myProfileRequest) {
-		return ResponseEntity.ok(myProfileService.updateMyProfile(userId, myProfileRequest.getUsername()));
+	ResponseEntity<MyProfileResponse> updateMyProfile(HttpServletRequest request, @RequestBody MyProfileRequest myProfileRequest) {
+		return ResponseEntity.ok(myProfileService.updateMyProfile((Long)request.getAttribute("userId"), myProfileRequest.getUsername()));
 	}
 
 	@PutMapping("/my/profile-img")
 	ResponseEntity<MyProfileImgResponse> updateMyProfileImg(
-		Long userId,
+		HttpServletRequest request,
 		@RequestPart(value = "file") MultipartFile multipartFile
 	) {
-		return ResponseEntity.ok(myProfileService.updateMyProfileImg(userId, multipartFile));
+		return ResponseEntity.ok(myProfileService.updateMyProfileImg((Long)request.getAttribute("userId"), multipartFile));
 	}
 
 }
