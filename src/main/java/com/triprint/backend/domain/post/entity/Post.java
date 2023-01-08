@@ -7,22 +7,17 @@ package com.triprint.backend.domain.post.entity;
 
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
+import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.Location;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.triprint.backend.domain.user.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -79,4 +74,18 @@ public class Post {
 	)
 	private List<Like> likes = new ArrayList();
 
+	@OneToMany(
+			mappedBy = "post",
+			cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+			orphanRemoval = true
+	)
+	private List<Image> images = new ArrayList<>();
+
+	@Builder
+	public Post(User user, String title, String contents, List<Image> images){
+		this.user = user;
+		this.title = title;
+		this.contents = contents;
+		this.images = images;
+	}
 }

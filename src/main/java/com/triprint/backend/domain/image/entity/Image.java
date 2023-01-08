@@ -14,12 +14,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+
+import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 public class Image {
 	@Id
 	@GeneratedValue(
@@ -37,4 +40,15 @@ public class Image {
 	)
 	private Post post;
 
+	@Builder
+	public Image( String path){
+		this.path = path;
+	}
+
+	public void setPost(Post post){
+		this.post = post;
+
+		if(!post.getImages().contains(this))
+			post.getImages().add(this);
+	}
 }

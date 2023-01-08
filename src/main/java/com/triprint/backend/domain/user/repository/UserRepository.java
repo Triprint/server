@@ -13,5 +13,4 @@ public interface UserRepository extends JpaRepository<User, Long> {
 //     select * user_master where kakao_id = ?
     Optional<User> findByEmail(String kakaoEmail);
 
-
 }

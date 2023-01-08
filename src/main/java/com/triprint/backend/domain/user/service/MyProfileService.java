@@ -55,12 +55,11 @@ public class MyProfileService {
 
 		String profileImg = "";
 
-		profileImg = awsS3Service.uploadFile("profiles", multipartFile);
-//		try {
-//			profileImg = awsS3Service.uploadFile("profiles", multipartFile);
-//		} catch (Exception e) {
-//			throw new RuntimeException("이미지 파일이 정상적으로 업로드되지 않았습니다.");
-//		}
+		try {
+			profileImg = awsS3Service.uploadFile("profiles", multipartFile);
+		} catch (Exception e) {
+			throw new RuntimeException("이미지 파일이 정상적으로 업로드되지 않았습니다.");
+		}
 
 		user.editProfileImg(profileImg);
 
