@@ -20,10 +20,14 @@ import com.triprint.backend.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 	@Id
 	@GeneratedValue(
@@ -34,7 +38,9 @@ public class Post {
 	private String contents;
 	private Double latitude;
 	private Double longitude;
+	@CreatedDate
 	private Timestamp createdAt;
+	@LastModifiedDate
 	private Timestamp updatedAt;
 	@ManyToOne(
 		fetch = FetchType.LAZY

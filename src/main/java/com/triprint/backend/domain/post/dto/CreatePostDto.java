@@ -14,8 +14,6 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreatePostDto {
-    private User user;
     private String title;
     private String content;
-    private List<MultipartFile> images;
 }

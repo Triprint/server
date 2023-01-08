@@ -151,4 +151,8 @@ public class UserService {
             throw new RuntimeException("올바른 사용자가 아닙니다.");
         });
     }
+
+    public User findByusername(UserDto userDto){
+        return userRepository.findByusername(userDto.getUsername());
+    }
 }
