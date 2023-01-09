@@ -4,7 +4,8 @@ spring:
     url: ${DB_URL}
     username: ${DB_NAME}
     password: ${DB_PASSWORD}
-
+    hikari:
+      maximum-pool-size: 20
   jpa:
     hibernate:
       ddl-auto: create
