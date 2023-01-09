@@ -15,6 +15,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.triprint.backend.domain.user.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -27,7 +28,7 @@ public class Like {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	private int status;
+	private boolean status;
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
@@ -42,5 +43,26 @@ public class Like {
 		name = "post_id"
 	)
 	private Post post;
+
+	@Builder
+	Like(Post post, User user) {
+		this.status = true;
+		setLikeAndUser(user);
+		setLikeAndPost(post);
+	}
+
+	public void setLikeAndPost(Post post) {
+		this.post = post;
+		post.getLikes().add(this);
+	}
+
+	public void setLikeAndUser(User user) {
+		this.user = user;
+		user.getLikes().add(this);
+	}
+
+	public void changeStatus(boolean status) {
+		this.status = status;
+	}
 
 }
