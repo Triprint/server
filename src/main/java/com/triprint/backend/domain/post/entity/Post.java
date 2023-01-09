@@ -49,13 +49,15 @@ public class Post {
 		name = "group_id"
 	)
 	private PostGroup postGroup;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
 		name = "author_id"
 	)
-	private User user;
+	private User author;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
@@ -88,10 +90,14 @@ public class Post {
 	private List<Image> images = new ArrayList<>();
 
 	@Builder
-	public Post(User user, String title, String contents, List<Image> images){
-		this.user = user;
+	public Post(User author, String title, String contents){
+		this.author = author;
 		this.title = title;
 		this.contents = contents;
-		this.images = images;
+	}
+
+	public void addImage(Image image) {
+		this.images.add(image);
+		image.setPost(this);
 	}
 }

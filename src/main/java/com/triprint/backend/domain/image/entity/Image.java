@@ -7,41 +7,44 @@ package com.triprint.backend.domain.image.entity;
 
 import com.triprint.backend.domain.post.entity.Post;
 import java.sql.Timestamp;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 
-import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
-@NoArgsConstructor(access = AccessLevel.PUBLIC)
+@NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Image {
 	@Id
 	@GeneratedValue(
-		strategy = GenerationType.IDENTITY
+			strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+
 	private String path;
+
+	@CreatedDate
 	private Timestamp createdAt;
+
+	@LastModifiedDate
 	private Timestamp updatedAt;
+
 	@ManyToOne(
-		fetch = FetchType.LAZY
+			fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "post_id"
+			name = "post_id"
 	)
 	private Post post;
 
 	@Builder
-	public Image( String path){
+	public Image(String path){
 		this.path = path;
 	}
 
