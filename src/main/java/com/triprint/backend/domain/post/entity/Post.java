@@ -72,7 +72,7 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<PostHashtag> postHashtag = new ArrayList();
+	private List<PostHashtag> postHashtag = new ArrayList(); //1. 태그가 있으면 가져오고 없으면 생성 2.update경우 어떻게 할지 생각하기(이미지를 수정했다면 그거에 대한 요청을 어떻게 받을 건지)
 	@OneToMany(
 		mappedBy = "post"
 	)

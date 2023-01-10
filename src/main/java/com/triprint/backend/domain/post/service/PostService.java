@@ -1,11 +1,13 @@
 package com.triprint.backend.domain.post.service;
 
 import com.amazonaws.util.CollectionUtils;
+import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
 import com.triprint.backend.domain.post.dto.ReadPostDto;
 import com.triprint.backend.domain.post.entity.Post;
+import com.triprint.backend.domain.post.entity.PostHashtag;
 import com.triprint.backend.domain.post.repository.PostRepository;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.service.AwsS3Service;
@@ -29,6 +31,7 @@ public class PostService {
     private final ImageRepository imageRepository;
     private final AwsS3Service awsS3Service;
     private final UserService userService;
+    private final HashtagService hashtagService;
 
     @Transactional
     public Long create(HttpServletRequest request, CreatePostDto createPostDto, List<MultipartFile> images) throws IllegalStateException, Exception {
@@ -43,9 +46,11 @@ public class PostService {
         images.forEach((img) -> {
             String image = awsS3Service.uploadFile("posts", img);
             post.addImage(imageRepository.save(Image.builder().path(image).build()));
-//            createPostDto.getImages().add(image);
         });
-        return postRepository.save(post).getId();
+        Post createdPost = postRepository.save(post);
+        hashtagService.createPosthashtag(createdPost, createPostDto.getHashtag());
+
+        return createdPost.getId();
     }
 
     public ReadPostDto read(Long postId){

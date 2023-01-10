@@ -13,13 +13,15 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
+
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Hashtag {
+public class Hashtag{
 	@Id
 	@GeneratedValue(
 		strategy = GenerationType.IDENTITY
@@ -31,4 +33,9 @@ public class Hashtag {
 	)
 	private List<PostHashtag> postHashtag = new ArrayList();
 
+	@Builder
+	public Hashtag(String contents){
+		this.contents = contents;
+
+	}
 }

@@ -1,5 +1,6 @@
 package com.triprint.backend.domain.post.dto;
 
+import com.triprint.backend.domain.post.entity.PostHashtag;
 import com.triprint.backend.domain.user.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -15,8 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreatePostDto {
-    private Long author;
     private String title;
     private String content;
-    private List<String> images = new ArrayList<>();
+    private List<String> hashtag = new ArrayList();
 }
