@@ -1,6 +1,7 @@
 package com.triprint.backend.domain.post.service;
 
 import com.amazonaws.util.CollectionUtils;
+import com.triprint.backend.domain.hashtag.entity.Hashtag;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
@@ -57,17 +58,23 @@ public class PostService {
         Post post = postRepository.findByid(postId);
 
         ArrayList<String> images = new ArrayList<>();
+        ArrayList<String> hashtags = new ArrayList<>();
 
         for (Image img : post.getImages()){
             images.add(img.getPath());
         }
 
+        for (PostHashtag hashtag : post.getPostHashtag()){
+            hashtags.add(hashtag.getHashtag().getContents());
+        }
+
+
         return ReadPostDto.builder()
                 .authorName(post.getAuthor().getUsername())
                 .title(post.getTitle())
                 .content(post.getContents())
+                .hashtag(hashtags)
                 .createdAt(post.getCreatedAt())
                 .images(images).build();
     }
-
 }

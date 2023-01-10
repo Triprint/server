@@ -16,5 +16,6 @@ public class ReadPostDto {
     private String title;
     private String content;
     private ArrayList<String> images;
+    private ArrayList<String> hashtag;
     private Timestamp createdAt;
 }
