@@ -7,28 +7,27 @@ package com.triprint.backend.domain.post.entity;
 
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
+import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.Location;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
 
 import com.triprint.backend.domain.user.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 	@Id
 	@GeneratedValue(
@@ -39,7 +38,9 @@ public class Post {
 	private String contents;
 	private Double latitude;
 	private Double longitude;
+	@CreatedDate
 	private Timestamp createdAt;
+	@LastModifiedDate
 	private Timestamp updatedAt;
 	@ManyToOne(
 		fetch = FetchType.LAZY
@@ -48,13 +49,15 @@ public class Post {
 		name = "group_id"
 	)
 	private PostGroup postGroup;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
 		name = "author_id"
 	)
-	private User user;
+	private User author;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
@@ -69,7 +72,7 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<PostHashtag> postHashtag = new ArrayList();
+	private List<PostHashtag> postHashtag = new ArrayList(); //1. 태그가 있으면 가져오고 없으면 생성 2.update경우 어떻게 할지 생각하기(이미지를 수정했다면 그거에 대한 요청을 어떻게 받을 건지)
 	@OneToMany(
 		mappedBy = "post"
 	)
@@ -79,4 +82,22 @@ public class Post {
 	)
 	private List<Like> likes = new ArrayList();
 
+	@OneToMany(
+			mappedBy = "post",
+			cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+			orphanRemoval = true
+	)
+	private List<Image> images = new ArrayList<>();
+
+	@Builder
+	public Post(User author, String title, String contents){
+		this.author = author;
+		this.title = title;
+		this.contents = contents;
+	}
+
+	public void addImage(Image image) {
+		this.images.add(image);
+		image.setPost(this);
+	}
 }

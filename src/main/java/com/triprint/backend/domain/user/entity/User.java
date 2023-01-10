@@ -48,7 +48,7 @@ public class User {
     private String kakaoId;
 
     @OneToMany(
-            mappedBy = "user"
+            mappedBy = "author"
     )
     private List<Post> posts = new ArrayList();
 
