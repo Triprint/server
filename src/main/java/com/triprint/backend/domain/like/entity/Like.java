@@ -15,12 +15,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
 import com.triprint.backend.domain.user.entity.User;
+import javax.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @NoArgsConstructor
+@Table(name = "likes")
 public class Like {
 	@Id
 	@GeneratedValue(
