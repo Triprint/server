@@ -9,6 +9,7 @@ import lombok.Getter;
 public class PostListDto {
 
 	private String author;
+	private String title;
 	private String contents;
 	private Integer likes;
 	private List<String> images;
@@ -16,8 +17,9 @@ public class PostListDto {
 
 
 	@Builder
-	PostListDto(String author, String contents, Integer likes, List<String> images, Timestamp createdDate) {
+	PostListDto(String author, String title, String contents, Integer likes, List<String> images, Timestamp createdDate) {
 		this.author = author;
+		this.title = title;
 		this.contents = contents;
 		this.likes = likes;
 		this.images = images;
