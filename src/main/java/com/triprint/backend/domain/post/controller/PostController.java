@@ -29,6 +29,6 @@ public class PostController {
 	public ResponseEntity<Page<PostListDto>> getLikePostList(HttpServletRequest request, @PageableDefault(size=10, sort="id", direction = Direction.DESC) Pageable page) {
 		Long userId = (Long) request.getAttribute("userId");
 
-		return ResponseEntity.ok(postService.getLikePostList(1L, page));
+		return ResponseEntity.ok(postService.getLikePostList(userId, page));
 	}
 }
