@@ -7,6 +7,8 @@ package com.triprint.backend.domain.image.entity;
 
 import com.triprint.backend.domain.post.entity.Post;
 import java.sql.Timestamp;
+import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 
 import lombok.Builder;
@@ -53,5 +55,13 @@ public class Image {
 
 		if(!post.getImages().contains(this))
 			post.getImages().add(this);
+	}
+
+	public boolean hasPost() {
+		return Objects.nonNull(this.post);
+	}
+
+	public boolean isContainsOf(List<Long> imageIds) {
+		return imageIds.contains(this.getId());
 	}
 }

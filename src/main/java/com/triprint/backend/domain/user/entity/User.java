@@ -97,6 +97,7 @@ public class User {
         this.role = userRole;
     }
 
+    public boolean isNotEquals(User user) { return !this.equals(user); }
     public void editProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }

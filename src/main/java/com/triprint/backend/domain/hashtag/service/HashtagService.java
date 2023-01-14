@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +29,6 @@ public class HashtagService {
                             .build();
             postHashtagRepository.save(postHashtag);
         });
-        return;
     }
 
     public Hashtag findOrCreate(String hashtag){
@@ -39,4 +39,20 @@ public class HashtagService {
         return hashtagRepository.save(Hashtag.builder().contents(hashtag).build());
     }
 
+    public List<PostHashtag> updatePostHashtag(List<String> requestHashtag, Post post){
+        List<PostHashtag> postHashtags = post.getPostHashtag();
+        List<PostHashtag> updatePostHashtags = post.getPostHashtag();
+
+        for (PostHashtag originalHashtag : postHashtags) {
+            postHashtagRepository.delete(originalHashtag);
+        }
+        for (String newHashtag : requestHashtag) {
+            PostHashtag postHashtag = PostHashtag.builder()
+                    .post(post)
+                    .hashtag(this.findOrCreate(newHashtag))
+                    .build();
+            updatePostHashtags.add(postHashtagRepository.save(postHashtag));
+        }
+        return updatePostHashtags;
+    }
 }

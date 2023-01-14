@@ -5,14 +5,12 @@
 
 package com.triprint.backend.domain.hashtag.entity;
 
+import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.post.entity.PostHashtag;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import java.util.stream.Collectors;
+import javax.persistence.*;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -29,13 +27,12 @@ public class Hashtag{
 	private Long id;
 	private String contents;
 	@OneToMany(
-		mappedBy = "hashtag"
+		mappedBy = "hashtag", cascade = CascadeType.ALL
 	)
 	private List<PostHashtag> postHashtag = new ArrayList();
 
 	@Builder
 	public Hashtag(String contents){
 		this.contents = contents;
-
 	}
 }

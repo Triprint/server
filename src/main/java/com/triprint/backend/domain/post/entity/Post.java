@@ -14,18 +14,18 @@ import com.triprint.backend.domain.location.entity.Location;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import javax.persistence.*;
 
 import com.triprint.backend.domain.user.entity.User;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
 @EntityListeners(AuditingEntityListener.class)
 public class Post {
@@ -38,10 +38,13 @@ public class Post {
 	private String contents;
 	private Double latitude;
 	private Double longitude;
+
 	@CreatedDate
 	private Timestamp createdAt;
+
 	@LastModifiedDate
 	private Timestamp updatedAt;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
@@ -83,9 +86,7 @@ public class Post {
 	private List<Like> likes = new ArrayList();
 
 	@OneToMany(
-			mappedBy = "post",
-			cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
-			orphanRemoval = true
+			mappedBy = "post"
 	)
 	private List<Image> images = new ArrayList<>();
 
@@ -96,8 +97,17 @@ public class Post {
 		this.contents = contents;
 	}
 
+	public void addImages(List<Image> postImages) {
+		postImages.forEach(this::addImage);
+	}
+
 	public void addImage(Image image) {
-		this.images.add(image);
-		image.setPost(this);
+		if (!this.images.contains(image)){
+			this.images.add(image);
+			image.setPost(this);
+		}
+		if (!image.hasPost()){
+			image.setPost(this);
+		}
 	}
 }
