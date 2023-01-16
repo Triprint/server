@@ -36,11 +36,11 @@ public class Post {
 	private Long id;
 	private String title;
 	private String contents;
-	private Double latitude;
-	private Double longitude;
+	private Double latitude; //데이터타입 변경하기
+	private Double longitude; //칼럼 이름 고민 [ 데이터 타입 지정, nullable ]
 
 	@CreatedDate
-	private Timestamp createdAt;
+	private Timestamp createdAt; //MySQL에서 해당 필드에 데이터 타입을 어노테이션으로 지정(nullable 할 수 있는 지 설정해보기)
 
 	@LastModifiedDate
 	private Timestamp updatedAt;
@@ -71,11 +71,11 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<Comment> comments = new ArrayList();
+	private List<Comment> comments = new ArrayList(); //MySQL에서 해당 필드에 데이터 타입을 어노테이션으로 지정(nullable 할 수 있는 지 설정해보기)
 	@OneToMany(
-		mappedBy = "post"
+		mappedBy = "post", cascade = CascadeType.ALL
 	)
-	private List<PostHashtag> postHashtag = new ArrayList(); //1. 태그가 있으면 가져오고 없으면 생성 2.update경우 어떻게 할지 생각하기(이미지를 수정했다면 그거에 대한 요청을 어떻게 받을 건지)
+	private List<PostHashtag> postHashtag = new ArrayList();
 	@OneToMany(
 		mappedBy = "post"
 	)
@@ -86,7 +86,7 @@ public class Post {
 	private List<Like> likes = new ArrayList();
 
 	@OneToMany(
-			mappedBy = "post"
+			mappedBy = "post", cascade = CascadeType.ALL
 	)
 	private List<Image> images = new ArrayList<>();
 

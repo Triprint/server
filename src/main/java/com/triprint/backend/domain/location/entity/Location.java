@@ -26,7 +26,7 @@ public class Location {
 	)
 	private Long id;
 	private String name;
-	private String location;
+	private String location; //시도, 시군구, 관광지 테이블 만들기 [ 1(시도):N(시군구), N(시군구):1(관광지) ]
 	@OneToMany(
 		mappedBy = "location"
 	)

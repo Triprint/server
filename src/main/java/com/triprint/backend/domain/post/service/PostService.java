@@ -35,7 +35,7 @@ public class PostService {
     private final HashtagService hashtagService;
 
     @Transactional
-    public Long create(HttpServletRequest request, CreatePostDto createPostDto, List<MultipartFile> images) throws IllegalStateException, Exception {
+    public Long create(HttpServletRequest request, CreatePostDto createPostDto, List<MultipartFile> images) throws Exception {
         Long userId = (Long) request.getAttribute("userId");
         User author = userService.findById(userId);
 
@@ -57,7 +57,7 @@ public class PostService {
     @Transactional
     public ReadPostDto read(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> {
-            throw new RuntimeException("email 에 해당하는 member 가 존재하지 않습니다."); });
+            throw new RuntimeException("해당하는 게시물이 존재하지 않습니다."); });
         ArrayList<String> images = new ArrayList<>();
         ArrayList<String> hashtags = new ArrayList<>();
 
@@ -81,7 +81,7 @@ public class PostService {
     @Transactional
     public Long updatePost(Long id, PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request, List<MultipartFile> images){
         Post post = postRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("ID에 해당하는 게시물이 없습니다."); });
+            throw new RuntimeException("해당 게시물이 없습니다."); });
         Long userId = (Long) request.getAttribute("userId");
         List<Image> updateImages = updatePostImages(postUpdateRequestDto, post);
         validateIsAuthor(post.getAuthor().getId(),userId);
@@ -93,7 +93,7 @@ public class PostService {
             updateImages.add(newImage);
         });
 
-        post.setImages(updateImages);
+        post.setImages(updateImages); //널값일 경우 에러 뿜게 하면 됨. (스프링 DTO validation으로 검색) -> 위치와 사진만 제한, 이미지 갯수 제한
         post.setTitle(postUpdateRequestDto.getTitle());
         post.setContents(postUpdateRequestDto.getContents());
         post.setPostHashtag(hashtagService.updatePostHashtag(postUpdateRequestDto.getHashtag(),post));
@@ -103,9 +103,12 @@ public class PostService {
     @Transactional
     public void deletePost(Long id, HttpServletRequest request){
         Post post = postRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("ID에 해당하는 게시물이 없습니다."); });
+            throw new RuntimeException("해당 게시물이 없습니다."); });
         Long userId = (Long) request.getAttribute("userId");
         validateIsAuthor(post.getAuthor().getId(), userId);
+//        post.getImages().stream().forEach(image -> {
+//            image.setPost(null);
+//        });
         postRepository.delete(post);
     }
 

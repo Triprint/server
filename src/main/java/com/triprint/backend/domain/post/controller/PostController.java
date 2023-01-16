@@ -19,7 +19,7 @@ public class PostController {
 
     @PostMapping("/posts")
     public ResponseEntity createPost(@RequestPart(value = "createPostDto") CreatePostDto createPostDto, @RequestPart(value="images") List<MultipartFile> images,
-                                     HttpServletRequest request) throws IllegalStateException, Exception {
+                                     HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(postService.create(request, createPostDto, images));
     }
 
