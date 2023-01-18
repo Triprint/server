@@ -25,9 +25,9 @@ public class Hashtag{
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	private String contents; //db 유니크 해야됨.
+	private String contents;
 	@OneToMany(
-		mappedBy = "hashtag", cascade = CascadeType.ALL
+		mappedBy = "hashtag" , cascade = CascadeType.ALL
 	)
 	private List<PostHashtag> postHashtag = new ArrayList();
 

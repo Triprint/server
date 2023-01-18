@@ -35,10 +35,10 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    @Value("${CLIENT_ID}")
+    @Value("${spring.servlet.security.oauth2.client.registration.kakao.clientId}")
     String client_id;
 
-    @Value("${CLIENT_SECRET}")
+    @Value("${spring.servlet.security.oauth2.client.registration.kakao.clientSecret}")
     String client_secret;
 
     public OauthToken getAccessToken(String code) {

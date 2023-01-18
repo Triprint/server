@@ -106,9 +106,6 @@ public class PostService {
             throw new RuntimeException("해당 게시물이 없습니다."); });
         Long userId = (Long) request.getAttribute("userId");
         validateIsAuthor(post.getAuthor().getId(), userId);
-//        post.getImages().stream().forEach(image -> {
-//            image.setPost(null);
-//        });
         postRepository.delete(post);
     }
 

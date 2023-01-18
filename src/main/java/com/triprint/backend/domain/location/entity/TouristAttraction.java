@@ -15,18 +15,21 @@ import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.locationtech.jts.geom.Point;
 
 @Entity
 @Getter
 @NoArgsConstructor
-public class Location {
+public class TouristAttraction {
 	@Id
 	@GeneratedValue(
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	private String name;
-	private String location; //시도, 시군구, 관광지 테이블 만들기 [ 1(시도):N(시군구), N(시군구):1(관광지) ]
+	private String touristAttractionName;
+	private Point location;
+	private String roadNameAddress;
+	private String lotNumberAddress;
 	@OneToMany(
 		mappedBy = "location"
 	)

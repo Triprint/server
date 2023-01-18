@@ -11,6 +11,8 @@ spring:
     properties:
       hibernate:
         format_sql: true
+    database: mysql
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
   servlet:
     multipart:
       max-file-size: 20MB
@@ -56,3 +58,10 @@ cloud:
       auto: false
     s3:
       bucket: ${BUCKET_NAME}
+
+token:
+  secret-key: ${TOKEN_SECRET}
+  expiration-time: ${EXPIRATION_TIME}
+
+app:
+  front-url: ${FRONT_URL}
