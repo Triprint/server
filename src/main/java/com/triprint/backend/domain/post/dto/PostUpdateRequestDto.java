@@ -1,5 +1,6 @@
 package com.triprint.backend.domain.post.dto;
 
+import com.sun.istack.Nullable;
 import com.triprint.backend.domain.hashtag.entity.Hashtag;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,8 +18,12 @@ import java.util.Optional;
 @AllArgsConstructor
 @ToString
 public class PostUpdateRequestDto {
+    @Nullable
     private String title;
+    @Nullable
     private String contents;
+    @Nullable
     private List<String> hashtag = new ArrayList();
+    @Nullable
     private List<String> existentImages = new ArrayList<>();
 }

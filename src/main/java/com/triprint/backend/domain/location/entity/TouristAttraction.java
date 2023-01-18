@@ -8,11 +8,11 @@ package com.triprint.backend.domain.location.entity;
 import com.triprint.backend.domain.post.entity.Post;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
+import javax.persistence.*;
+
+import com.triprint.backend.domain.post.entity.PostGroup;
+import com.triprint.backend.domain.user.entity.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.locationtech.jts.geom.Point;
@@ -27,12 +27,28 @@ public class TouristAttraction {
 	)
 	private Long id;
 	private String touristAttractionName;
-	private Point location;
-	private String roadNameAddress;
-	private String lotNumberAddress;
+	private Point latitudeLongitude;
+	private String roadNameAddress; //도로명주소
+	private String lotNumberAddress; //지번주소
+
+	@ManyToOne(
+			fetch = FetchType.LAZY
+	)
+	@JoinColumn(
+			name = "district_id"
+	)
+	private District district;
+
 	@OneToMany(
-		mappedBy = "location"
+		mappedBy = "touristAttraction"
 	)
 	private List<Post> posts = new ArrayList();
 
+	@Builder
+	public TouristAttraction(String touristAttractionName, Point latitudeLongitude, String roadNameAddress, String lotNumberAddress){
+		this.touristAttractionName = touristAttractionName;
+		this.latitudeLongitude = latitudeLongitude;
+		this.roadNameAddress = roadNameAddress;
+		this.lotNumberAddress = lotNumberAddress;
+	}
 }

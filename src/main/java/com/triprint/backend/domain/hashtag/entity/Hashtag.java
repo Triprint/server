@@ -25,6 +25,7 @@ public class Hashtag{
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+	@Column(columnDefinition = "VARCHAR(45)", nullable = true)
 	private String contents;
 	@OneToMany(
 		mappedBy = "hashtag" , cascade = CascadeType.ALL

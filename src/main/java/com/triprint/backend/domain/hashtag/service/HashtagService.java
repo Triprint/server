@@ -21,6 +21,9 @@ public class HashtagService {
     private final PostHashtagRepository postHashtagRepository;
 
     public void createPosthashtag(Post post, List<String> hashtags){
+        if (hashtags.isEmpty()){
+            return;
+        }
         hashtags.forEach((hashtag) -> {
             Hashtag tag = this.findOrCreate(hashtag);
             PostHashtag postHashtag = PostHashtag.builder()

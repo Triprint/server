@@ -22,6 +22,8 @@ import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
@@ -34,12 +36,14 @@ public class Post {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+	@Nullable
 	private String title;
+	@Nullable
 	private String contents;
 	private Point latitudeLongitude;
 
 	@CreatedDate
-	private Timestamp createdAt; //MySQL에서 해당 필드에 데이터 타입을 어노테이션으로 지정(nullable 할 수 있는 지 설정해보기)
+	private Timestamp createdAt;
 
 	@LastModifiedDate
 	private Timestamp updatedAt;
@@ -64,13 +68,13 @@ public class Post {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "location_id"
+		name = "touristAttraction_id"
 	)
-	private TouristAttraction location;
+	private TouristAttraction touristAttraction;
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<Comment> comments = new ArrayList(); //MySQL에서 해당 필드에 데이터 타입을 어노테이션으로 지정(nullable 할 수 있는 지 설정해보기)
+	private List<Comment> comments = new ArrayList();
 	@OneToMany(
 		mappedBy = "post", orphanRemoval = true
 	)
@@ -87,6 +91,7 @@ public class Post {
 	@OneToMany(
 			mappedBy = "post", cascade = CascadeType.ALL
 	)
+	@NonNull
 	private List<Image> images = new ArrayList();
 
 	@Builder

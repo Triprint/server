@@ -1,12 +1,10 @@
 package com.triprint.backend.domain.post.dto;
 
-import com.triprint.backend.domain.post.entity.PostHashtag;
-import com.triprint.backend.domain.user.entity.User;
+import com.sun.istack.Nullable;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +14,10 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 public class CreatePostDto {
+    @Nullable
     private String title;
+    @Nullable
     private String content;
+    @Nullable
     private List<String> hashtag = new ArrayList();
 }

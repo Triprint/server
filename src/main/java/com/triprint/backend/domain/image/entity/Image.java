@@ -5,6 +5,7 @@
 
 package com.triprint.backend.domain.image.entity;
 
+import com.sun.istack.NotNull;
 import com.triprint.backend.domain.post.entity.Post;
 import java.sql.Timestamp;
 import java.util.List;
@@ -28,7 +29,7 @@ public class Image {
 			strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-
+	@NotNull
 	private String path;
 
 	@CreatedDate

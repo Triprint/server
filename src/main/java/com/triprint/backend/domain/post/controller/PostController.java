@@ -1,5 +1,6 @@
 package com.triprint.backend.domain.post.controller;
 
+import com.sun.istack.NotNull;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
 import com.triprint.backend.domain.post.dto.PostUpdateRequestDto;
 import com.triprint.backend.domain.post.service.PostService;
@@ -18,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity createPost(@RequestPart(value = "createPostDto") CreatePostDto createPostDto, @RequestPart(value="images") List<MultipartFile> images,
+    public ResponseEntity createPost(@RequestPart(value = "createPostDto") CreatePostDto createPostDto, @NotNull @RequestPart(value="images") List<MultipartFile> images,
                                      HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(postService.create(request, createPostDto, images));
     }
