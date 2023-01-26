@@ -20,4 +20,8 @@ public class CreatePostDto {
     private String content;
     @Nullable
     private List<String> hashtag = new ArrayList();
+    private Long x, y;
+    private String roadNameAddress;
+    private String firstDepthName;
+    private String secondDepthName;
 }

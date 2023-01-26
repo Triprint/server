@@ -5,6 +5,7 @@ import com.triprint.backend.domain.hashtag.repository.HashtagRepository;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
+import com.triprint.backend.domain.location.service.TouristAttractionService;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
 import com.triprint.backend.domain.post.dto.PostUpdateRequestDto;
 import com.triprint.backend.domain.post.dto.ReadPostDto;
@@ -29,10 +30,11 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
-    private final HashtagRepository hashtagRepository;
     private final AwsS3Service awsS3Service;
     private final UserService userService;
     private final HashtagService hashtagService;
+    private final TouristAttractionService touristAttractionService;
+
 
     @Transactional
     public Long create(HttpServletRequest request, CreatePostDto createPostDto, List<MultipartFile> images) throws Exception {
@@ -50,6 +52,7 @@ public class PostService {
         });
         Post createdPost = postRepository.save(post);
         hashtagService.createPosthashtag(createdPost, createPostDto.getHashtag());
+        touristAttractionService.createTouristAttraction(createdPost, createPostDto.getX(), createPostDto.getY(), createPostDto.getRoadNameAddress(), createPostDto.getFirstDepthName(), createPostDto.getSecondDepthName());
 
         return createdPost.getId();
     }

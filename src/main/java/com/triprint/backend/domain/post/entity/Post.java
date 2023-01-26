@@ -36,11 +36,12 @@ public class Post {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	@Nullable
+
+	@Column(nullable = true)
 	private String title;
-	@Nullable
+
+	@Column(nullable = true)
 	private String contents;
-	private Point latitudeLongitude;
 
 	@CreatedDate
 	private Timestamp createdAt;
@@ -68,7 +69,7 @@ public class Post {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "touristAttraction_id"
+		name = "touristAttraction_id", nullable = false
 	)
 	private TouristAttraction touristAttraction;
 	@OneToMany(
