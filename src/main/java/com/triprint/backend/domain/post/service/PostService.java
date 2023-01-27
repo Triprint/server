@@ -5,6 +5,7 @@ import com.triprint.backend.domain.hashtag.repository.HashtagRepository;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
+import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
 import com.triprint.backend.domain.post.dto.PostUpdateRequestDto;
@@ -41,10 +42,12 @@ public class PostService {
         Long userId = (Long) request.getAttribute("userId");
         User author = userService.findById(userId);
 
+        TouristAttraction touristAttraction = touristAttractionService.findOrCreate(createPostDto.getTouristAttraction());
         Post post = Post.builder()
                 .author(author)
                 .title(createPostDto.getTitle())
                 .contents(createPostDto.getContent())
+                .touristAttraction(touristAttraction)
                 .build();
         images.forEach((img) -> {
             String image = awsS3Service.uploadFile("posts", img);
@@ -52,7 +55,6 @@ public class PostService {
         });
         Post createdPost = postRepository.save(post);
         hashtagService.createPosthashtag(createdPost, createPostDto.getHashtag());
-        touristAttractionService.createTouristAttraction(createdPost, createPostDto.getX(), createPostDto.getY(), createPostDto.getRoadNameAddress(), createPostDto.getFirstDepthName(), createPostDto.getSecondDepthName());
 
         return createdPost.getId();
     }

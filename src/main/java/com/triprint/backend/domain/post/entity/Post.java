@@ -14,6 +14,7 @@ import com.triprint.backend.domain.location.entity.TouristAttraction;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 
 import com.triprint.backend.domain.user.entity.User;
@@ -96,10 +97,11 @@ public class Post {
 	private List<Image> images = new ArrayList();
 
 	@Builder
-	public Post(User author, String title, String contents){
+	public Post(User author, String title, String contents, TouristAttraction touristAttraction){
 		this.author = author;
 		this.title = title;
 		this.contents = contents;
+		this.touristAttraction = touristAttraction;
 	}
 
 	public void addImages(List<Image> postImages) {
@@ -114,5 +116,16 @@ public class Post {
 		if (!image.hasPost()){
 			image.setPost(this);
 		}
+	}
+
+	public void setTouristAttraction(TouristAttraction touristAttraction){
+		this.touristAttraction = touristAttraction;
+
+		if(!touristAttraction.getPosts().contains(this))
+			touristAttraction.getPosts().add(this);
+	}
+
+	public boolean hasTouristAttraction() {
+		return Objects.nonNull(this.touristAttraction);
 	}
 }

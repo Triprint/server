@@ -5,6 +5,7 @@
 
 package com.triprint.backend.domain.location.entity;
 
+import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.post.entity.Post;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,18 +26,12 @@ public class TouristAttraction {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	private String touristAttractionName;
+	private String touristAttraction;
 	private Point latitudeLongitude;
 
 	@Column(nullable = false)
 	private String roadNameAddress; //도로명주소 -> district
 	private String lotNumberAddress; //지번주소
-
-	@Column(nullable = false)
-	private String firstDepthName; //city
-
-	@Column(nullable = false)
-	private String secondDepthName; //district
 
 	@ManyToOne(
 			fetch = FetchType.LAZY
@@ -52,12 +47,20 @@ public class TouristAttraction {
 	private List<Post> posts = new ArrayList();
 
 	@Builder
-	public TouristAttraction(String touristAttractionName, Point latitudeLongitude, String roadNameAddress, String lotNumberAddress,String firstDepthName,String secondDepthName){
-		this.touristAttractionName = touristAttractionName;
+	public TouristAttraction(String touristAttraction, Point latitudeLongitude, String roadNameAddress, String lotNumberAddress){
+		this.touristAttraction = touristAttraction;
 		this.latitudeLongitude = latitudeLongitude;
 		this.roadNameAddress = roadNameAddress;
 		this.lotNumberAddress = lotNumberAddress;
-		this.firstDepthName = firstDepthName;
-		this.secondDepthName = secondDepthName;
+	}
+
+	public void addPost(Post post) {
+		if (!this.posts.contains(post)){
+			this.posts.add(post);
+			post.setTouristAttraction(this);
+		}
+		if (!post.hasTouristAttraction()){
+			post.setTouristAttraction(this);
+		}
 	}
 }
