@@ -1,8 +1,11 @@
 package com.triprint.backend.domain.post.dto;
 
-import com.sun.istack.Nullable;
+import org.springframework.lang.Nullable;
+import com.triprint.backend.domain.location.entity.TouristAttraction;
 import lombok.Builder;
 import lombok.Getter;
+import org.springframework.lang.NonNull;
+
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -21,4 +24,6 @@ public class ReadPostDto {
     private List<String> hashtags = new ArrayList<>();
     private Timestamp createdAt;
     private Timestamp updatedAt;
+    @NonNull
+    private TouristAttraction touristAttraction;
 }

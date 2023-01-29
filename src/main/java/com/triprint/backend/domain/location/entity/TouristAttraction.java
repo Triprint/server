@@ -9,6 +9,7 @@ import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.post.entity.Post;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import javax.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -42,16 +43,15 @@ public class TouristAttraction {
 	private District district;
 
 	@OneToMany(
-		mappedBy = "touristAttraction"
+		mappedBy = "touristAttraction", cascade = CascadeType.ALL
 	)
 	private List<Post> posts = new ArrayList();
 
 	@Builder
-	public TouristAttraction(String touristAttraction, Point latitudeLongitude, String roadNameAddress, String lotNumberAddress){
+	public TouristAttraction(String touristAttraction, Point latitudeLongitude, String roadNameAddress){
 		this.touristAttraction = touristAttraction;
 		this.latitudeLongitude = latitudeLongitude;
 		this.roadNameAddress = roadNameAddress;
-		this.lotNumberAddress = lotNumberAddress;
 	}
 
 	public void addPost(Post post) {
@@ -62,5 +62,16 @@ public class TouristAttraction {
 		if (!post.hasTouristAttraction()){
 			post.setTouristAttraction(this);
 		}
+	}
+
+	public void setDistrict(District district){
+		this.district = district;
+
+		if(!district.getTouristAttractions().contains(this))
+			district.getTouristAttractions().add(this);
+	}
+
+	public boolean hasDistrict() {
+		return Objects.nonNull(this.district);
 	}
 }

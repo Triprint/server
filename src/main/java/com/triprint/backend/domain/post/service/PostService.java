@@ -1,14 +1,13 @@
 package com.triprint.backend.domain.post.service;
 
-import com.triprint.backend.domain.hashtag.entity.Hashtag;
-import com.triprint.backend.domain.hashtag.repository.HashtagRepository;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
+import com.triprint.backend.domain.location.Repository.TouristAttractionRepository;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
-import com.triprint.backend.domain.post.dto.PostUpdateRequestDto;
+import com.triprint.backend.domain.post.dto.UpdatePostDto;
 import com.triprint.backend.domain.post.dto.ReadPostDto;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.entity.PostHashtag;
@@ -35,6 +34,7 @@ public class PostService {
     private final UserService userService;
     private final HashtagService hashtagService;
     private final TouristAttractionService touristAttractionService;
+    private final TouristAttractionRepository touristAttractionRepository;
 
 
     @Transactional
@@ -53,6 +53,7 @@ public class PostService {
             String image = awsS3Service.uploadFile("posts", img);
             post.addImage(imageRepository.save(Image.builder().path(image).build()));
         });
+        touristAttraction.addPost(post);
         Post createdPost = postRepository.save(post);
         hashtagService.createPosthashtag(createdPost, createPostDto.getHashtag());
 
@@ -79,17 +80,20 @@ public class PostService {
                 .title(post.getTitle())
                 .content(post.getContents())
                 .hashtags(hashtags)
+                .touristAttraction(post.getTouristAttraction())
                 .createdAt(post.getCreatedAt())
                 .images(images).build();
     }
 
     @Transactional
-    public Long updatePost(Long id, PostUpdateRequestDto postUpdateRequestDto, HttpServletRequest request, List<MultipartFile> images){
+    public Long updatePost(Long id, UpdatePostDto updatePostDto, HttpServletRequest request, List<MultipartFile> images) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(() -> {
             throw new RuntimeException("해당 게시물이 없습니다."); });
         Long userId = (Long) request.getAttribute("userId");
-        List<Image> updateImages = updatePostImages(postUpdateRequestDto, post);
         validateIsAuthor(post.getAuthor().getId(),userId);
+
+        List<Image> updateImages = updatePostImages(updatePostDto, post);
+        TouristAttraction updateTouristAttraction = updateTouristAttraction(updatePostDto, post);
 
         images.forEach((img) -> {
             String image = awsS3Service.uploadFile("posts", img);
@@ -99,9 +103,10 @@ public class PostService {
         });
 
         post.setImages(updateImages); //널값일 경우 에러 뿜게 하면 됨. (스프링 DTO validation으로 검색) -> 위치와 사진만 제한, 이미지 갯수 제한
-        post.setTitle(postUpdateRequestDto.getTitle());
-        post.setContents(postUpdateRequestDto.getContents());
-        post.setPostHashtag(hashtagService.updatePostHashtag(postUpdateRequestDto.getHashtag(),post));
+        post.setTitle(updatePostDto.getTitle());
+        post.setContents(updatePostDto.getContents());
+        post.setTouristAttraction(updateTouristAttraction);
+        post.setPostHashtag(hashtagService.updatePostHashtag(updatePostDto.getHashtag(),post));
         return post.getId();
     }
 
@@ -114,8 +119,8 @@ public class PostService {
         postRepository.delete(post);
     }
 
-    private List<Image> updatePostImages(PostUpdateRequestDto postUpdateRequestDto, Post post){
-        List<String> newImages = postUpdateRequestDto.getExistentImages();
+    private List<Image> updatePostImages(UpdatePostDto updatePostDto, Post post){
+        List<String> newImages = updatePostDto.getExistentImages();
         List<Image> existentImages = post.getImages();
         List<Image> updateImages = new ArrayList<>();
 
@@ -128,6 +133,13 @@ public class PostService {
             }
         });
         return updateImages;
+    }
+
+    private TouristAttraction updateTouristAttraction(UpdatePostDto updatePostDto, Post post) throws Exception {
+
+        touristAttractionRepository.delete(post.getTouristAttraction());
+        TouristAttraction updateTouristAttraction = touristAttractionService.findOrCreate(updatePostDto.getUpdatedTouristAttraction());
+        return updateTouristAttraction;
     }
 
     private void validateIsAuthor(Long postAuthor, Long currentUserId) {

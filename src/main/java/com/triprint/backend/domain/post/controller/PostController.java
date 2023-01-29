@@ -2,7 +2,7 @@ package com.triprint.backend.domain.post.controller;
 
 import com.sun.istack.NotNull;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
-import com.triprint.backend.domain.post.dto.PostUpdateRequestDto;
+import com.triprint.backend.domain.post.dto.UpdatePostDto;
 import com.triprint.backend.domain.post.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -30,8 +30,8 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity updatePost(@PathVariable Long id, @RequestPart(value = "postUpdateRequestDto") PostUpdateRequestDto postUpdateRequestDto,
-                                     HttpServletRequest request, @RequestPart(value="images")List<MultipartFile> images) {
+    public ResponseEntity updatePost(@PathVariable Long id, @RequestPart(value = "postUpdateRequestDto") UpdatePostDto postUpdateRequestDto,
+                                     HttpServletRequest request, @RequestPart(value="images")List<MultipartFile> images) throws Exception {
         return ResponseEntity.ok(postService.updatePost(id, postUpdateRequestDto, request, images));
     }
 

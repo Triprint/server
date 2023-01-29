@@ -4,6 +4,7 @@ import com.triprint.backend.domain.location.Repository.DistrictRepository;
 import com.triprint.backend.domain.location.entity.District;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @AllArgsConstructor
@@ -11,6 +12,7 @@ public class DistrictService {
 
     private final DistrictRepository districtRepository;
 
+    @Transactional
     public District matchDistrict(String roadAddress){
         String[] beExtractedDistrict = roadAddress.split(" ");
         String district = String.valueOf(districtRepository.findByDistrict(beExtractedDistrict[1]));

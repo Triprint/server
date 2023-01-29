@@ -24,9 +24,9 @@ public class District { //시군구 행정지역
     private String districtName;
 
     @OneToMany(
-            mappedBy = "district"
+            mappedBy = "district", cascade = CascadeType.ALL
     )
-    private List<TouristAttraction> TouristAttraction = new ArrayList();
+    private List<TouristAttraction> touristAttractions = new ArrayList();
 
     @ManyToOne(
             fetch = FetchType.LAZY
@@ -40,5 +40,14 @@ public class District { //시군구 행정지역
     public District(String districtCode, String districtName){
         this.districtCode = districtCode;
         this.districtName = districtName;
+    }
+    public void addTouristAttraction(TouristAttraction touristAttraction) {
+        if (!this.touristAttractions.contains(touristAttraction)){
+            this.touristAttractions.add(touristAttraction);
+            touristAttraction.setDistrict(this);
+        }
+        if (!touristAttraction.hasDistrict()){
+            touristAttraction.setDistrict(this);
+        }
     }
 }
