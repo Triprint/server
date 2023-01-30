@@ -31,8 +31,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     UserRepository userRepository;
 
-    public static final String FRONT_URL = "https://triprint.up.railway.app";
-
     private final CorsFilter corsFilter;
 
     // @Bean -> 해당 메소드의 리턴되는 오브젝트를 IoC로 등록해줌
@@ -52,15 +50,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .formLogin().disable()
                 .addFilter(corsFilter); // @CrossOrigin(인증X), 시큐리티 필터에 등록 인증(O)
 
-        http.authorizeRequests()
-                .antMatchers(FRONT_URL+"/**")
-//                .antMatchers(FRONT_URL+"/admin/**").hasRole("ADMIN")
-                .authenticated()
-                .anyRequest().permitAll()
-
-                .and()
-                .exceptionHandling()
-                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
+        //수정해야할 부분!!
+//        http.authorizeRequests()
+//                .antMatchers("/auth/me")
+////                .antMatchers("/admin/**").hasRole("ADMIN")
+//                .authenticated()
+//                .anyRequest().permitAll()
+//                .and()
+//                .exceptionHandling();
+//                .authenticationEntryPoint(new CustomAuthenticationEntryPoint());
 
         http.addFilterBefore(new JwtRequestFilter(), UsernamePasswordAuthenticationFilter.class);
     }

@@ -27,7 +27,7 @@ spring:
             clientSecret: ${CLIENT_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://localhost:3000/auth/sign-in"
+            redirectUri: ${REDIRECT_URI}
             scope:
               - profile_nickname
               - profile_image
@@ -63,5 +63,4 @@ token:
   secret-key: ${TOKEN_SECRET}
   expiration-time: ${EXPIRATION_TIME}
 
-app:
-  front-url: ${FRONT_URL}
+

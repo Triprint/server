@@ -25,7 +25,6 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
-import static com.triprint.backend.domain.user.config.SecurityConfig.FRONT_URL;
 import static com.triprint.backend.domain.user.status.UserRole.USER;
 
 
@@ -41,6 +40,9 @@ public class UserService {
     @Value("${spring.servlet.security.oauth2.client.registration.kakao.clientSecret}")
     String client_secret;
 
+    @Value("${spring.servlet.security.oauth2.client.registration.kakao.redirectUri}")
+    String redirectUri;
+
     public OauthToken getAccessToken(String code) {
 
         RestTemplate rt = new RestTemplate();
@@ -51,7 +53,7 @@ public class UserService {
         MultiValueMap<String, String> params = new LinkedMultiValueMap<>();
         params.add("grant_type", "authorization_code");
         params.add("client_id", client_id);
-        params.add("redirect_uri", FRONT_URL + "/auth/kakao");
+        params.add("redirect_uri", redirectUri);
         params.add("code", code);
         params.add("client_secret", client_secret);
 
@@ -141,7 +143,7 @@ public class UserService {
                 .withExpiresAt(new Date(System.currentTimeMillis() + JwtProperties.EXPIRATION_TIME))
                 .withClaim("id", user.getId())
                 .withClaim("nickname", user.getUsername())
-                .sign(Algorithm.HMAC512(JwtProperties.SECRET));
+                .sign(Algorithm.HMAC512(JwtProperties.TOKEN_SECRET_KEY));
 
         return jwtToken;
     }
