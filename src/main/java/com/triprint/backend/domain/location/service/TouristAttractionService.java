@@ -1,6 +1,5 @@
 package com.triprint.backend.domain.location.service;
 
-import com.triprint.backend.domain.hashtag.entity.Hashtag;
 import com.triprint.backend.domain.location.Repository.TouristAttractionRepository;
 import com.triprint.backend.domain.location.dto.CreateTouristAttractionDto;
 import com.triprint.backend.domain.location.entity.District;
@@ -22,7 +21,7 @@ public class TouristAttractionService {
 
     @Transactional
     public TouristAttraction findOrCreate(CreateTouristAttractionDto createTouristAttractionDto) throws Exception{
-        Optional<TouristAttraction> touristAttraction = touristAttractionRepository.findByName(createTouristAttractionDto.getTouristAttraction());
+        Optional<TouristAttraction> touristAttraction = touristAttractionRepository.findByName(createTouristAttractionDto.getName());
         if(touristAttraction.isPresent()){
             return touristAttraction.get();
         }
@@ -38,12 +37,19 @@ public class TouristAttractionService {
         District district = districtService.matchDistrict(createTouristAttractionDto.getRoadNameAddress());
         TouristAttraction touristAttraction = TouristAttraction.builder()
                 .latitudeLongitude(point)
-                .name(createTouristAttractionDto.getTouristAttraction())
+                .name(createTouristAttractionDto.getName())
                 .roadNameAddress(createTouristAttractionDto.getRoadNameAddress())
                 .build();
         district.addTouristAttraction(touristAttraction);
 
         return touristAttractionRepository.save(touristAttraction);
     }
+
+    @Transactional
+    public TouristAttraction updateTouristAttraction(CreateTouristAttractionDto updateTouristAttractionDto) throws Exception{
+        TouristAttraction updateTouristAttraction = this.findOrCreate(updateTouristAttractionDto);
+        return updateTouristAttraction;
+    }
+
 
 }

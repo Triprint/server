@@ -2,7 +2,7 @@ package com.triprint.backend.domain.post.dto;
 
 import com.sun.istack.Nullable;
 import com.triprint.backend.domain.location.dto.CreateTouristAttractionDto;
-import com.triprint.backend.domain.location.entity.TouristAttraction;
+import com.triprint.backend.domain.location.dto.ReadTouristAttractionDto;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,5 +26,5 @@ public class UpdatePostDto {
     @Nullable
     private List<String> existentImages = new ArrayList<>();
     @NonNull
-    private CreateTouristAttractionDto updatedTouristAttraction;
+    private CreateTouristAttractionDto touristAttraction;
 }

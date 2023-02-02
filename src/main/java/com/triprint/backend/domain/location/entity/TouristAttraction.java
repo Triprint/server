@@ -5,7 +5,6 @@
 
 package com.triprint.backend.domain.location.entity;
 
-import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.post.entity.Post;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +26,11 @@ public class TouristAttraction {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	private String name; //변수명 변환하기
+	private String name;
 	private Point latitudeLongitude;
 
 	@Column(nullable = false)
-	private String roadNameAddress; //도로명주소 -> district
+	private String roadNameAddress;
 
 	@ManyToOne(
 			fetch = FetchType.LAZY

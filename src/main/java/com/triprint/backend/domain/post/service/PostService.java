@@ -4,6 +4,7 @@ import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
 import com.triprint.backend.domain.location.Repository.TouristAttractionRepository;
+import com.triprint.backend.domain.location.dto.CreateTouristAttractionDto;
 import com.triprint.backend.domain.location.dto.ReadTouristAttractionDto;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
@@ -80,7 +81,7 @@ public class PostService {
                 .x(post.getTouristAttraction().getLatitudeLongitude().getY())
                 .y(post.getTouristAttraction().getLatitudeLongitude().getX())
                 .roadNameAddress(post.getTouristAttraction().getRoadNameAddress())
-                .touristAttraction(post.getTouristAttraction().getName())
+                .name(post.getTouristAttraction().getName())
                 .build();
 
         return ReadPostDto.builder()
@@ -101,7 +102,7 @@ public class PostService {
         validateIsAuthor(post.getAuthor().getId(),userId);
 
         List<Image> updateImages = updatePostImages(updatePostDto, post);
-        TouristAttraction updateTouristAttraction = updateTouristAttraction(updatePostDto, post);
+        TouristAttraction updateTouristAttraction = touristAttractionService.updateTouristAttraction(updatePostDto.getTouristAttraction());
 
         images.forEach((img) -> {
             String image = awsS3Service.uploadFile("posts", img);
@@ -110,7 +111,7 @@ public class PostService {
             updateImages.add(newImage);
         });
 
-        post.setImages(updateImages); //널값일 경우 에러 뿜게 하면 됨. (스프링 DTO validation으로 검색) -> 위치와 사진만 제한, 이미지 갯수 제한
+        post.setImages(updateImages); // 이미지 갯수 제한
         post.setTitle(updatePostDto.getTitle());
         post.setContents(updatePostDto.getContents());
         post.setTouristAttraction(updateTouristAttraction);
@@ -141,13 +142,6 @@ public class PostService {
             }
         });
         return updateImages;
-    }
-
-    private TouristAttraction updateTouristAttraction(UpdatePostDto updatePostDto, Post post) throws Exception {
-
-        touristAttractionRepository.delete(post.getTouristAttraction());
-        TouristAttraction updateTouristAttraction = touristAttractionService.findOrCreate(updatePostDto.getUpdatedTouristAttraction());
-        return updateTouristAttraction;
     }
 
     private void validateIsAuthor(Long postAuthor, Long currentUserId) {

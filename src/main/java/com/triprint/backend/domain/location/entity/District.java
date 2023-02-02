@@ -1,11 +1,8 @@
 package com.triprint.backend.domain.location.entity;
 
-import com.triprint.backend.domain.post.entity.Post;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.locationtech.jts.geom.Point;
-
 import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;

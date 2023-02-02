@@ -18,5 +18,5 @@ public class CreateTouristAttractionDto {
     private String roadNameAddress;
 
     @NonNull
-    private String touristAttraction;
+    private String name;
 }
