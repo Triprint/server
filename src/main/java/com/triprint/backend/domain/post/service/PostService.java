@@ -4,6 +4,7 @@ import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
 import com.triprint.backend.domain.location.Repository.TouristAttractionRepository;
+import com.triprint.backend.domain.location.dto.ReadTouristAttractionDto;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
 import com.triprint.backend.domain.post.dto.CreatePostDto;
@@ -75,12 +76,19 @@ public class PostService {
             hashtags.add(hashtag.getHashtag().getContents());
         }
 
+        ReadTouristAttractionDto readTouristAttractionDto = ReadTouristAttractionDto.builder()
+                .x(post.getTouristAttraction().getLatitudeLongitude().getY())
+                .y(post.getTouristAttraction().getLatitudeLongitude().getX())
+                .roadNameAddress(post.getTouristAttraction().getRoadNameAddress())
+                .touristAttraction(post.getTouristAttraction().getName())
+                .build();
+
         return ReadPostDto.builder()
                 .authorName(post.getAuthor().getUsername())
                 .title(post.getTitle())
                 .content(post.getContents())
                 .hashtags(hashtags)
-                .touristAttraction(post.getTouristAttraction())
+                .touristAttraction(readTouristAttractionDto)
                 .createdAt(post.getCreatedAt())
                 .images(images).build();
     }

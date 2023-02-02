@@ -27,12 +27,11 @@ public class TouristAttraction {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-	private String touristAttraction;
+	private String name; //변수명 변환하기
 	private Point latitudeLongitude;
 
 	@Column(nullable = false)
 	private String roadNameAddress; //도로명주소 -> district
-	private String lotNumberAddress; //지번주소
 
 	@ManyToOne(
 			fetch = FetchType.LAZY
@@ -48,8 +47,8 @@ public class TouristAttraction {
 	private List<Post> posts = new ArrayList();
 
 	@Builder
-	public TouristAttraction(String touristAttraction, Point latitudeLongitude, String roadNameAddress){
-		this.touristAttraction = touristAttraction;
+	public TouristAttraction(String name, Point latitudeLongitude, String roadNameAddress){
+		this.name = name;
 		this.latitudeLongitude = latitudeLongitude;
 		this.roadNameAddress = roadNameAddress;
 	}

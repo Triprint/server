@@ -22,7 +22,7 @@ public class TouristAttractionService {
 
     @Transactional
     public TouristAttraction findOrCreate(CreateTouristAttractionDto createTouristAttractionDto) throws Exception{
-        Optional<TouristAttraction> touristAttraction = touristAttractionRepository.findBytouristAttraction(createTouristAttractionDto.getTouristAttraction());
+        Optional<TouristAttraction> touristAttraction = touristAttractionRepository.findByName(createTouristAttractionDto.getTouristAttraction());
         if(touristAttraction.isPresent()){
             return touristAttraction.get();
         }
@@ -31,14 +31,14 @@ public class TouristAttractionService {
 
     @Transactional
     public TouristAttraction createTouristAttraction(CreateTouristAttractionDto createTouristAttractionDto) throws Exception{
-        Double latitude = createTouristAttractionDto.getX();
-        Double longitude = createTouristAttractionDto.getY();
-        String pointWKT = String.format("POINT(%s %s)", longitude, latitude);
+        Double x = createTouristAttractionDto.getX();
+        Double y = createTouristAttractionDto.getY();
+        String pointWKT = String.format("POINT(%s %s)", x, y);
         Point point = (Point) new WKTReader().read(pointWKT); //TODO: ParseError Handling
         District district = districtService.matchDistrict(createTouristAttractionDto.getRoadNameAddress());
         TouristAttraction touristAttraction = TouristAttraction.builder()
                 .latitudeLongitude(point)
-                .touristAttraction(createTouristAttractionDto.getTouristAttraction())
+                .name(createTouristAttractionDto.getTouristAttraction())
                 .roadNameAddress(createTouristAttractionDto.getRoadNameAddress())
                 .build();
         district.addTouristAttraction(touristAttraction);

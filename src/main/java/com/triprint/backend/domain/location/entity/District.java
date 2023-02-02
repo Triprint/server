@@ -20,7 +20,6 @@ public class District { //시군구 행정지역
             strategy = GenerationType.IDENTITY
     )
     private Long id;
-    private String districtCode;
     private String districtName;
 
     @OneToMany(
@@ -37,10 +36,10 @@ public class District { //시군구 행정지역
     private City city;
 
     @Builder
-    public District(String districtCode, String districtName){
-        this.districtCode = districtCode;
+    public District(String districtName){
         this.districtName = districtName;
     }
+
     public void addTouristAttraction(TouristAttraction touristAttraction) {
         if (!this.touristAttractions.contains(touristAttraction)){
             this.touristAttractions.add(touristAttraction);
@@ -49,5 +48,16 @@ public class District { //시군구 행정지역
         if (!touristAttraction.hasDistrict()){
             touristAttraction.setDistrict(this);
         }
+    }
+
+    public void setCity(City city){
+        this.city = city;
+
+        if(!city.getDistrict().contains(this))
+            city.getDistrict().add(this);
+    }
+
+    public boolean hasCity() {
+        return Objects.nonNull(this.city);
     }
 }

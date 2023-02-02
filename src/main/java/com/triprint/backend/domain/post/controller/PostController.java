@@ -19,7 +19,7 @@ public class PostController {
     private final PostService postService;
 
     @PostMapping("/posts")
-    public ResponseEntity createPost(@RequestPart(value = "createPostDto") CreatePostDto createPostDto, @NotNull @RequestPart(value="images") List<MultipartFile> images,
+    public ResponseEntity createPost(@RequestPart(value = "data") CreatePostDto createPostDto, @NotNull @RequestPart(value="images") List<MultipartFile> images,
                                      HttpServletRequest request) throws Exception {
         return ResponseEntity.ok(postService.create(request, createPostDto, images));
     }
@@ -30,7 +30,7 @@ public class PostController {
     }
 
     @PutMapping("/posts/{id}")
-    public ResponseEntity updatePost(@PathVariable Long id, @RequestPart(value = "postUpdateRequestDto") UpdatePostDto postUpdateRequestDto,
+    public ResponseEntity updatePost(@PathVariable Long id, @RequestPart(value = "data") UpdatePostDto postUpdateRequestDto,
                                      HttpServletRequest request, @RequestPart(value="images")List<MultipartFile> images) throws Exception {
         return ResponseEntity.ok(postService.updatePost(id, postUpdateRequestDto, request, images));
     }

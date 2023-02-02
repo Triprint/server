@@ -18,17 +18,25 @@ public class City { //시도 행정지역
             strategy = GenerationType.IDENTITY
     )
     private Long id;
-    private String cityCode;
     private String cityName;
 
     @OneToMany(
-            mappedBy = "city"
+            mappedBy = "city", cascade = CascadeType.ALL
     )
     private List<District> district = new ArrayList();
 
     @Builder
-    public City(String cityCode, String cityName){
-        this.cityCode = cityCode;
+    public City(String cityName){
         this.cityName = cityName;
+    }
+
+    public void addDistrict(District district) {
+        if (!this.district.contains(district)){
+            this.district.add(district);
+            district.setCity(this);
+        }
+        if (!district.hasCity()){
+            district.setCity(this);
+        }
     }
 }

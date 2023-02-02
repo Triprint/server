@@ -1,7 +1,9 @@
 package com.triprint.backend.domain.post.dto;
 
+import com.triprint.backend.domain.location.dto.ReadTouristAttractionDto;
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
-import com.triprint.backend.domain.location.entity.TouristAttraction;
 import lombok.Builder;
 import lombok.Getter;
 import org.springframework.lang.NonNull;
@@ -10,8 +12,10 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-@Builder
 @Getter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class ReadPostDto {
     private String authorName;
     @Nullable
@@ -25,5 +29,5 @@ public class ReadPostDto {
     private Timestamp createdAt;
     private Timestamp updatedAt;
     @NonNull
-    private TouristAttraction touristAttraction;
+    private ReadTouristAttractionDto touristAttraction;
 }
