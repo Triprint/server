@@ -34,7 +34,7 @@ public class TouristAttractionService {
         Double y = createTouristAttractionDto.getY();
         String pointWKT = String.format("POINT(%s %s)", x, y);
         Point point = (Point) new WKTReader().read(pointWKT); //TODO: ParseError Handling
-        District district = districtService.matchDistrict(createTouristAttractionDto.getRoadNameAddress());
+        District district = districtService.findOrCreate(createTouristAttractionDto.getRoadNameAddress());
         TouristAttraction touristAttraction = TouristAttraction.builder()
                 .latitudeLongitude(point)
                 .name(createTouristAttractionDto.getName())

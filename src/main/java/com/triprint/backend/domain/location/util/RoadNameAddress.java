@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.location.dto;
+package com.triprint.backend.domain.location.util;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
