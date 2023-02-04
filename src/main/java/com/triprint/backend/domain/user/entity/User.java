@@ -48,7 +48,7 @@ public class User {
     private String kakaoId;
 
     @OneToMany(
-            mappedBy = "user"
+            mappedBy = "author"
     )
     private List<Post> posts = new ArrayList();
 
@@ -97,6 +97,7 @@ public class User {
         this.role = userRole;
     }
 
+    public boolean isNotEquals(User user) { return !this.equals(user); }
     public void editProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }

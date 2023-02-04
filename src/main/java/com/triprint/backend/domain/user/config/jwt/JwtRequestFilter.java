@@ -30,6 +30,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
         // header 가 정상적인 형식인지 확인
         if(jwtHeader == null || !jwtHeader.startsWith(JwtProperties.TOKEN_PREFIX)) {
+            request.setAttribute(JwtProperties.HEADER_STRING, "토큰이 없습니다.");
             filterChain.doFilter(request, response);
             return;
         }
@@ -40,7 +41,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         Long userId = null;
 
         try {
-            userId = JWT.require(Algorithm.HMAC512(JwtProperties.SECRET)).build().verify(token)
+            userId = JWT.require(Algorithm.HMAC512(JwtProperties.TOKEN_SECRET_KEY)).build().verify(token)
                     .getClaim("id").asLong();
 
         } catch (TokenExpiredException e) {

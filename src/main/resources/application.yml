@@ -8,10 +8,12 @@ spring:
       maximum-pool-size: 3
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+    database: mysql
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
   servlet:
     multipart:
       max-file-size: 20MB
@@ -27,7 +29,7 @@ spring:
             clientSecret: ${CLIENT_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://localhost:3000/auth/sign-in"
+            redirectUri: ${REDIRECT_URI}
             scope:
               - profile_nickname
               - profile_image
@@ -58,3 +60,9 @@ cloud:
       auto: false
     s3:
       bucket: ${BUCKET_NAME}
+
+token:
+  secret-key: ${TOKEN_SECRET}
+  expiration-time: ${EXPIRATION_TIME}
+
+

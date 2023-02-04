@@ -7,40 +7,49 @@ package com.triprint.backend.domain.post.entity;
 
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
+import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
-import com.triprint.backend.domain.location.entity.Location;
+import com.triprint.backend.domain.location.entity.TouristAttraction;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
+import java.util.Objects;
+import javax.persistence.*;
 
 import com.triprint.backend.domain.user.entity.User;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
+import org.locationtech.jts.geom.Point;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.lang.NonNull;
+import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class Post {
 	@Id
 	@GeneratedValue(
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+
+	@Column(nullable = true)
 	private String title;
+
+	@Column(nullable = true)
 	private String contents;
-	private Double latitude;
-	private Double longitude;
+
+	@CreatedDate
 	private Timestamp createdAt;
+
+	@LastModifiedDate
 	private Timestamp updatedAt;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
@@ -48,26 +57,28 @@ public class Post {
 		name = "group_id"
 	)
 	private PostGroup postGroup;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
 		name = "author_id"
 	)
-	private User user;
+	private User author;
+
 	@ManyToOne(
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "location_id"
+		name = "touristAttraction_id", nullable = false
 	)
-	private Location location;
+	private TouristAttraction touristAttraction;
 	@OneToMany(
 		mappedBy = "post"
 	)
 	private List<Comment> comments = new ArrayList();
 	@OneToMany(
-		mappedBy = "post"
+		mappedBy = "post", orphanRemoval = true
 	)
 	private List<PostHashtag> postHashtag = new ArrayList();
 	@OneToMany(
@@ -79,4 +90,42 @@ public class Post {
 	)
 	private List<Like> likes = new ArrayList();
 
+	@OneToMany(
+			mappedBy = "post", cascade = CascadeType.ALL
+	)
+	@NonNull
+	private List<Image> images = new ArrayList();
+
+	@Builder
+	public Post(User author, String title, String contents, TouristAttraction touristAttraction){
+		this.author = author;
+		this.title = title;
+		this.contents = contents;
+		this.touristAttraction = touristAttraction;
+	}
+
+	public void addImages(List<Image> postImages) {
+		postImages.forEach(this::addImage);
+	}
+
+	public void addImage(Image image) {
+		if (!this.images.contains(image)){
+			this.images.add(image);
+			image.setPost(this);
+		}
+		if (!image.hasPost()){
+			image.setPost(this);
+		}
+	}
+
+	public void setTouristAttraction(TouristAttraction touristAttraction){
+		this.touristAttraction = touristAttraction;
+
+		if(!touristAttraction.getPosts().contains(this))
+			touristAttraction.getPosts().add(this);
+	}
+
+	public boolean hasTouristAttraction() {
+		return Objects.nonNull(this.touristAttraction);
+	}
 }
