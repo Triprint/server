@@ -4,7 +4,8 @@ spring:
     url: ${DB_URL}
     username: ${DB_NAME}
     password: ${DB_PASSWORD}
-
+    hikari:
+      maximum-pool-size: 3
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,9 +19,10 @@ spring:
       max-file-size: 20MB
       max-request-size: 20MB
 
-    # Security OAuth
-    security:
-      oauth2.client:
+  # Security OAuth
+  security:
+    oauth2:
+      client:
         registration:
           kakao:
             clientId: ${CLIENT_ID}
