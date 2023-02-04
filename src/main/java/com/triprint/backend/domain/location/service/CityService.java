@@ -11,11 +11,11 @@ public class CityService {
 
     private final CityRepository cityRepository;
 
-    public City findOrCreate(String city) {
-        return cityRepository.findByCityName(city).orElseGet(() -> createCity(city));
+    public City findOrCreate(String name) {
+        return cityRepository.findByName(name).orElseGet(() -> createCity(name));
     }
 
-    private City createCity(String city) {
-        return cityRepository.save(City.builder().cityName(city).build());
+    private City createCity(String name) {
+        return cityRepository.save(City.builder().name(name).build());
     }
 }

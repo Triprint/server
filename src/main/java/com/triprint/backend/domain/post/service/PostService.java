@@ -3,6 +3,7 @@ package com.triprint.backend.domain.post.service;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
+import com.triprint.backend.domain.image.service.ImageService;
 import com.triprint.backend.domain.location.Repository.TouristAttractionRepository;
 import com.triprint.backend.domain.location.dto.CreateTouristAttractionDto;
 import com.triprint.backend.domain.location.dto.ReadTouristAttractionDto;
@@ -32,12 +33,10 @@ public class PostService {
 
     private final PostRepository postRepository;
     private final ImageRepository imageRepository;
-    private final AwsS3Service awsS3Service;
     private final UserService userService;
+    private final ImageService imageService;
     private final HashtagService hashtagService;
     private final TouristAttractionService touristAttractionService;
-    private final TouristAttractionRepository touristAttractionRepository;
-
 
     @Transactional
     public Long create(HttpServletRequest request, CreatePostDto createPostDto, List<MultipartFile> images) throws Exception {
@@ -51,10 +50,7 @@ public class PostService {
                 .contents(createPostDto.getContent())
                 .touristAttraction(touristAttraction)
                 .build();
-        images.forEach((img) -> {
-            String image = awsS3Service.uploadFile("posts", img);
-            post.addImage(imageRepository.save(Image.builder().path(image).build()));
-        });
+        imageService.createImage(images, post);
         touristAttraction.addPost(post);
         Post createdPost = postRepository.save(post);
         hashtagService.createPosthashtag(createdPost, createPostDto.getHashtag());
@@ -63,7 +59,7 @@ public class PostService {
     }
 
     @Transactional
-    public ReadPostDto read(Long postId) {
+    public ReadPostDto getPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> {
             throw new RuntimeException("해당하는 게시물이 존재하지 않습니다."); });
         ArrayList<String> images = new ArrayList<>();
@@ -103,13 +99,7 @@ public class PostService {
 
         List<Image> updateImages = updatePostImages(updatePostDto, post);
         TouristAttraction updateTouristAttraction = touristAttractionService.updateTouristAttraction(updatePostDto.getTouristAttraction());
-
-        images.forEach((img) -> {
-            String image = awsS3Service.uploadFile("posts", img);
-            Image newImage = imageRepository.save(Image.builder().path(image).build());
-            post.addImage(newImage);
-            updateImages.add(newImage);
-        });
+        updateImages = imageService.updateImage(updateImages, images, post);
 
         post.setImages(updateImages); // 이미지 갯수 제한
         post.setTitle(updatePostDto.getTitle());

@@ -1,8 +1,7 @@
 package com.triprint.backend.domain.location.service;
 
-import com.triprint.backend.domain.hashtag.entity.Hashtag;
 import com.triprint.backend.domain.location.Repository.DistrictRepository;
-import com.triprint.backend.domain.location.dto.CreateDistrictDto;
+import com.triprint.backend.domain.location.dto.RoadNameAddress;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import lombok.AllArgsConstructor;
@@ -18,25 +17,17 @@ public class DistrictService {
 
     @Transactional
     public District matchDistrict(String roadAddress){
-        String[] beExtractedDistrict = roadAddress.split(" ");
-        CreateDistrictDto createDistrictDto = CreateDistrictDto.builder()
-                .city(beExtractedDistrict[0])
-                .district(beExtractedDistrict[1])
-                .build();
-
-        if (beExtractedDistrict[0].equals("세종특별자치시")){
-            return districtRepository.findByDistrictName("세종특별자치시").orElseThrow(NullPointerException::new); //Exception 추가 후 변경
-        }
-        return this.findOrCreate(createDistrictDto);
+        RoadNameAddress roadNameAddress = new RoadNameAddress(roadAddress);
+        return this.findOrCreate(roadNameAddress);
     }
 
-    public District findOrCreate(CreateDistrictDto createDistrictDto){
-        return districtRepository.findByDistrictName(createDistrictDto.getDistrict()).orElseGet(() -> this.createDistrict(createDistrictDto));
+    public District findOrCreate(RoadNameAddress roadNameAddress){
+        return districtRepository.findByDistrictName(roadNameAddress.getDistrict()).orElseGet(() -> this.createDistrict(roadNameAddress));
     }
 
-    public District createDistrict(CreateDistrictDto createDistrictDto){
-        City city = cityService.findOrCreate(createDistrictDto.getCity());
-        District district = District.builder().districtName(createDistrictDto.getDistrict()).build();
+    public District createDistrict(RoadNameAddress roadNameAddress){
+        City city = cityService.findOrCreate(roadNameAddress.getCity());
+        District district = District.builder().districtName(roadNameAddress.getDistrict()).build();
         city.addDistrict(district);
         return districtRepository.save(district);
     }

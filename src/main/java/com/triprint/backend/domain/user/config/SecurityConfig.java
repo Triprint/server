@@ -1,11 +1,9 @@
 package com.triprint.backend.domain.user.config;
 
-import com.triprint.backend.domain.user.config.jwt.CustomAuthenticationEntryPoint;
 import com.triprint.backend.domain.user.config.jwt.JwtRequestFilter;
 import com.triprint.backend.domain.user.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -52,9 +50,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         //수정해야할 부분!!
 //        http.authorizeRequests()
-//                .antMatchers("/auth/me")
-////                .antMatchers("/admin/**").hasRole("ADMIN")
-//                .authenticated()
+//                .antMatchers("/auth/me").authenticated() //인증을 어디서 진행하는 지 파악하는게 필요함.
+//                .antMatchers("/admin/**").hasRole("ADMIN")
 //                .anyRequest().permitAll()
 //                .and()
 //                .exceptionHandling();

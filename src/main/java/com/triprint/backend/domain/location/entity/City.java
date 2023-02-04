@@ -16,7 +16,7 @@ public class City { //시도 행정지역
             strategy = GenerationType.IDENTITY
     )
     private Long id;
-    private String cityName;
+    private String name;
 
     @OneToMany(
             mappedBy = "city", cascade = CascadeType.ALL
@@ -24,8 +24,8 @@ public class City { //시도 행정지역
     private List<District> district = new ArrayList();
 
     @Builder
-    public City(String cityName){
-        this.cityName = cityName;
+    public City(String name){
+        this.name = name;
     }
 
     public void addDistrict(District district) {
