@@ -6,9 +6,9 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.triprint.backend.domain.user.config.jwt.JwtProperties;
 import com.triprint.backend.domain.user.entity.User;
-import com.triprint.backend.domain.user.entity.UserDto;
 import com.triprint.backend.domain.user.dto.kakaoLoginDto.KakaoProfile;
 import com.triprint.backend.domain.user.dto.kakaoLoginDto.OauthToken;
+import com.triprint.backend.domain.user.dto.UserDto;
 import com.triprint.backend.domain.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 

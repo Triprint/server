@@ -1,35 +1,33 @@
-package com.triprint.backend.core.security.config;
+package com.triprint.backend.domain.auth.security.config;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Component
+@Getter
+@Service
 @ConfigurationProperties(prefix = "app")
 public class AppProperties {
     private final Auth auth = new Auth();
     private final OAuth2 oauth2 = new OAuth2();
 
+    @Getter
+    @Setter
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class Auth {
         private String tokenSecret;
-        private long tokenExpirationMsec;
+        private long tokenExpiration;
+        private long refreshTokenExpiry;
 
         public String getTokenSecret() {
             return tokenSecret;
-        }
-
-        public void setTokenSecret(String tokenSecret) {
-            this.tokenSecret = tokenSecret;
-        }
-
-        public long getTokenExpirationMsec() {
-            return tokenExpirationMsec;
-        }
-
-        public void setTokenExpirationMsec(long tokenExpirationMsec) {
-            this.tokenExpirationMsec = tokenExpirationMsec;
         }
     }
 

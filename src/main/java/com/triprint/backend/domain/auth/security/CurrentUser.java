@@ -1,4 +1,4 @@
-package com.triprint.backend.core.security;
+package com.triprint.backend.domain.auth.security;
 
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import java.lang.annotation.*;

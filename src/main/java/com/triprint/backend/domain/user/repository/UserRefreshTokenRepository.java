@@ -1,2 +1,11 @@
-package com.triprint.backend.domain.user.repository;public interface UserRefreshTokenRepository {
+package com.triprint.backend.domain.user.repository;
+
+import com.triprint.backend.domain.user.entity.UserRefreshToken;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+@Repository
+public interface UserRefreshTokenRepository extends JpaRepository<UserRefreshToken, Long> {
+    UserRefreshToken findByUserId(String userId);
+    UserRefreshToken findByUserIdAndRefreshToken(String userId, String refreshToken);
 }

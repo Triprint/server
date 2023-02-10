@@ -1,8 +1,8 @@
 package com.triprint.backend.domain.user.controller;
 
-import com.triprint.backend.domain.user.entity.UserDto;
 import com.triprint.backend.domain.user.dto.kakaoLoginDto.OauthToken;
 import com.triprint.backend.domain.user.dto.kakaoLoginDto.KakaoDto;
+import com.triprint.backend.domain.user.dto.UserDto;
 import com.triprint.backend.domain.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;

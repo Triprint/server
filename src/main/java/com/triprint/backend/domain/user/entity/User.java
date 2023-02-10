@@ -1,5 +1,7 @@
 package com.triprint.backend.domain.user.entity;
 
+import com.sun.istack.NotNull;
+import com.triprint.backend.domain.auth.security.oauth2.user.AuthProvider;
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.like.entity.Like;
@@ -11,15 +13,15 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.persistence.*;
 
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
 @Entity
 @Getter
+@Setter
 @NoArgsConstructor
+@AllArgsConstructor
 public class User {
     @Id
     @GeneratedValue(
@@ -35,6 +37,10 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     private UserRole role;
+
+    @Enumerated(EnumType.STRING)
+    @NotNull
+    private AuthProvider provider;
 
     private String profileImg;
 
@@ -88,12 +94,13 @@ public class User {
 
     @Builder
     public User(String kakaoId, String kakaoProfileImg, String kakaoNickname,
-                String kakaoEmail, UserRole userRole) {
+                String kakaoEmail, UserRole userRole, AuthProvider provider) {
 
         this.kakaoId = kakaoId;
         this.profileImg = kakaoProfileImg;
         this.username = kakaoNickname;;
         this.email = kakaoEmail;
+        this.provider = provider;
         this.role = userRole;
     }
 

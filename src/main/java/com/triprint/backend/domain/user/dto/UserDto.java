@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.user.entity;
+package com.triprint.backend.domain.user.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

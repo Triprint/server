@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.auth.security.oauth2;
+package com.triprint.backend.domain.auth.security.oauth2.user;
 
 import java.util.Map;
 
@@ -13,7 +13,7 @@ public abstract class OAuth2UserInfo {
         return attributes;
     }
 
-    public abstract String getId();
+    public abstract String getId(); //카카오 ID == providerID
 
     public abstract String getName();
 

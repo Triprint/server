@@ -1,64 +1,60 @@
-package com.triprint.backend.core.security;
+package com.triprint.backend.domain.auth.security;
 
-import com.triprint.backend.core.security.config.AppProperties;
-import io.jsonwebtoken.*;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.triprint.backend.domain.auth.security.oauth2.exception.TokenValidFailedException;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.stereotype.Service;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.User;
 
+import java.security.Key;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Date;
+import java.util.stream.Collectors;
 
-@Service
+@Slf4j
 public class TokenProvider {
 
-    private static final Logger logger = LoggerFactory.getLogger(TokenProvider.class);
+    private final Key key;
+    private static final String AUTHORITIES_KEY = "role";
 
-    private AppProperties appProperties;
-
-    public TokenProvider(AppProperties appProperties) {
-        this.appProperties = appProperties;
+    public TokenProvider(String secret) {
+        this.key = Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String createToken(Authentication authentication) {
-        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
-
-        Date now = new Date();
-        Date expiryDate = new Date(now.getTime() + appProperties.getAuth().getTokenExpirationMsec());
-
-        return Jwts.builder()
-                .setSubject(Long.toString(userPrincipal.getId()))
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
-                .signWith(SignatureAlgorithm.HS512, appProperties.getAuth().getTokenSecret())
-                .compact();
+    public AuthToken createAuthToken(Long id, Date expiry) {
+        return new AuthToken(id, expiry, key);
     }
 
-    public Long getUserIdFromToken(String token) {
-        Claims claims = Jwts.parser()
-                .setSigningKey(appProperties.getAuth().getTokenSecret())
-                .parseClaimsJws(token)
-                .getBody();
-
-        return Long.parseLong(claims.getSubject());
+    public AuthToken createAuthToken(Long id, String role, Date expiry) { //어떤 토큰인지 식별필요
+        return new AuthToken(id, role, expiry, key);
     }
 
-    public boolean validateToken(String authToken) {
-        try {
-            Jwts.parser().setSigningKey(appProperties.getAuth().getTokenSecret()).parseClaimsJws(authToken);
-            return true;
-        } catch (SignatureException ex) {
-            logger.error("Invalid JWT signature");
-        } catch (MalformedJwtException ex) {
-            logger.error("Invalid JWT token");
-        } catch (ExpiredJwtException ex) {
-            logger.error("Expired JWT token");
-        } catch (UnsupportedJwtException ex) {
-            logger.error("Unsupported JWT token");
-        } catch (IllegalArgumentException ex) {
-            logger.error("JWT claims string is empty.");
+    public AuthToken convertAuthToken(String token) {
+        return new AuthToken(token, key);
+    }
+
+    public Authentication getAuthentication(AuthToken authToken) {
+
+        if(authToken.validate()) {
+
+            Claims claims = authToken.getTokenClaims();
+            Collection<? extends GrantedAuthority> authorities =
+                    Arrays.stream(new String[]{claims.get(AUTHORITIES_KEY).toString()})
+                            .map(SimpleGrantedAuthority::new)
+                            .collect(Collectors.toList());
+
+            log.debug("claims subject := [{}]", claims.getSubject());
+            User principal = new User(claims.getSubject(), "", authorities);
+
+            return new UsernamePasswordAuthenticationToken(principal, authToken, authorities);
+        } else {
+            throw new TokenValidFailedException();
         }
-        return false;
     }
 
 }

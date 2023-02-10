@@ -1,4 +1,4 @@
-package com.triprint.backend.core.security.oauth2;
+package com.triprint.backend.domain.auth.security.oauth2;
 
 import com.nimbusds.oauth2.sdk.util.StringUtils;
 import com.triprint.backend.domain.user.util.CookieUtils;
@@ -13,6 +13,8 @@ import javax.servlet.http.HttpServletResponse;
 public class HttpCookieOAuth2AuthorizationRequestRepository implements AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
     public static final String OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME = "oauth2_auth_request";
     public static final String REDIRECT_URI_PARAM_COOKIE_NAME = "redirect_uri";
+    public final static String REFRESH_TOKEN = "refresh_token";
+
     private static final int cookieExpireSeconds = 180;
 
     @Override
@@ -27,6 +29,7 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
         if (authorizationRequest == null) {
             CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
             CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+            CookieUtils.deleteCookie(request, response, REFRESH_TOKEN);
             return;
         }
 
@@ -45,5 +48,6 @@ public class HttpCookieOAuth2AuthorizationRequestRepository implements Authoriza
     public void removeAuthorizationRequestCookies(HttpServletRequest request, HttpServletResponse response) {
         CookieUtils.deleteCookie(request, response, OAUTH2_AUTHORIZATION_REQUEST_COOKIE_NAME);
         CookieUtils.deleteCookie(request, response, REDIRECT_URI_PARAM_COOKIE_NAME);
+        CookieUtils.deleteCookie(request, response, REFRESH_TOKEN);
     }
 }
