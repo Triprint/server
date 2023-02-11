@@ -25,10 +25,6 @@ public class AppProperties {
         private String tokenSecret;
         private long tokenExpiration;
         private long refreshTokenExpiry;
-
-        public String getTokenSecret() {
-            return tokenSecret;
-        }
     }
 
     public static final class OAuth2 {
@@ -42,13 +38,5 @@ public class AppProperties {
             this.authorizedRedirectUris = authorizedRedirectUris;
             return this;
         }
-    }
-
-    public Auth getAuth() {
-        return auth;
-    }
-
-    public OAuth2 getOauth2() {
-        return oauth2;
     }
 }
