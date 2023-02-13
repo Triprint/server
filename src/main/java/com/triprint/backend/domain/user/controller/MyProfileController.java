@@ -25,7 +25,7 @@ public class MyProfileController {
 	private final MyProfileService myProfileService;
 
 	@GetMapping("/my/profile")
-	@PreAuthorize("hasRole('ROLE_ADMIN')")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileResponse> getMyProfile(@CurrentUser UserPrincipal userPrincipal) {
 		return ResponseEntity.ok(myProfileService.getMyProfile(userPrincipal.getId()));
 	}

@@ -1,17 +1,19 @@
 package com.triprint.backend.domain.user.service;
 
+import com.triprint.backend.domain.post.service.PostService;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.dto.UserDto;
 import com.triprint.backend.domain.user.repository.UserRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
-    @Autowired
-    UserRepository userRepository;
+    private final UserRepository userRepository;
 
     @Value("${spring.security.oauth2.client.registration.kakao.clientId}")
     String client_id;

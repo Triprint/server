@@ -9,7 +9,7 @@ import java.security.Key;
 import java.util.Date;
 
 @Slf4j
-@RequiredArgsConstructor
+@RequiredArgsConstructor //final로 지정된 매개변수들로
 public class AuthToken {
 
     @Getter
@@ -18,7 +18,7 @@ public class AuthToken {
 
     private static final String AUTHORITIES_KEY = "role";
 
-    AuthToken(Long id, Date expiry, Key key) {
+    AuthToken(Long id, Date expiry, Key key) {        //Refresh Token
         this.key = key;
         this.token = createAuthToken(id, expiry);
     }
