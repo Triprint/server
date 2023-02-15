@@ -73,7 +73,9 @@ cors:
 app:
   auth:
     tokenSecret: ${TOKEN_SECRET}
+    refreshTokenSecret: ${REFRESH_TOKEN_SECRET}
     tokenExpiration: ${EXPIRATION_TIME}
+    refreshTokenExpiration: ${REFRESH_EXPIRATION_TIME}
   cors:
     allowedOrigins: ${FRONT_URL},http://localhost:8080
   oauth2:

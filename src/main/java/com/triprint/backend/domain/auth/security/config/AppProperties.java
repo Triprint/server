@@ -27,8 +27,9 @@ public class AppProperties {
     @AllArgsConstructor
     public static class Auth {
         private String tokenSecret;
+        private String refreshTokenSecret;
         private long tokenExpiration;
-        private long refreshTokenExpiry;
+        private long refreshTokenExpiration;
     }
 
     public static final class OAuth2 {

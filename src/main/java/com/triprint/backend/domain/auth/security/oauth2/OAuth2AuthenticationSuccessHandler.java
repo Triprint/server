@@ -25,6 +25,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -70,7 +71,7 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
         UserPrincipal userPrincipal =  (UserPrincipal) authentication.getPrincipal();
 //        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, userPrincipal.getAttributes());
-//        Collection<? extends GrantedAuthority> authorities = ((OidcUser) authentication.getPrincipal()).getAuthorities();
+        Collection<? extends GrantedAuthority> authorities = ((UserPrincipal) authentication.getPrincipal()).getAuthorities();
 
         UserRole roleType = hasAuthority(userPrincipal.getAuthorities(), UserRole.ADMIN.getCode()) ? UserRole.ADMIN : UserRole.USER;
 
@@ -81,25 +82,24 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
                 new Date(now.getTime() + appProperties.getAuth().getTokenExpiration())
         );
 
-        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiry();
+        long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiration();
 
-//        AuthToken refreshToken = tokenProvider.createAuthToken(
-//                appProperties.getAuth().getTokenSecret(),
-//                new Date(now.getTime() + refreshTokenExpiry)
-//        );
+        AuthToken refreshToken = tokenProvider.createAuthToken(
+                userPrincipal.getId(),
+                new Date(now.getTime() + refreshTokenExpiry)
+        );
 
-//        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userInfo.getId());
-//        if (userRefreshToken != null) {
-//            userRefreshToken.setRefreshToken(refreshToken.getToken());
-//        } else {
-//            userRefreshToken = new UserRefreshToken(userInfo.getId(), refreshToken.getToken());
-//            userRefreshTokenRepository.saveAndFlush(userRefreshToken);
-//        }
-//
-//        int cookieMaxAge = (int) refreshTokenExpiry / 60;
-//
-//        CookieUtils.deleteCookie(request, response, REFRESH_TOKEN);
-//        CookieUtils.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userPrincipal.getId().toString());
+        if (userRefreshToken != null) {
+            userRefreshToken.setRefreshToken(refreshToken.getToken());
+        } else {
+            userRefreshToken = new UserRefreshToken(userPrincipal.getId().toString(), refreshToken.getToken());
+        }
+        userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+
+        int cookieMaxAge = (int) refreshTokenExpiry / 1000;
+        CookieUtils.deleteCookie(request, response, REFRESH_TOKEN);
+        CookieUtils.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
         return UriComponentsBuilder.fromUriString(targetUrl)
                 .queryParam("token", accessToken.getToken())

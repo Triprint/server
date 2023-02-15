@@ -28,6 +28,7 @@ public class AuthToken {
         this.token = createAuthToken(id, role, expiry);
     }
 
+    //Refresh
     private String createAuthToken(Long id, Date expiry) {
         return Jwts.builder()
                 .setSubject(id.toString())
@@ -36,6 +37,7 @@ public class AuthToken {
                 .compact();
     }
 
+    //Access
     private String createAuthToken(Long id, String role, Date expiry) {
         return Jwts.builder()
                 .setSubject(id.toString())
