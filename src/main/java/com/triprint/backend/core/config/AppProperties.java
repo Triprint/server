@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.auth.security.config;
+package com.triprint.backend.core.config;
 
 import com.triprint.backend.domain.auth.security.TokenProvider;
 import lombok.AllArgsConstructor;

@@ -3,10 +3,8 @@ package com.triprint.backend.domain.auth.security.oauth2;
 import com.triprint.backend.domain.auth.security.AuthToken;
 import com.triprint.backend.domain.auth.security.TokenProvider;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.auth.security.config.AppProperties;
+import com.triprint.backend.core.config.AppProperties;
 import com.triprint.backend.domain.auth.security.oauth2.user.AuthProvider;
-import com.triprint.backend.domain.auth.security.oauth2.user.OAuth2UserInfo;
-import com.triprint.backend.domain.auth.security.oauth2.user.OAuth2UserInfoFactory;
 import com.triprint.backend.domain.user.entity.UserRefreshToken;
 import com.triprint.backend.domain.user.repository.UserRefreshTokenRepository;
 import com.triprint.backend.domain.user.status.UserRole;
@@ -15,7 +13,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
-import org.springframework.security.oauth2.core.oidc.user.OidcUser;
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -25,7 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.net.URI;
-import java.text.SimpleDateFormat;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Optional;
@@ -70,7 +66,6 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         AuthProvider providerType = AuthProvider.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
 
         UserPrincipal userPrincipal =  (UserPrincipal) authentication.getPrincipal();
-//        OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, userPrincipal.getAttributes());
         Collection<? extends GrantedAuthority> authorities = ((UserPrincipal) authentication.getPrincipal()).getAuthorities();
 
         UserRole roleType = hasAuthority(userPrincipal.getAuthorities(), UserRole.ADMIN.getCode()) ? UserRole.ADMIN : UserRole.USER;
@@ -83,13 +78,12 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         );
 
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiration();
-
         AuthToken refreshToken = tokenProvider.createAuthToken(
                 userPrincipal.getId(),
                 new Date(now.getTime() + refreshTokenExpiry)
         );
 
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userPrincipal.getId().toString());
+        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userPrincipal.getId().toString()); //repo => tokenService로 분리! (도메인 위주 분리는 어떻게 하면 좋을까 찾아보기)
         if (userRefreshToken != null) {
             userRefreshToken.setRefreshToken(refreshToken.getToken());
         } else {

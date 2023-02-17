@@ -1,6 +1,6 @@
 package com.triprint.backend.domain.auth.security.config;
 
-import antlr.Token;
+import com.triprint.backend.core.config.AppProperties;
 import com.triprint.backend.domain.auth.security.CustomUserDetailsService;
 import com.triprint.backend.domain.auth.security.RestAuthenticationEntryPoint;
 import com.triprint.backend.domain.auth.security.TokenAuthenticationFilter;
@@ -11,7 +11,6 @@ import com.triprint.backend.domain.auth.security.oauth2.HttpCookieOAuth2Authoriz
 import com.triprint.backend.domain.auth.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.triprint.backend.domain.auth.security.oauth2.OAuth2AuthenticationSuccessHandler;
 import com.triprint.backend.domain.user.repository.UserRefreshTokenRepository;
-import com.triprint.backend.domain.user.status.UserRole;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -34,7 +33,7 @@ import java.util.Arrays;
 @EnableWebSecurity
 @RequiredArgsConstructor
 @EnableGlobalMethodSecurity(securedEnabled = true, prePostEnabled = true)
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+public class SecurityConfig extends WebSecurityConfigurerAdapter { // 변경 필요해요~
 
     private final CorsProperties corsProperties;
     private final AppProperties appProperties;

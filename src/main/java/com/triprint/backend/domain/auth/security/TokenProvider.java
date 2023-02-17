@@ -1,6 +1,6 @@
 package com.triprint.backend.domain.auth.security;
 
-import com.triprint.backend.domain.auth.security.config.AppProperties;
+import com.triprint.backend.core.config.AppProperties;
 import com.triprint.backend.domain.auth.security.oauth2.exception.TokenValidFailedException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
