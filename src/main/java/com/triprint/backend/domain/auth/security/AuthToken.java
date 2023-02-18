@@ -19,33 +19,39 @@ public class AuthToken {
     private static final String AUTHORITIES_KEY = "role";
 
     //Refresh Token
-    AuthToken(Long id, Date expiry, Key key) {
+    AuthToken(Long id, Long expiry, Key key) {
         this.key = key;
         this.token = createAuthToken(id, expiry);
     }
 
     //Access Token
-    AuthToken(Long id, String role, Date expiry, Key key) {
+    AuthToken(Long id, String role, Long expiry, Key key) {
         this.key = key;
         this.token = createAuthToken(id, role, expiry);
     }
 
     //Refresh
-    private String createAuthToken(Long id, Date expiry) {
+    private String createAuthToken(Long id, Long expirationMs) {
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + expirationMs);
         return Jwts.builder()
                 .setSubject(id.toString())
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(expiry)
+                .setExpiration(expirationDate)
+                .setIssuedAt(now)
                 .compact();
     }
 
     //Access
-    private String createAuthToken(Long id, String role, Date expiry) {
+    private String createAuthToken(Long id, String role, Long expirationMs) {
+        Date now = new Date();
+        Date expirationDate = new Date(now.getTime() + expirationMs);
         return Jwts.builder()
                 .setSubject(id.toString())
                 .claim(AUTHORITIES_KEY, role)
                 .signWith(key, SignatureAlgorithm.HS512)
-                .setExpiration(expiry)
+                .setExpiration(expirationDate)
+                .setIssuedAt(now)
                 .compact();
     }
 

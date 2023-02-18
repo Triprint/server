@@ -10,6 +10,8 @@ import com.triprint.backend.domain.auth.security.oauth2.CustomOAuth2UserService;
 import com.triprint.backend.domain.auth.security.oauth2.HttpCookieOAuth2AuthorizationRequestRepository;
 import com.triprint.backend.domain.auth.security.oauth2.OAuth2AuthenticationFailureHandler;
 import com.triprint.backend.domain.auth.security.oauth2.OAuth2AuthenticationSuccessHandler;
+import com.triprint.backend.domain.auth.security.service.AuthService;
+import com.triprint.backend.domain.auth.security.service.RefreshTokenService;
 import com.triprint.backend.domain.user.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -40,7 +42,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 변경 필
     private final CustomUserDetailsService userDetailsService;
     private final CustomOAuth2UserService oAuth2UserService;
     private final TokenAccessDeniedHandler tokenAccessDeniedHandler;
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
 
     @Bean
     public TokenProvider tokenProvider(){
@@ -79,7 +81,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter { // 변경 필
         return new OAuth2AuthenticationSuccessHandler(
                 tokenProvider(),
                 appProperties,
-                userRefreshTokenRepository,
+                refreshTokenService,
                 cookieAuthorizationRequestRepository()
         );
     }

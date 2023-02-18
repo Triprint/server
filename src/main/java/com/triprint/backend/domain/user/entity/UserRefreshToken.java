@@ -2,19 +2,15 @@ package com.triprint.backend.domain.user.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 
+@Entity
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "USER_REFRESH_TOKEN")
 public class UserRefreshToken {
     @JsonIgnore
     @Id
@@ -22,15 +18,13 @@ public class UserRefreshToken {
     private Long refreshTokenSeq;
 
     @NotNull
-    private String userId;
+    private Long userId;
 
     @NotNull
     private String refreshToken;
 
-    public UserRefreshToken(
-            @NotNull String userId,
-            @NotNull String refreshToken
-    ) {
+    @Builder
+    public UserRefreshToken(@NotNull Long userId, @NotNull String refreshToken) {
         this.userId = userId;
         this.refreshToken = refreshToken;
     }

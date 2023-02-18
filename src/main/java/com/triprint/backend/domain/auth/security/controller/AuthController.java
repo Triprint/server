@@ -12,11 +12,11 @@ import javax.servlet.http.HttpServletResponse;
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
-    private final AuthService tokenService;
+    private final AuthService authService;
 
     @GetMapping("/refresh")
     public ApiResponse refreshToken (HttpServletRequest request, HttpServletResponse response){
-        return tokenService.refresh(request, response);
+        return authService.refresh(request, response);
     }
-    
+
 }

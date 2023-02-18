@@ -5,11 +5,14 @@ import com.triprint.backend.domain.auth.security.TokenProvider;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.core.config.AppProperties;
 import com.triprint.backend.domain.auth.security.oauth2.user.AuthProvider;
+import com.triprint.backend.domain.auth.security.service.AuthService;
+import com.triprint.backend.domain.auth.security.service.RefreshTokenService;
 import com.triprint.backend.domain.user.entity.UserRefreshToken;
 import com.triprint.backend.domain.user.repository.UserRefreshTokenRepository;
 import com.triprint.backend.domain.user.status.UserRole;
 import com.triprint.backend.domain.user.util.CookieUtils;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -36,12 +39,15 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
 
     private final TokenProvider tokenProvider;
     private final AppProperties appProperties;
-    private final UserRefreshTokenRepository userRefreshTokenRepository;
+    private final RefreshTokenService refreshTokenService;
     private final HttpCookieOAuth2AuthorizationRequestRepository httpCookieOAuth2AuthorizationRequestRepository;
+
+
 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException, ServletException {
-        String targetUrl = determineTargetUrl(request, response, authentication);
+        String targetUrl = getTargetUrl(request);
+        String accessToken = this.createTokenAndCookie(request, response, authentication).getToken();
 
         if (response.isCommitted()) {
             logger.debug("Response has already been committed. Unable to redirect to " + targetUrl);
@@ -49,10 +55,16 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
         }
 
         clearAuthenticationAttributes(request, response);
-        getRedirectStrategy().sendRedirect(request, response, targetUrl);
+        getRedirectStrategy().sendRedirect(request, response, this.determineTargetUrl(targetUrl, accessToken));
     }
 
-    protected String determineTargetUrl(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
+    protected String determineTargetUrl(String targetUrl, String accessToken) {
+        return UriComponentsBuilder.fromUriString(targetUrl)
+                .queryParam("token", accessToken)
+                .build().toUriString();
+    }
+
+    private String getTargetUrl(HttpServletRequest request){
         Optional<String> redirectUri = CookieUtils.getCookie(request, REDIRECT_URI_PARAM_COOKIE_NAME)
                 .map(Cookie::getValue);
 
@@ -60,44 +72,31 @@ public class OAuth2AuthenticationSuccessHandler extends SimpleUrlAuthenticationS
             throw new IllegalArgumentException("Sorry! We've got an Unauthorized Redirect URI and can't proceed with the authentication");
         }
 
-        String targetUrl = redirectUri.orElse(getDefaultTargetUrl());
+        return redirectUri.orElse(getDefaultTargetUrl());
+    }
 
-        OAuth2AuthenticationToken authToken = (OAuth2AuthenticationToken) authentication;
-        AuthProvider providerType = AuthProvider.valueOf(authToken.getAuthorizedClientRegistrationId().toUpperCase());
-
-        UserPrincipal userPrincipal =  (UserPrincipal) authentication.getPrincipal();
-        Collection<? extends GrantedAuthority> authorities = ((UserPrincipal) authentication.getPrincipal()).getAuthorities();
-
+    private AuthToken createTokenAndCookie(HttpServletRequest request, HttpServletResponse response, Authentication authentication){
+        UserPrincipal userPrincipal = (UserPrincipal) authentication.getPrincipal();
         UserRole roleType = hasAuthority(userPrincipal.getAuthorities(), UserRole.ADMIN.getCode()) ? UserRole.ADMIN : UserRole.USER;
 
-        Date now = new Date();
-        AuthToken accessToken = tokenProvider.createAuthToken(
-                userPrincipal.getId(),
-                roleType.getCode(),
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiration())
+        Long userId = userPrincipal.getId();
+        AuthToken accessToken = tokenProvider.createAccessToken(
+                userId,
+                roleType.getCode()
         );
 
         long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiration();
-        AuthToken refreshToken = tokenProvider.createAuthToken(
-                userPrincipal.getId(),
-                new Date(now.getTime() + refreshTokenExpiry)
+        AuthToken refreshToken = tokenProvider.createRefreshToken(
+                userId
         );
 
-        UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserId(userPrincipal.getId().toString()); //repo => tokenService로 분리! (도메인 위주 분리는 어떻게 하면 좋을까 찾아보기)
-        if (userRefreshToken != null) {
-            userRefreshToken.setRefreshToken(refreshToken.getToken());
-        } else {
-            userRefreshToken = new UserRefreshToken(userPrincipal.getId().toString(), refreshToken.getToken());
-        }
-        userRefreshTokenRepository.saveAndFlush(userRefreshToken);
+        refreshTokenService.findOrCreate(userId, refreshToken.getToken());
 
         int cookieMaxAge = (int) refreshTokenExpiry / 1000;
         CookieUtils.deleteCookie(request, response, REFRESH_TOKEN);
         CookieUtils.addCookie(response, REFRESH_TOKEN, refreshToken.getToken(), cookieMaxAge);
 
-        return UriComponentsBuilder.fromUriString(targetUrl)
-                .queryParam("token", accessToken.getToken())
-                .build().toUriString();
+        return accessToken;
     }
 
     protected void clearAuthenticationAttributes(HttpServletRequest request, HttpServletResponse response) {

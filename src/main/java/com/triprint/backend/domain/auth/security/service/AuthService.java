@@ -35,7 +35,7 @@ public class AuthService {
             return ApiResponse.notExpiredTokenYet();
         }
 
-        String userId = claims.getSubject();
+        Long userId = Long.parseLong(claims.getSubject());
         UserRole userRole = UserRole.of(claims.get("role", String.class));
 
         String refreshToken = CookieUtils.getCookie(request, "refresh_token")
@@ -53,19 +53,17 @@ public class AuthService {
         }
 
         Date now = new Date();
-        AuthToken newAccessToken = tokenProvider.createAuthToken(
-                Long.parseLong(userId),
-                userRole.getCode(),
-                new Date(now.getTime() + appProperties.getAuth().getTokenExpiration())
+        AuthToken newAccessToken = tokenProvider.createAccessToken(
+                userId,
+                userRole.getCode()
         );
 
         long validTime = authRefreshToken.getTokenClaims().getExpiration().getTime() - now.getTime();
 
         if (validTime <= 259200000) {
             long refreshTokenExpiry = appProperties.getAuth().getRefreshTokenExpiration();
-            authRefreshToken = tokenProvider.createAuthToken(
-                    Long.parseLong(userId),
-                    new Date(now.getTime() + refreshTokenExpiry)
+            authRefreshToken = tokenProvider.createRefreshToken(
+                    userId
             );
             userRefreshToken.setRefreshToken(authRefreshToken.getToken());
             userRefreshTokenRepository.saveAndFlush(userRefreshToken); //DB에 update쿼리 날리는 게 더 좋아보임 => 찾아보기

@@ -28,12 +28,12 @@ public class TokenProvider {
         this.appProperties = appProperties;
     }
 
-    public AuthToken createAuthToken(Long id, Date expiry) {
-        return new AuthToken(id, expiry, refreshKey);
+    public AuthToken createRefreshToken(Long id) {
+        return new AuthToken(id, appProperties.getAuth().getRefreshTokenExpiration(), refreshKey);
     }
 
-    public AuthToken createAuthToken(Long id, String role, Date expiry) { //Access Token
-        return new AuthToken(id, role, expiry, key);
+    public AuthToken createAccessToken(Long id, String role) {
+        return new AuthToken(id, role, appProperties.getAuth().getTokenExpiration(), key);
     }
 
     public AuthToken convertAuthToken(String token) {
@@ -43,7 +43,6 @@ public class TokenProvider {
     public AuthToken convertRefreshToken(String token) {
         return new AuthToken(token, refreshKey);
     }
-
 
     public UsernamePasswordAuthenticationToken getAuthentication(AuthToken authToken) {
 
