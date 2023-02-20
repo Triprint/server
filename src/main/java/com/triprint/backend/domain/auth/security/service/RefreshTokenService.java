@@ -1,7 +1,7 @@
 package com.triprint.backend.domain.auth.security.service;
 
-import com.triprint.backend.domain.user.entity.UserRefreshToken;
-import com.triprint.backend.domain.user.repository.UserRefreshTokenRepository;
+import com.triprint.backend.domain.auth.security.entity.UserRefreshToken;
+import com.triprint.backend.domain.auth.security.repository.UserRefreshTokenRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

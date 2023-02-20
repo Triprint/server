@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.user.entity;
+package com.triprint.backend.domain.auth.security.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sun.istack.NotNull;
