@@ -4,8 +4,8 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class BadRequestException extends ServiceException{
-    public BadRequestException(String message){
+public class ForbiddenException extends ServiceException{
+    public ForbiddenException(String message){
         super(HttpStatus.FORBIDDEN, message);
     }
 }

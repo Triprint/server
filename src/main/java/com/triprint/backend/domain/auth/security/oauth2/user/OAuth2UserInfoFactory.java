@@ -1,7 +1,5 @@
 package com.triprint.backend.domain.auth.security.oauth2.user;
 
-import com.triprint.backend.core.exception.OAuth2AuthenticationProcessingException;
-
 import java.util.Map;
 
 public class OAuth2UserInfoFactory {

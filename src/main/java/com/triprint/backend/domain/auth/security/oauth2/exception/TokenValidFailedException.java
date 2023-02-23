@@ -1,12 +1,11 @@
 package com.triprint.backend.domain.auth.security.oauth2.exception;
 
-public class TokenValidFailedException extends RuntimeException {
+import com.triprint.backend.core.exception.ServiceException;
+import org.springframework.http.HttpStatus;
 
-    public TokenValidFailedException() {
-        super("Failed to generate Token.");
-    }
+public class TokenValidFailedException extends ServiceException {
 
-    private TokenValidFailedException(String message) {
-        super(message);
+    public TokenValidFailedException(String message) {
+        super(HttpStatus.UNAUTHORIZED, message);
     }
 }

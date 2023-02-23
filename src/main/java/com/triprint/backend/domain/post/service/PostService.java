@@ -1,5 +1,8 @@
 package com.triprint.backend.domain.post.service;
 
+import com.triprint.backend.core.exception.ForbiddenException;
+import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
@@ -23,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -36,9 +40,8 @@ public class PostService {
     private final TouristAttractionService touristAttractionService;
 
     @Transactional
-    public Long create(HttpServletRequest request, CreatePostDto createPostDto, List<MultipartFile> images) throws Exception {
-        Long userId = (Long) request.getAttribute("userId");
-        User author = userService.findById(userId);
+    public Long create(Long authorId, CreatePostDto createPostDto, List<MultipartFile> images) throws Exception {
+        User author = userService.findById(authorId);
 
         TouristAttraction touristAttraction = touristAttractionService.findOrCreate(createPostDto.getTouristAttraction());
         Post post = Post.builder()
@@ -58,7 +61,7 @@ public class PostService {
     @Transactional
     public ReadPostDto getPost(Long postId) {
         Post post = postRepository.findById(postId).orElseThrow(() -> {
-            throw new RuntimeException("해당하는 게시물이 존재하지 않습니다."); });
+            throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다."); });
         ArrayList<String> images = new ArrayList<>();
         ArrayList<String> hashtags = new ArrayList<>();
 
@@ -90,7 +93,7 @@ public class PostService {
     @Transactional
     public Long updatePost(Long id, UpdatePostDto updatePostDto, HttpServletRequest request, List<MultipartFile> images) throws Exception {
         Post post = postRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("해당 게시물이 없습니다."); });
+            throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다."); });
         Long userId = (Long) request.getAttribute("userId");
         validateIsAuthor(post.getAuthor().getId(),userId);
 
@@ -109,7 +112,7 @@ public class PostService {
     @Transactional
     public void deletePost(Long id, HttpServletRequest request){
         Post post = postRepository.findById(id).orElseThrow(() -> {
-            throw new RuntimeException("해당 게시물이 없습니다."); });
+            throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다."); });
         Long userId = (Long) request.getAttribute("userId");
         validateIsAuthor(post.getAuthor().getId(), userId);
         postRepository.delete(post);
@@ -133,7 +136,7 @@ public class PostService {
 
     private void validateIsAuthor(Long postAuthor, Long currentUserId) {
         if (!currentUserId.equals(postAuthor)) {
-            throw new RuntimeException("작성자가 아니므로 수정할 권한이 없습니다.");
+            throw new ForbiddenException("작성자가 아니므로 수정할 권한이 없습니다.");
         }
     }
 

@@ -1,13 +1,18 @@
 package com.triprint.backend.core.exception;
 
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
+
+import java.util.Date;
 
 @Getter
-@RequiredArgsConstructor
 public class ErrorResponse {
+	private Date timestamp;
+	private String message;
+	private String description;
 
-	private final String code;
-	private final String message;
-
+	public ErrorResponse(Date timestamp, String message, String description) {
+		this.timestamp = timestamp;
+		this.message = message;
+		this.description = description;
+	}
 }

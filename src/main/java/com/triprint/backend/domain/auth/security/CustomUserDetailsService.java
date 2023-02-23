@@ -22,7 +22,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByKakaoId(username);
         if (user == null) {
-            throw new UsernameNotFoundException("Can not find username.");
+            throw new UsernameNotFoundException("해당하는 사용자 이름을 찾을 수 없습니다.");
         }
         return UserPrincipal.create(user);
     }
@@ -30,7 +30,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Transactional
     public UserPrincipal loadUserById(Long id){
         User user = userRepository.findById(id).orElseThrow(
-                () -> new ResourceNotFoundException("User", "id", id));
+                () -> new ResourceNotFoundException("해당하는 id가 존재하지 않습니다."));
         return UserPrincipal.create(user);
     }
 }

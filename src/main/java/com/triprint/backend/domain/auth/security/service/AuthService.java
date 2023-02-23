@@ -2,15 +2,18 @@ package com.triprint.backend.domain.auth.security.service;
 
 import com.triprint.backend.domain.auth.security.AuthToken;
 import com.triprint.backend.domain.auth.security.TokenProvider;
-import com.triprint.backend.domain.auth.security.common.ApiResponse;
 import com.triprint.backend.core.config.AppProperties;
 import com.triprint.backend.domain.auth.security.entity.UserRefreshToken;
+import com.triprint.backend.domain.auth.security.oauth2.exception.InvalidRefreshToken;
+import com.triprint.backend.domain.auth.security.oauth2.exception.NotExpiredTokenYet;
 import com.triprint.backend.domain.auth.security.repository.UserRefreshTokenRepository;
 import com.triprint.backend.domain.user.status.UserRole;
 import com.triprint.backend.domain.user.util.CookieUtils;
 import com.triprint.backend.domain.user.util.HeaderUtil;
 import io.jsonwebtoken.Claims;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.Cookie;
@@ -26,13 +29,13 @@ public class AuthService {
     private final AppProperties appProperties;
     private final UserRefreshTokenRepository userRefreshTokenRepository;
 
-    public ApiResponse refresh(HttpServletRequest request, HttpServletResponse response) {
+    public String refresh(HttpServletRequest request, HttpServletResponse response) {
         String accessToken = HeaderUtil.getAccessToken(request);
         AuthToken authToken = tokenProvider.convertAuthToken(accessToken);
 
         Claims claims = authToken.getExpiredTokenClaims();
         if (claims == null) {
-            return ApiResponse.notExpiredTokenYet();
+            throw new NotExpiredTokenYet("아직 만료되지 않은 토큰입니다.");
         }
 
         Long userId = Long.parseLong(claims.getSubject());
@@ -44,12 +47,12 @@ public class AuthService {
         AuthToken authRefreshToken = tokenProvider.convertRefreshToken(refreshToken);
 
         if (!authRefreshToken.validate()) {
-            return ApiResponse.invalidRefreshToken();
+            throw new InvalidRefreshToken("유효하지 않은 RefreshToken입니다.");
         }
 
         UserRefreshToken userRefreshToken = userRefreshTokenRepository.findByUserIdAndRefreshToken(userId, refreshToken);
         if (userRefreshToken == null) {
-            return ApiResponse.invalidRefreshToken();
+            throw new InvalidRefreshToken("해당 사용자는 RefreshToken이 존재하지 않습니다.");
         }
 
         Date now = new Date();
@@ -73,7 +76,7 @@ public class AuthService {
             CookieUtils.addCookie(response, "refresh_token", authRefreshToken.getToken(), cookieMaxAge);
         }
 
-        return ApiResponse.success("token", newAccessToken.getToken());
+        return newAccessToken.getToken();
     }
 }
 

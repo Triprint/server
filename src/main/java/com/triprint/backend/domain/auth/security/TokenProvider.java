@@ -55,7 +55,7 @@ public class TokenProvider {
 
             return new UsernamePasswordAuthenticationToken(principal, authToken, principal.getAuthorities());
         } else {
-            throw new TokenValidFailedException();
+            throw new TokenValidFailedException("인증되지 않은 토큰입니다.");
         }
     }
 
