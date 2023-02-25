@@ -61,8 +61,19 @@ cloud:
     s3:
       bucket: ${BUCKET_NAME}
 
-token:
-  secret-key: ${TOKEN_SECRET}
-  expiration-time: ${EXPIRATION_TIME}
+cors:
+  allowed-origins: ${FRONT_URL}
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: '*'
+  max-age: 3600
 
-
+app:
+  auth:
+    tokenSecret: ${TOKEN_SECRET}
+    refreshTokenSecret: ${REFRESH_TOKEN_SECRET}
+    tokenExpiration: ${EXPIRATION_TIME}
+    refreshTokenExpiration: ${REFRESH_EXPIRATION_TIME}
+  cors:
+    allowedOrigins: ${FRONT_URL},http://localhost:8080
+  oauth2:
+    authorizedRedirectUris: ${FRONT_URL}

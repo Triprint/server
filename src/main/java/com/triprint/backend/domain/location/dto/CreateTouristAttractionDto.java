@@ -12,7 +12,7 @@ import org.springframework.lang.NonNull;
 @AllArgsConstructor
 public class CreateTouristAttractionDto {
     @NonNull
-    private Double x, y;
+    private String x, y;
 
     @NonNull
     private String roadNameAddress;

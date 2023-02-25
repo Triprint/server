@@ -1,5 +1,7 @@
 package com.triprint.backend.domain.user.controller;
 
+import com.triprint.backend.domain.auth.security.CurrentUser;
+import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileRequest;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
@@ -8,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -22,8 +25,9 @@ public class MyProfileController {
 	private final MyProfileService myProfileService;
 
 	@GetMapping("/my/profile")
-	ResponseEntity<MyProfileResponse> getMyProfile(HttpServletRequest request) {
-		return new ResponseEntity<>(myProfileService.getMyProfile((Long)request.getAttribute("userId")), HttpStatus.OK);
+	@PreAuthorize("hasRole('ROLE_USER')")
+	ResponseEntity<MyProfileResponse> getMyProfile(@CurrentUser UserPrincipal userPrincipal) {
+		return ResponseEntity.ok(myProfileService.getMyProfile(userPrincipal.getId()));
 	}
 
 	@PutMapping("/my/profile")
