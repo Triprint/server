@@ -61,9 +61,6 @@ cloud:
     s3:
       bucket: ${BUCKET_NAME}
 
-jwt:
-  secret: ${JWT_SECRET}
-
 cors:
   allowed-origins: ${FRONT_URL}
   allowed-methods: GET,POST,PUT,DELETE,OPTIONS

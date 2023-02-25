@@ -41,7 +41,7 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
         AuthProvider providerType = AuthProvider.valueOf(userRequest.getClientRegistration().getRegistrationId().toUpperCase());
 
         OAuth2UserInfo userInfo = OAuth2UserInfoFactory.getOAuth2UserInfo(providerType, user.getAttributes());
-        User savedUser = userRepository.findByKakaoId(userInfo.getId());
+        User savedUser = userRepository.findByProviderId(userInfo.getId());
 
         if (savedUser != null) {
             if (providerType != savedUser.getProvider()) {

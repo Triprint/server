@@ -5,8 +5,8 @@ import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
 @Getter
-public class NotExpiredTokenYet extends ServiceException {
-    public NotExpiredTokenYet(String message) {
+public class InvalidRefreshTokenException extends ServiceException {
+    public InvalidRefreshTokenException(String message) {
         super(HttpStatus.BAD_REQUEST, message);
     }
 }

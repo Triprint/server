@@ -53,10 +53,8 @@ public class TouristAttractionService {
     }
 
     @Transactional
-    public TouristAttraction updateTouristAttraction(CreateTouristAttractionDto updateTouristAttractionDto){
+    public TouristAttraction updateTouristAttraction(CreateTouristAttractionDto updateTouristAttractionDto) {
         TouristAttraction updateTouristAttraction = this.findOrCreate(updateTouristAttractionDto);
         return updateTouristAttraction;
     }
-
-
 }

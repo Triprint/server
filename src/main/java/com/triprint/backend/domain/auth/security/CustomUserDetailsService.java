@@ -20,7 +20,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = userRepository.findByKakaoId(username);
+        User user = userRepository.findByProviderId(username);
         if (user == null) {
             throw new UsernameNotFoundException("해당하는 사용자 이름을 찾을 수 없습니다.");
         }

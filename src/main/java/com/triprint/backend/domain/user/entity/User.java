@@ -50,8 +50,8 @@ public class User {
     @LastModifiedDate
     private Timestamp updatedAt;
 
-    @Column(name = "kakao_id")
-    private String kakaoId;
+    @Column(name = "providerId")
+    private String providerId;
 
     @OneToMany(
             mappedBy = "author"
@@ -93,10 +93,10 @@ public class User {
     public List<User> children;
 
     @Builder
-    public User(String kakaoId, String kakaoProfileImg, String kakaoNickname,
+    public User(String providerId, String kakaoProfileImg, String kakaoNickname,
                 String kakaoEmail, UserRole userRole, AuthProvider provider) {
 
-        this.kakaoId = kakaoId;
+        this.providerId = providerId;
         this.profileImg = kakaoProfileImg;
         this.username = kakaoNickname;;
         this.email = kakaoEmail;
