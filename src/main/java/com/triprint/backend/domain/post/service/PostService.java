@@ -1,8 +1,8 @@
 package com.triprint.backend.domain.post.service;
 
+import com.triprint.backend.core.exception.BadRequestException;
 import com.triprint.backend.core.exception.ForbiddenException;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
-import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
@@ -26,7 +26,6 @@ import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -41,6 +40,10 @@ public class PostService {
 
     @Transactional
     public Long create(Long authorId, CreatePostDto createPostDto, List<MultipartFile> images) throws Exception {
+
+        if(images.size() > 10) {
+            throw new BadRequestException("이미지 개수가 올바르지 않습니다. 다시 확인해주세요!");
+        }
         User author = userService.findById(authorId);
 
         TouristAttraction touristAttraction = touristAttractionService.findOrCreate(createPostDto.getTouristAttraction());
@@ -92,6 +95,11 @@ public class PostService {
 
     @Transactional
     public Long updatePost(Long id, UpdatePostDto updatePostDto, HttpServletRequest request, List<MultipartFile> images) throws Exception {
+
+        if(images.size() + updatePostDto.getExistentImages().size() > 10) {
+            throw new BadRequestException("이미지 개수가 올바르지 않습니다. 다시 확인해주세요!");
+        }
+
         Post post = postRepository.findById(id).orElseThrow(() -> {
             throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다."); });
         Long userId = (Long) request.getAttribute("userId");
@@ -101,11 +109,12 @@ public class PostService {
         TouristAttraction updateTouristAttraction = touristAttractionService.updateTouristAttraction(updatePostDto.getTouristAttraction());
         updateImages = imageService.updateImage(updateImages, images, post);
 
-        post.setImages(updateImages); // 이미지 갯수 제한
+        post.setImages(updateImages);
         post.setTitle(updatePostDto.getTitle());
         post.setContents(updatePostDto.getContents());
         post.setTouristAttraction(updateTouristAttraction);
         post.setPostHashtag(hashtagService.updatePostHashtag(updatePostDto.getHashtag(),post));
+
         return post.getId();
     }
 

@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.lang.Nullable;
 import lombok.Builder;
 import lombok.Getter;
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -28,6 +28,6 @@ public class ReadPostDto {
     private List<String> hashtags = new ArrayList<>();
     private Timestamp createdAt;
     private Timestamp updatedAt;
-    @NonNull
+    @NotNull
     private ReadTouristAttractionDto touristAttraction;
 }

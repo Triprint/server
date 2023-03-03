@@ -5,11 +5,9 @@
 
 package com.triprint.backend.domain.hashtag.entity;
 
-import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.post.entity.PostHashtag;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 import javax.persistence.*;
 
 import lombok.Builder;

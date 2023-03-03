@@ -8,11 +8,9 @@ import java.util.Date;
 public class ErrorResponse {
     private Date timestamp;
     private String message;
-    private String description;
 
-    public ErrorResponse(Date timestamp, String message, String description) {
+    public ErrorResponse(Date timestamp, String message) {
         this.timestamp = timestamp;
         this.message = message;
-        this.description = description;
     }
 }

@@ -59,16 +59,16 @@ public class CustomOAuth2UserService extends DefaultOAuth2UserService {
     }
 
     private User createUser(OAuth2UserInfo userInfo, AuthProvider providerType) {
-        User user = new User(
-                userInfo.getId(),
-                userInfo.getImageUrl(),
-                userInfo.getName(),
-                userInfo.getEmail(),
-                UserRole.USER,
-                providerType
-        );
+        User user = User.builder()
+                .providerId(userInfo.getId())
+                .profileImg(userInfo.getImageUrl())
+                .username(userInfo.getName())
+                .email(userInfo.getEmail())
+                .provider(providerType)
+                .userRole(UserRole.USER)
+                .build();
 
-        return userRepository.saveAndFlush(user);
+        return userRepository.save(user);
     }
 
     private User updateUser(User user, OAuth2UserInfo userInfo) {

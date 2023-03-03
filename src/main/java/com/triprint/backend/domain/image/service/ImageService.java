@@ -6,6 +6,7 @@ import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.user.service.AwsS3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class ImageService {
     private final AwsS3Service awsS3Service;
     private final ImageRepository imageRepository;
 
-    public void createImage(List<MultipartFile> images, Post post){
+    public void createImage(@Validated List<MultipartFile> images, Post post){
         images.forEach((img) -> {
             String image = awsS3Service.uploadFile("posts", img);
             post.addImage(imageRepository.save(Image.builder().path(image).build()));
