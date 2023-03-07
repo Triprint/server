@@ -5,24 +5,39 @@
 
 package com.triprint.backend.domain.post.entity;
 
+import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
-
-import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import javax.persistence.*;
-import javax.validation.constraints.Size;
-
 import com.triprint.backend.domain.user.entity.User;
-import lombok.*;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Entity
 @Getter
@@ -36,12 +51,12 @@ public class Post {
 	)
 	private Long id;
 
-	@Column(nullable = true, length = 50)
-	@Size(min = 0, max = 50)
+	@Column(length = 50)
+	@Size(max = 50)
 	private String title;
 
-	@Column(nullable = true, length = 255)
-	@Size(min = 0, max = 500)
+	@Column(length = 2000)
+	@Size(max = 2000)
 	private String contents;
 
 	@CreatedDate
@@ -76,30 +91,30 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<Comment> comments = new ArrayList();
+	private List<Comment> comments = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "post", orphanRemoval = true
 	)
-	private List<PostHashtag> postHashtag = new ArrayList();
+	private List<PostHashtag> postHashtag = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<Bookmark> bookmarks = new ArrayList();
+	private List<Bookmark> bookmarks = new ArrayList<>();
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<Like> likes = new ArrayList();
+	private List<Like> likes = new ArrayList<>();
 
 	@OneToMany(
-			mappedBy = "post", cascade = CascadeType.ALL
+		mappedBy = "post", cascade = CascadeType.ALL
 	)
 
 	@Column(nullable = false, length = 10)
 	@Size(min = 1, max = 10)
-	private List<Image> images = new ArrayList();
+	private List<Image> images = new ArrayList<>();
 
 	@Builder
-	public Post(User author, String title, String contents, TouristAttraction touristAttraction){
+	public Post(User author, String title, String contents, TouristAttraction touristAttraction) {
 		this.author = author;
 		this.title = title;
 		this.contents = contents;
@@ -111,20 +126,21 @@ public class Post {
 	}
 
 	public void addImage(Image image) {
-		if (!this.images.contains(image)){
+		if (!this.images.contains(image)) {
 			this.images.add(image);
 			image.setPost(this);
 		}
-		if (!image.hasPost()){
+		if (!image.hasPost()) {
 			image.setPost(this);
 		}
 	}
 
-	public void setTouristAttraction(TouristAttraction touristAttraction){
+	public void setTouristAttraction(TouristAttraction touristAttraction) {
 		this.touristAttraction = touristAttraction;
 
-		if(!touristAttraction.getPosts().contains(this))
+		if (!touristAttraction.getPosts().contains(this)) {
 			touristAttraction.getPosts().add(this);
+		}
 	}
 
 	public boolean hasTouristAttraction() {
