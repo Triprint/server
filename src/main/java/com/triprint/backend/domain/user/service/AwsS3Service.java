@@ -24,7 +24,7 @@ public class AwsS3Service {
 	private final AmazonS3Client amazonS3Client;
 
 	@Value("${cloud.aws.s3.bucket}")
-	private final String bucketName;
+	private String bucketName;
 
 	public String uploadFile(String category, MultipartFile multipartFile) {
 		validateFileExists(multipartFile);
