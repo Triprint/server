@@ -93,13 +93,12 @@ public class User {
     public List<User> children;
 
     @Builder
-    public User(String providerId, String kakaoProfileImg, String kakaoNickname,
-                String kakaoEmail, UserRole userRole, AuthProvider provider) {
-
+    public User(String providerId, String profileImg, String username,
+                String email, UserRole userRole, AuthProvider provider) {
         this.providerId = providerId;
-        this.profileImg = kakaoProfileImg;
-        this.username = kakaoNickname;;
-        this.email = kakaoEmail;
+        this.profileImg = profileImg;
+        this.username = username;
+        this.email = email;
         this.provider = provider;
         this.role = userRole;
     }

@@ -16,8 +16,9 @@ spring:
     database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
   servlet:
     multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
+      max-file-size: 5MB
+      max-request-size: 120MB
+      enabled: true
 
   # Security OAuth
   security:

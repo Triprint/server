@@ -5,12 +5,13 @@
 
 package com.triprint.backend.domain.image.entity;
 
-import com.sun.istack.NotNull;
+import javax.validation.constraints.NotNull;
 import com.triprint.backend.domain.post.entity.Post;
 import java.sql.Timestamp;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -47,6 +48,7 @@ public class Image {
 	private Post post;
 
 	@Builder
+	@Size(min = 1, max = 10)
 	public Image(String path){
 		this.path = path;
 	}

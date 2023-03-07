@@ -13,7 +13,7 @@ public abstract class OAuth2UserInfo {
         return attributes;
     }
 
-    public abstract String getId(); //카카오 ID == providerID
+    public abstract String getId();
 
     public abstract String getName();
 

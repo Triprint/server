@@ -16,15 +16,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 import com.triprint.backend.domain.user.entity.User;
 import lombok.*;
-import org.locationtech.jts.geom.Point;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 @Entity
 @Getter
@@ -38,10 +36,12 @@ public class Post {
 	)
 	private Long id;
 
-	@Column(nullable = true)
+	@Column(nullable = true, length = 50)
+	@Size(min = 0, max = 50)
 	private String title;
 
-	@Column(nullable = true)
+	@Column(nullable = true, length = 255)
+	@Size(min = 0, max = 500)
 	private String contents;
 
 	@CreatedDate
@@ -93,7 +93,9 @@ public class Post {
 	@OneToMany(
 			mappedBy = "post", cascade = CascadeType.ALL
 	)
-	@NonNull
+
+	@Column(nullable = false, length = 10)
+	@Size(min = 1, max = 10)
 	private List<Image> images = new ArrayList();
 
 	@Builder

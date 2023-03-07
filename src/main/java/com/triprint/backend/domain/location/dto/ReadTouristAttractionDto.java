@@ -4,19 +4,19 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 @Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
 public class ReadTouristAttractionDto {
-    @NonNull
+    @NotNull
     private Double x, y;
 
-    @NonNull
+    @NotNull
     private String roadNameAddress;
 
-    @NonNull
+    @NotNull
     private String name;
 }

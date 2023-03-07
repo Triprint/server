@@ -31,11 +31,13 @@ public class MyProfileController {
 	}
 
 	@PutMapping("/my/profile")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileResponse> updateMyProfile(HttpServletRequest request, @RequestBody MyProfileRequest myProfileRequest) {
 		return ResponseEntity.ok(myProfileService.updateMyProfile((Long)request.getAttribute("userId"), myProfileRequest.getUsername()));
 	}
 
 	@PutMapping("/my/profile-img")
+	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileImgResponse> updateMyProfileImg(
 		HttpServletRequest request,
 		@RequestPart(value = "file") MultipartFile multipartFile
