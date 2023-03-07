@@ -1,20 +1,20 @@
 package com.triprint.backend.core.exception;
 
-import lombok.Getter;
-import org.springframework.http.HttpStatus;
+import java.util.Date;
+
 import org.springframework.validation.BindingResult;
 
-import java.util.Date;
+import lombok.Getter;
 
 @Getter
 public class ValidationErrorException {
-    public ErrorResponse makeValidationErrorException(BindingResult bindingResult){
-        Date timestamp = new Date();
-        String message = "";
+	public ErrorResponse makeValidationErrorException(BindingResult bindingResult) {
+		Date timestamp = new Date();
+		String message = "";
 
-        if (bindingResult.hasErrors()){
-            message = bindingResult.getFieldError().getDefaultMessage();
-        }
-        return new ErrorResponse(timestamp, message);
-    }
+		if (bindingResult.hasErrors()) {
+			message = bindingResult.getFieldError().getDefaultMessage();
+		}
+		return new ErrorResponse(timestamp, message);
+	}
 }

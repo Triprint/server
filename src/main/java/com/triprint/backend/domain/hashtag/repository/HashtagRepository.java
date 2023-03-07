@@ -1,11 +1,11 @@
 package com.triprint.backend.domain.hashtag.repository;
 
-import com.triprint.backend.domain.hashtag.entity.Hashtag;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.repository.query.Param;
-
 import java.util.Optional;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import com.triprint.backend.domain.hashtag.entity.Hashtag;
+
 public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
-    Optional<Hashtag> findBycontents(String hashtag);
+	Optional<Hashtag> findByContents(String hashtag);
 }

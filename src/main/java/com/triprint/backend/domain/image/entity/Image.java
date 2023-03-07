@@ -5,20 +5,29 @@
 
 package com.triprint.backend.domain.image.entity;
 
-import javax.validation.constraints.NotNull;
-import com.triprint.backend.domain.post.entity.Post;
 import java.sql.Timestamp;
-import java.util.List;
 import java.util.Objects;
-import javax.persistence.*;
+
+import javax.persistence.Entity;
+import javax.persistence.EntityListeners;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+
+import com.triprint.backend.domain.post.entity.Post;
 
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.CreatedDate;
-import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 @Entity
 @Getter
@@ -27,9 +36,10 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 public class Image {
 	@Id
 	@GeneratedValue(
-			strategy = GenerationType.IDENTITY
+		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
+
 	@NotNull
 	private String path;
 
@@ -40,31 +50,28 @@ public class Image {
 	private Timestamp updatedAt;
 
 	@ManyToOne(
-			fetch = FetchType.LAZY
+		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-			name = "post_id"
+		name = "post_id"
 	)
 	private Post post;
 
 	@Builder
 	@Size(min = 1, max = 10)
-	public Image(String path){
+	public Image(String path) {
 		this.path = path;
 	}
 
-	public void setPost(Post post){
+	public void setPost(Post post) {
 		this.post = post;
 
-		if(!post.getImages().contains(this))
+		if (!post.getImages().contains(this)) {
 			post.getImages().add(this);
+		}
 	}
 
 	public boolean hasPost() {
 		return Objects.nonNull(this.post);
-	}
-
-	public boolean isContainsOf(List<Long> imageIds) {
-		return imageIds.contains(this.getId());
 	}
 }

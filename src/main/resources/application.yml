@@ -47,7 +47,7 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
   org.springframework.web: trace
-#  org.apache: trace
+  #  org.apache: trace
   org.hibernate.type: trace
 
 cloud:
