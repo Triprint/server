@@ -1,13 +1,15 @@
 package com.triprint.backend.domain.user.service;
 
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.repository.UserRepository;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 @Service
 @RequiredArgsConstructor
@@ -53,17 +55,13 @@ public class MyProfileService {
 			throw new RuntimeException("email 에 해당하는 member 가 존재하지 않습니다.");
 		});
 
-		String profileImg = "";
-
 		try {
-			profileImg = awsS3Service.uploadFile("profiles", multipartFile);
+			String profileImg = awsS3Service.uploadFile("profiles", multipartFile);
+			user.editProfileImg(profileImg);
+			return MyProfileImgResponse.builder().profileImg(profileImg).build();
 		} catch (Exception e) {
 			throw new RuntimeException("이미지 파일이 정상적으로 업로드되지 않았습니다.");
 		}
-
-		user.editProfileImg(profileImg);
-
-		return MyProfileImgResponse.builder().profileImg(profileImg).build();
 	}
 
 	@Transactional

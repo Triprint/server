@@ -1,13 +1,15 @@
 package com.triprint.backend.core.exception;
 
+import org.springframework.http.HttpStatus;
+
 import lombok.Getter;
 
 @Getter
-public class ServiceException extends RuntimeException{
-	private final ErrorCode errorCode;
+public class ServiceException extends RuntimeException {
+	private final HttpStatus httpStatus;
 
-	protected ServiceException(ErrorCode errorCode) {
-		super(errorCode.getMessage());
-		this.errorCode = errorCode;
+	public ServiceException(HttpStatus httpStatus, String message) {
+		super(message);
+		this.httpStatus = httpStatus;
 	}
 }
