@@ -6,29 +6,29 @@ import java.util.List;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.sun.istack.Nullable;
-import com.triprint.backend.domain.location.dto.CreateTouristAttractionDto;
+import org.springframework.lang.Nullable;
+
+import com.triprint.backend.domain.location.dto.CreateTouristAttractionRequest;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 
 @Getter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString
-public class UpdatePostDto {
+public class CreatePostRequest {
 	@Nullable
 	@Size(max = 50)
 	private String title;
+
 	@Nullable
 	@Size(max = 500)
-	private String contents;
-	@Nullable
+	private String content;
+
 	private List<String> hashtag = new ArrayList<>();
-	@Nullable
-	private List<String> existentImages = new ArrayList<>();
 	@NotNull
-	private CreateTouristAttractionDto touristAttraction;
+	private CreateTouristAttractionRequest touristAttraction;
 }

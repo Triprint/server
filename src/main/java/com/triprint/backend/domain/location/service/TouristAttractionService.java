@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.triprint.backend.core.exception.BadRequestException;
-import com.triprint.backend.domain.location.dto.CreateTouristAttractionDto;
+import com.triprint.backend.domain.location.dto.CreateTouristAttractionRequest;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.repository.TouristAttractionRepository;
@@ -22,24 +22,24 @@ public class TouristAttractionService {
 	private final DistrictService districtService;
 
 	@Transactional
-	public TouristAttraction findOrCreate(CreateTouristAttractionDto createTouristAttractionDto) {
+	public TouristAttraction findOrCreate(CreateTouristAttractionRequest createTouristAttractionRequest) {
 		return touristAttractionRepository.findByName(
-				createTouristAttractionDto.getName())
-			.orElseGet(() -> this.createTouristAttraction(createTouristAttractionDto));
+				createTouristAttractionRequest.getName())
+			.orElseGet(() -> this.createTouristAttraction(createTouristAttractionRequest));
 	}
 
 	@Transactional
-	public TouristAttraction createTouristAttraction(CreateTouristAttractionDto createTouristAttractionDto) {
+	public TouristAttraction createTouristAttraction(CreateTouristAttractionRequest createTouristAttractionRequest) {
 		try {
-			String x = createTouristAttractionDto.getX();
-			String y = createTouristAttractionDto.getY();
+			String x = createTouristAttractionRequest.getX();
+			String y = createTouristAttractionRequest.getY();
 			String pointWkt = String.format("POINT(%s %s)", x, y);
 			Point point = (Point)new WKTReader().read(pointWkt);
-			District district = districtService.findOrCreate(createTouristAttractionDto.getRoadNameAddress());
+			District district = districtService.findOrCreate(createTouristAttractionRequest.getRoadNameAddress());
 			TouristAttraction touristAttraction = TouristAttraction.builder()
 				.latitudeLongitude(point)
-				.name(createTouristAttractionDto.getName())
-				.roadNameAddress(createTouristAttractionDto.getRoadNameAddress())
+				.name(createTouristAttractionRequest.getName())
+				.roadNameAddress(createTouristAttractionRequest.getRoadNameAddress())
 				.build();
 			district.addTouristAttraction(touristAttraction);
 
@@ -50,7 +50,7 @@ public class TouristAttractionService {
 	}
 
 	@Transactional
-	public TouristAttraction updateTouristAttraction(CreateTouristAttractionDto updateTouristAttractionDto) {
+	public TouristAttraction updateTouristAttraction(CreateTouristAttractionRequest updateTouristAttractionDto) {
 		return this.findOrCreate(updateTouristAttractionDto);
 	}
 }

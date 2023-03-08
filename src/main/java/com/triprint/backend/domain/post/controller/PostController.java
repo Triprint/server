@@ -27,9 +27,10 @@ import com.triprint.backend.core.valid.ValidFileFormat;
 import com.triprint.backend.core.valid.ValidFileSize;
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.post.dto.CreatePostDto;
-import com.triprint.backend.domain.post.dto.PostListDto;
-import com.triprint.backend.domain.post.dto.UpdatePostDto;
+import com.triprint.backend.domain.post.dto.CreatePostRequest;
+import com.triprint.backend.domain.post.dto.GetPostResponse;
+import com.triprint.backend.domain.post.dto.PostResponse;
+import com.triprint.backend.domain.post.dto.UpdatePostRequest;
 import com.triprint.backend.domain.post.service.PostService;
 
 import lombok.RequiredArgsConstructor;
@@ -43,13 +44,13 @@ public class PostController {
 	private final PostService postService;
 
 	@GetMapping()
-	public ResponseEntity<Page<PostListDto>> getPostList(
+	public ResponseEntity<Page<GetPostResponse>> getPostList(
 		@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable page) {
 		return ResponseEntity.ok(postService.getPostList(page));
 	}
 
 	@GetMapping("/like")
-	public ResponseEntity<Page<PostListDto>> getLikePostList(HttpServletRequest request,
+	public ResponseEntity<Page<GetPostResponse>> getLikePostList(HttpServletRequest request,
 		@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable page) {
 		Long userId = (Long)request.getAttribute("userId");
 
@@ -58,26 +59,27 @@ public class PostController {
 
 	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<Long> createPost(@Valid @RequestPart(value = "data") CreatePostDto createPostDto,
+	public ResponseEntity<PostResponse> createPost(
+		@Valid @RequestPart(value = "data") CreatePostRequest createPostRequest,
 		@ValidFileFormat(format = {"image/jpeg",
 			"image/png"}) @ValidFileSize(maxSize = 1024) @RequestPart(value = "images") List<MultipartFile> images,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return new ResponseEntity<>(postService.create(userPrincipal.getId(), createPostDto, images),
+		return new ResponseEntity<>(postService.create(userPrincipal.getId(), createPostRequest, images),
 			HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity readPost(@PathVariable Long id) {
+	public ResponseEntity<GetPostResponse> getPost(@PathVariable Long id) {
 		return new ResponseEntity<>(postService.getPost(id), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity updatePost(@PathVariable Long id,
-		@RequestPart(value = "data") @Valid UpdatePostDto postUpdateRequestDto, HttpServletRequest request,
+	public ResponseEntity<PostResponse> updatePost(@PathVariable Long id,
+		@RequestPart(value = "data") @Valid UpdatePostRequest postUpdateRequest, HttpServletRequest request,
 		@RequestPart(value = "images") List<MultipartFile> images) {
-		return new ResponseEntity<>(postService.updatePost(id, postUpdateRequestDto, request, images), HttpStatus.OK);
+		return new ResponseEntity<>(postService.updatePost(id, postUpdateRequest, request, images), HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
