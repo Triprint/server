@@ -45,7 +45,8 @@ public class PostController {
 
 	@GetMapping()
 	public ResponseEntity<Page<GetPostResponse>> getPostList(
-		@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable page) {
+		@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable page,
+		@CurrentUser UserPrincipal userPrincipal) {
 		return ResponseEntity.ok(postService.getPostList(page));
 	}
 

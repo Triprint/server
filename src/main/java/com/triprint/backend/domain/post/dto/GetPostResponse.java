@@ -7,16 +7,18 @@ import java.util.stream.Collectors;
 
 import com.triprint.backend.domain.location.dto.GetTouristAttractionResponse;
 import com.triprint.backend.domain.post.entity.Post;
+import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
 
 import lombok.Getter;
 
 @Getter
 public class GetPostResponse {
 	private Long id;
-	private String author;
+	private AuthorInfoResponse author;
 	private String title;
 	private String contents;
 	private Integer likes;
+	private Boolean isLike;
 	private List<String> images = new ArrayList<>();
 	private List<String> hashtags = new ArrayList<>();
 	private Timestamp createdAt;
@@ -32,7 +34,7 @@ public class GetPostResponse {
 				Collectors.toList());
 
 		this.id = post.getId();
-		this.author = post.getAuthor().getUsername();
+		this.author = new AuthorInfoResponse(post.getAuthor());
 		this.title = post.getTitle();
 		this.contents = post.getContents();
 		this.touristAttraction = new GetTouristAttractionResponse(post.getTouristAttraction());

@@ -44,18 +44,17 @@ public class PostService {
 	private final HashtagService hashtagService;
 	private final TouristAttractionService touristAttractionService;
 
-	public Page<GetPostResponse> getPostList(Pageable page) {
+	public Page<GetPostResponse> getPostList(Pageable page) { // Pageable 내부가 어떤 식으로 되어 있는지
 
 		Page<Post> posts = postRepository.findAll(page);
-
 		return posts.map(GetPostResponse::new);
 	}
 
 	public Page<GetPostResponse> getLikePostList(Long userId, Pageable page) {
 
-		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("일치하는 user 가 없습니다."));
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
 		Page<Post> posts = postRepository.findByLikeUser(user, page);
-
 		return posts.map(GetPostResponse::new);
 	}
 
