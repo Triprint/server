@@ -5,8 +5,8 @@
 
 package com.triprint.backend.domain.comment.entity;
 
-import com.triprint.backend.domain.post.entity.Post;
 import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -15,7 +15,9 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.user.entity.User;
+
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 

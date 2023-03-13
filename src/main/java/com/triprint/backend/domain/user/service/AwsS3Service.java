@@ -1,16 +1,20 @@
 package com.triprint.backend.domain.user.service;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Objects;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+
 import com.amazonaws.services.s3.AmazonS3Client;
 import com.amazonaws.services.s3.model.CannedAccessControlList;
 import com.amazonaws.services.s3.model.ObjectMetadata;
 import com.amazonaws.services.s3.model.PutObjectRequest;
-import java.io.IOException;
-import java.io.InputStream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,7 +29,8 @@ public class AwsS3Service {
 	public String uploadFile(String category, MultipartFile multipartFile) {
 		validateFileExists(multipartFile);
 
-		String fileName = CommonUtils.buildFileName(category, multipartFile.getOriginalFilename());
+		String fileName = CommonUtils.buildFileName(category,
+			Objects.requireNonNull(multipartFile.getOriginalFilename()));
 
 		ObjectMetadata objectMetadata = new ObjectMetadata();
 		objectMetadata.setContentType(multipartFile.getContentType());

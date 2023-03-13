@@ -4,17 +4,21 @@ spring:
     url: ${DB_URL}
     username: ${DB_NAME}
     password: ${DB_PASSWORD}
-
+    hikari:
+      maximum-pool-size: 3
   jpa:
     hibernate:
-      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
         format_sql: true
+    database: mysql
+    database-platform: org.hibernate.spatial.dialect.mysql.MySQL56InnoDBSpatialDialect
   servlet:
     multipart:
-      max-file-size: 20MB
-      max-request-size: 20MB
+      max-file-size: 5MB
+      max-request-size: 120MB
+      enabled: true
 
   # Security OAuth
   security:
@@ -26,7 +30,7 @@ spring:
             clientSecret: ${CLIENT_SECRET}
             clientAuthenticationMethod: post
             authorizationGrantType: authorization_code
-            redirectUri: "http://localhost:3000/auth/sign-in"
+            redirectUri: ${REDIRECT_URI}
             scope:
               - profile_nickname
               - profile_image
@@ -43,7 +47,7 @@ spring:
 logging.level:
   org.hibernate.SQL: debug
   org.springframework.web: trace
-#  org.apache: trace
+  #  org.apache: trace
   org.hibernate.type: trace
 
 cloud:
@@ -57,3 +61,20 @@ cloud:
       auto: false
     s3:
       bucket: ${BUCKET_NAME}
+
+cors:
+  allowed-origins: ${FRONT_URL}
+  allowed-methods: GET,POST,PUT,DELETE,OPTIONS
+  allowed-headers: '*'
+  max-age: 3600
+
+app:
+  auth:
+    tokenSecret: ${TOKEN_SECRET}
+    refreshTokenSecret: ${REFRESH_TOKEN_SECRET}
+    tokenExpiration: ${EXPIRATION_TIME}
+    refreshTokenExpiration: ${REFRESH_EXPIRATION_TIME}
+  cors:
+    allowedOrigins: ${FRONT_URL},http://localhost:8080
+  oauth2:
+    authorizedRedirectUris: ${FRONT_URL}
