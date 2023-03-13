@@ -47,15 +47,14 @@ public class PostController {
 	public ResponseEntity<Page<GetPostResponse>> getPostList(
 		@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable page,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return ResponseEntity.ok(postService.getPostList(page));
+		return ResponseEntity.ok(postService.getPostList(page)); //로그인 X => null
 	}
 
 	@GetMapping("/like")
-	public ResponseEntity<Page<GetPostResponse>> getLikePostList(HttpServletRequest request,
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<Page<GetPostResponse>> getLikePostList(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(size = 10, sort = "id", direction = Direction.DESC) Pageable page) {
-		Long userId = (Long)request.getAttribute("userId");
-
-		return ResponseEntity.ok(postService.getLikePostList(userId, page));
+		return ResponseEntity.ok(postService.getLikePostList(userPrincipal.getId(), page));
 	}
 
 	@PostMapping()
