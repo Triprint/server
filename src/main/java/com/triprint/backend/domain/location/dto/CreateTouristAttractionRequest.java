@@ -11,12 +11,10 @@ import lombok.NoArgsConstructor;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class ReadTouristAttractionDto {
-	@SuppressWarnings("checkstyle:MemberName")
+public class CreateTouristAttractionRequest {
 	@NotNull
 	private String x;
 
-	@SuppressWarnings("checkstyle:MemberName")
 	@NotNull
 	private String y;
 

@@ -25,6 +25,7 @@ public class MyProfileService {
 		});
 
 		return MyProfileResponse.builder()
+			.id(memberId)
 			.email(user.getEmail())
 			.username(user.getUsername())
 			.profileImg(user.getProfileImg())
@@ -43,6 +44,7 @@ public class MyProfileService {
 		}
 
 		return MyProfileResponse.builder()
+			.id(userId)
 			.email(user.getEmail())
 			.username(user.getUsername())
 			.profileImg(user.getProfileImg())

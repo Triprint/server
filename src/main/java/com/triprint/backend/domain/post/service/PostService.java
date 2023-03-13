@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -16,16 +18,16 @@ import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
 import com.triprint.backend.domain.image.service.ImageService;
-import com.triprint.backend.domain.location.dto.ReadTouristAttractionDto;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
-import com.triprint.backend.domain.post.dto.CreatePostDto;
-import com.triprint.backend.domain.post.dto.ReadPostDto;
-import com.triprint.backend.domain.post.dto.UpdatePostDto;
+import com.triprint.backend.domain.post.dto.CreatePostRequest;
+import com.triprint.backend.domain.post.dto.GetPostResponse;
+import com.triprint.backend.domain.post.dto.PostResponse;
+import com.triprint.backend.domain.post.dto.UpdatePostRequest;
 import com.triprint.backend.domain.post.entity.Post;
-import com.triprint.backend.domain.post.entity.PostHashtag;
 import com.triprint.backend.domain.post.repository.PostRepository;
 import com.triprint.backend.domain.user.entity.User;
+import com.triprint.backend.domain.user.repository.UserRepository;
 import com.triprint.backend.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -35,72 +37,63 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
 
 	private final PostRepository postRepository;
+	private final UserRepository userRepository;
 	private final ImageRepository imageRepository;
 	private final UserService userService;
 	private final ImageService imageService;
 	private final HashtagService hashtagService;
 	private final TouristAttractionService touristAttractionService;
 
+	public Page<GetPostResponse> getPostList(Pageable page) {
+		Page<Post> posts = postRepository.findAll(page);
+		return posts.map(GetPostResponse::new);
+	}
+
+	public Page<GetPostResponse> getLikePostList(Long userId, Pageable page) {
+
+		User user = userRepository.findById(userId)
+			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
+		Page<Post> posts = postRepository.findByLikeUser(user, page);
+		return posts.map(GetPostResponse::new);
+	}
+
 	@Transactional
-	public Long create(Long authorId, CreatePostDto createPostDto, List<MultipartFile> images) {
+	public PostResponse create(Long authorId, CreatePostRequest createPostRequest, List<MultipartFile> images) {
 		if (images.size() > 10) {
 			throw new BadRequestException("이미지 개수가 올바르지 않습니다. 다시 확인해주세요!");
 		}
 		User author = userService.findById(authorId);
 
 		TouristAttraction touristAttraction = touristAttractionService.findOrCreate(
-			createPostDto.getTouristAttraction());
+			createPostRequest.getTouristAttraction());
 		Post post = Post.builder()
 			.author(author)
-			.title(createPostDto.getTitle())
-			.contents(createPostDto.getContent())
+			.title(createPostRequest.getTitle())
+			.contents(createPostRequest.getContent())
 			.touristAttraction(touristAttraction)
 			.build();
 		imageService.createImage(images, post);
 		touristAttraction.addPost(post);
 		Post createdPost = postRepository.save(post);
-		assert createPostDto.getHashtag() != null;
-		hashtagService.createPosthashtag(createdPost, createPostDto.getHashtag());
-		return createdPost.getId();
+		assert createPostRequest.getHashtag() != null;
+		hashtagService.createPosthashtag(createdPost, createPostRequest.getHashtag());
+		return PostResponse.builder()
+			.id(createdPost.getId())
+			.build();
 	}
 
 	@Transactional
-	public ReadPostDto getPost(Long postId) {
+	public GetPostResponse getPost(Long postId) {
 		Post post = postRepository.findById(postId).orElseThrow(() -> {
 			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
 		});
-		ArrayList<String> images = new ArrayList<>();
-		ArrayList<String> hashtags = new ArrayList<>();
-
-		for (Image img : post.getImages()) {
-			images.add(img.getPath());
-		}
-
-		for (PostHashtag hashtag : post.getPostHashtag()) {
-			hashtags.add(hashtag.getHashtag().getContents());
-		}
-
-		ReadTouristAttractionDto readTouristAttractionDto = ReadTouristAttractionDto.builder()
-			.x(String.valueOf(post.getTouristAttraction().getLatitudeLongitude().getY()))
-			.y(String.valueOf(post.getTouristAttraction().getLatitudeLongitude().getX()))
-			.roadNameAddress(post.getTouristAttraction().getRoadNameAddress())
-			.name(post.getTouristAttraction().getName())
-			.build();
-
-		return ReadPostDto.builder()
-			.authorName(post.getAuthor().getUsername())
-			.title(post.getTitle())
-			.content(post.getContents())
-			.hashtags(hashtags)
-			.touristAttraction(readTouristAttractionDto)
-			.createdAt(post.getCreatedAt())
-			.images(images).build();
+		return new GetPostResponse(post);
 	}
 
 	@Transactional
-	public Long updatePost(Long id, UpdatePostDto updatePostDto, HttpServletRequest request,
+	public PostResponse updatePost(Long id, UpdatePostRequest updatePostRequest, HttpServletRequest request,
 		List<MultipartFile> images) {
-		if (images.size() + updatePostDto.getExistentImages().size() > 10) {
+		if (images.size() + updatePostRequest.getExistentImages().size() > 10) {
 			throw new BadRequestException("이미지 개수가 올바르지 않습니다. 다시 확인해주세요!");
 		}
 
@@ -110,18 +103,20 @@ public class PostService {
 		Long userId = (Long)request.getAttribute("userId");
 		validateIsAuthor(post.getAuthor().getId(), userId);
 
-		List<Image> updateImages = updatePostImages(updatePostDto, post);
+		List<Image> updateImages = updatePostImages(updatePostRequest, post);
 		TouristAttraction updateTouristAttraction = touristAttractionService.updateTouristAttraction(
-			updatePostDto.getTouristAttraction());
+			updatePostRequest.getTouristAttraction());
 		updateImages = imageService.updateImage(updateImages, images, post);
 
 		post.setImages(updateImages);
-		post.setTitle(updatePostDto.getTitle());
-		post.setContents(updatePostDto.getContents());
+		post.setTitle(updatePostRequest.getTitle());
+		post.setContents(updatePostRequest.getContents());
 		post.setTouristAttraction(updateTouristAttraction);
-		post.setPostHashtag(hashtagService.updatePostHashtag(updatePostDto.getHashtag(), post));
+		post.setPostHashtag(hashtagService.updatePostHashtag(updatePostRequest.getHashtag(), post));
 
-		return post.getId();
+		return PostResponse.builder()
+			.id(post.getId())
+			.build();
 	}
 
 	@Transactional
@@ -134,8 +129,8 @@ public class PostService {
 		postRepository.delete(post);
 	}
 
-	private List<Image> updatePostImages(UpdatePostDto updatePostDto, Post post) {
-		List<String> newImages = updatePostDto.getExistentImages();
+	private List<Image> updatePostImages(UpdatePostRequest updatePostRequest, Post post) {
+		List<String> newImages = updatePostRequest.getExistentImages();
 		List<Image> existentImages = post.getImages();
 		List<Image> updateImages = new ArrayList<>();
 
@@ -155,5 +150,4 @@ public class PostService {
 			throw new ForbiddenException("작성자가 아니므로 수정할 권한이 없습니다.");
 		}
 	}
-
 }

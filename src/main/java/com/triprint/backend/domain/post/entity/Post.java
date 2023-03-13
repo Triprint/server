@@ -88,18 +88,22 @@ public class Post {
 		name = "touristAttraction_id", nullable = false
 	)
 	private TouristAttraction touristAttraction;
+
 	@OneToMany(
 		mappedBy = "post"
 	)
 	private List<Comment> comments = new ArrayList<>();
+
 	@OneToMany(
 		mappedBy = "post", orphanRemoval = true
 	)
 	private List<PostHashtag> postHashtag = new ArrayList<>();
+
 	@OneToMany(
 		mappedBy = "post"
 	)
 	private List<Bookmark> bookmarks = new ArrayList<>();
+
 	@OneToMany(
 		mappedBy = "post"
 	)
@@ -108,7 +112,6 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post", cascade = CascadeType.ALL
 	)
-
 	@Column(nullable = false, length = 10)
 	@Size(min = 1, max = 10)
 	private List<Image> images = new ArrayList<>();
