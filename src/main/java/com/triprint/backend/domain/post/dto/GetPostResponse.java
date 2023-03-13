@@ -1,7 +1,6 @@
 package com.triprint.backend.domain.post.dto;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -19,8 +18,8 @@ public class GetPostResponse {
 	private String contents;
 	private Integer likes;
 	private Boolean isLike;
-	private List<String> images = new ArrayList<>();
-	private List<String> hashtags = new ArrayList<>();
+	private List<String> images;
+	private List<String> hashtags;
 	private Timestamp createdAt;
 	private Timestamp updatedAt;
 	private GetTouristAttractionResponse touristAttraction;
