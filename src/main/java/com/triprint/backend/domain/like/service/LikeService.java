@@ -29,7 +29,7 @@ public class LikeService {
 		Post post = postRepository.findById(postId)
 			.orElseThrow(() -> new RuntimeException("일치하는 post 가 없습니다."));
 
-		Like like = likeRepository.getUserIdAndPostId(userId, postId)
+		Like like = likeRepository.findByUserIdAndPostId(userId, postId)
 			.orElseGet(() -> Like.builder().user(user).post(post).build());
 
 		// if (like.isEmpty()) {
@@ -42,11 +42,11 @@ public class LikeService {
 		// }
 		// Like newLike = like.get();
 
-		try {
-			activate(like);
-		} catch (RuntimeException e) {
-			System.err.println("like 가 생성되지 않았습니다.");
-		}
+		// try {
+		activate(like);
+		// } catch (RuntimeException e) {
+		// 	System.err.println("like 가 생성되지 않았습니다.");
+		// }
 
 		return new LikeDto(like.isStatus());
 	}
@@ -58,7 +58,7 @@ public class LikeService {
 		// Post post = postRepository.findById(postId)
 		// 	.orElseThrow(() -> new RuntimeException("일치하는 post 가 없습니다."));
 
-		Like like = likeRepository.getUserIdAndPostId(userId, postId)
+		Like like = likeRepository.findByUserIdAndPostId(userId, postId)
 			.orElseThrow(() -> new RuntimeException("일치하는 like 가 없습니다."));
 
 		inactive(like);

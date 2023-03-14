@@ -10,6 +10,6 @@ import com.triprint.backend.domain.like.entity.Like;
 
 public interface LikeRepository extends JpaRepository<Like, Long> {
 
-	@Query("select l from Like l where l.user_id = :user_id  and l.post_id = :post_id")
-	Optional<Like> getUserIdAndPostId(@Param("user_id") Long userId, @Param("post_id") Long postId);
+	@Query(value = "select * from likes l where l.user_id = :userId  and l.post_id = :postId", nativeQuery = true)
+	Optional<Like> findByUserIdAndPostId(@Param("userId") Long userId, @Param("postId") Long postId);
 }

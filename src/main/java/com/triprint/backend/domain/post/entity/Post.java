@@ -27,7 +27,6 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.image.entity.Image;
@@ -108,7 +107,6 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post"
 	)
-	@JsonIgnoreProperties({"post"})
 	private List<Like> likes = new ArrayList<>();
 
 	@OneToMany(

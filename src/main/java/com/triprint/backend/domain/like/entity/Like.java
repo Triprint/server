@@ -25,12 +25,9 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
+// @Table(name = "likes")
 @Table(uniqueConstraints = {
-	@UniqueConstraint(
-		name = "likes",
-		columnNames = {"post_id", "user_id"}
-	)}
-)
+	@UniqueConstraint(name = "likes_uk", columnNames = {"post_id", "user_id"})}, name = "likes")
 public class Like {
 	@Id
 	@GeneratedValue(
