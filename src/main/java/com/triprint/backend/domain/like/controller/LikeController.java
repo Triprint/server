@@ -31,8 +31,8 @@ public class LikeController {
 	@PutMapping("/{postId}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<LikeDto> deactivateLike(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long postId) {
-		likeService.registerLike(userPrincipal.getId(), postId);
+		likeService.unregisterLike(userPrincipal.getId(), postId);
 
-		return ResponseEntity.ok(likeService.registerLike(userPrincipal.getId(), postId));
+		return ResponseEntity.ok(likeService.unregisterLike(userPrincipal.getId(), postId));
 	}
 }

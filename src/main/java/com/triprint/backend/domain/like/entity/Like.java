@@ -25,7 +25,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-// @Table(name = "likes")
 @Table(uniqueConstraints = {
 	@UniqueConstraint(name = "likes_uk", columnNames = {"post_id", "user_id"})}, name = "likes")
 public class Like {
@@ -34,8 +33,6 @@ public class Like {
 		strategy = GenerationType.IDENTITY
 	)
 	private Long id;
-
-	private boolean status;
 
 	@ManyToOne(
 		fetch = FetchType.LAZY
@@ -55,7 +52,6 @@ public class Like {
 
 	@Builder
 	Like(Post post, User user) {
-		this.status = true;
 		setLikeAndUser(user);
 		setLikeAndPost(post);
 	}
@@ -69,9 +65,4 @@ public class Like {
 		this.user = user;
 		user.getLikes().add(this);
 	}
-
-	public void changeStatus(boolean status) {
-		this.status = status;
-	}
-
 }
