@@ -1,7 +1,5 @@
 package com.triprint.backend.domain.like.service;
 
-import java.util.Optional;
-
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -29,10 +27,10 @@ public class LikeService {
 	public LikeDto registerLike(Long userId, Long postId) {
 
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException("일치하는 사용자가 없습니다."));
 
 		Post post = postRepository.findById(postId)
-			.orElseThrow(() -> new ResourceNotFoundException("일치하는 post 가 없습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException("일치하는 게시물이 없습니다."));
 
 		Like like = likeRepository.findByUserAndPost(user, post)
 			.orElseGet(() -> Like.builder().user(user).post(post).build());
@@ -44,15 +42,12 @@ public class LikeService {
 	@Transactional
 	public LikeDto unregisterLike(Long userId, Long postId) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException("일치하는 사용자가 없습니다."));
 
 		Post post = postRepository.findById(postId)
-			.orElseThrow(() -> new ResourceNotFoundException("일치하는 post 가 없습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException("일치하는 게시물이 없습니다."));
 
-		Optional<Like> like = likeRepository.findByUserAndPost(user, post);
-		if (like.isPresent()) {
-			likeRepository.delete(like.get());
-		}
+		likeRepository.findByUserAndPost(user, post).ifPresent(likeRepository::delete);
 		return new LikeDto(false);
 	}
 }
