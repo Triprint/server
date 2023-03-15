@@ -5,7 +5,7 @@ import javax.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
 import com.triprint.backend.core.exception.ResourceNotFoundException;
-import com.triprint.backend.domain.like.dto.LikeDto;
+import com.triprint.backend.domain.like.dto.LikeResponse;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.like.repository.LikeRepository;
 import com.triprint.backend.domain.post.entity.Post;
@@ -24,7 +24,7 @@ public class LikeService {
 	private final PostRepository postRepository;
 
 	@Transactional
-	public LikeDto registerLike(Long userId, Long postId) {
+	public LikeResponse registerLike(Long userId, Long postId) {
 
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new ResourceNotFoundException("일치하는 사용자가 없습니다."));
@@ -36,11 +36,11 @@ public class LikeService {
 			.orElseGet(() -> Like.builder().user(user).post(post).build());
 
 		likeRepository.save(like);
-		return new LikeDto(true);
+		return new LikeResponse(true);
 	}
 
 	@Transactional
-	public LikeDto unregisterLike(Long userId, Long postId) {
+	public LikeResponse unregisterLike(Long userId, Long postId) {
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new ResourceNotFoundException("일치하는 사용자가 없습니다."));
 
@@ -48,6 +48,6 @@ public class LikeService {
 			.orElseThrow(() -> new ResourceNotFoundException("일치하는 게시물이 없습니다."));
 
 		likeRepository.findByUserAndPost(user, post).ifPresent(likeRepository::delete);
-		return new LikeDto(false);
+		return new LikeResponse(false);
 	}
 }

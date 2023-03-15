@@ -3,10 +3,10 @@ package com.triprint.backend.domain.like.dto;
 import lombok.Getter;
 
 @Getter
-public class LikeDto {
+public class LikeResponse {
 	boolean status;
 
-	public LikeDto(boolean status) {
+	public LikeResponse(boolean status) {
 		this.status = status;
 	}
 }

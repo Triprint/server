@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.like.dto.LikeDto;
+import com.triprint.backend.domain.like.dto.LikeResponse;
 import com.triprint.backend.domain.like.service.LikeService;
 
 import lombok.RequiredArgsConstructor;
@@ -24,13 +24,15 @@ public class LikeController {
 
 	@PostMapping("/{postId}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<LikeDto> activateLike(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long postId) {
+	public ResponseEntity<LikeResponse> activateLike(@CurrentUser UserPrincipal userPrincipal,
+		@PathVariable Long postId) {
 		return ResponseEntity.ok(likeService.registerLike(userPrincipal.getId(), postId));
 	}
 
 	@PutMapping("/{postId}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<LikeDto> deactivateLike(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long postId) {
+	public ResponseEntity<LikeResponse> deactivateLike(@CurrentUser UserPrincipal userPrincipal,
+		@PathVariable Long postId) {
 		return ResponseEntity.ok(likeService.unregisterLike(userPrincipal.getId(), postId));
 	}
 }
