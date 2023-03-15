@@ -105,7 +105,7 @@ public class Post {
 	private List<Bookmark> bookmarks = new ArrayList<>();
 
 	@OneToMany(
-		mappedBy = "post"
+		mappedBy = "post", cascade = CascadeType.ALL
 	)
 	private List<Like> likes = new ArrayList<>();
 
