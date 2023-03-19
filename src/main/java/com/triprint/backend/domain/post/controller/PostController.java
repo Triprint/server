@@ -2,7 +2,6 @@ package com.triprint.backend.domain.post.controller;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 
 import org.springframework.data.domain.Page;
@@ -47,7 +46,7 @@ public class PostController {
 	public ResponseEntity<Page<GetPostResponse>> getPostList(
 		@PageableDefault(sort = "id", direction = Direction.DESC) Pageable page,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return ResponseEntity.ok(postService.getPostList(page)); //로그인 X => null
+		return ResponseEntity.ok(postService.getPostList(page, userPrincipal));
 	}
 
 	@GetMapping("/like")
@@ -69,23 +68,24 @@ public class PostController {
 	}
 
 	@GetMapping("/{id}")
-	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<GetPostResponse> getPost(@PathVariable Long id) {
-		return new ResponseEntity<>(postService.getPost(id), HttpStatus.OK);
+	public ResponseEntity<GetPostResponse> getPost(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long id) {
+		return new ResponseEntity<>(postService.getPost(id, userPrincipal), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<PostResponse> updatePost(@PathVariable Long id,
-		@RequestPart(value = "data") @Valid UpdatePostRequest postUpdateRequest, HttpServletRequest request,
+		@RequestPart(value = "data") @Valid UpdatePostRequest postUpdateRequest,
+		@CurrentUser UserPrincipal userPrincipal,
 		@RequestPart(value = "images") List<MultipartFile> images) {
-		return new ResponseEntity<>(postService.updatePost(id, postUpdateRequest, request, images), HttpStatus.OK);
+		return new ResponseEntity<>(postService.updatePost(id, postUpdateRequest, userPrincipal.getId(), images),
+			HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<Void> deletePost(@PathVariable Long id, HttpServletRequest request) {
-		postService.deletePost(id, request);
+	public ResponseEntity<Void> deletePost(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
+		postService.deletePost(id, userPrincipal.getId());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

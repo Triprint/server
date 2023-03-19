@@ -2,8 +2,7 @@ package com.triprint.backend.domain.post.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +13,12 @@ import org.springframework.web.multipart.MultipartFile;
 import com.triprint.backend.core.exception.BadRequestException;
 import com.triprint.backend.core.exception.ForbiddenException;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
 import com.triprint.backend.domain.image.service.ImageService;
+import com.triprint.backend.domain.like.service.LikeService;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
 import com.triprint.backend.domain.post.dto.CreatePostRequest;
@@ -43,18 +44,51 @@ public class PostService {
 	private final ImageService imageService;
 	private final HashtagService hashtagService;
 	private final TouristAttractionService touristAttractionService;
+	private final LikeService likeService;
 
-	public Page<GetPostResponse> getPostList(Pageable page) {
+	public Page<GetPostResponse> getPostListWithUnAuthenticated(Page<Post> posts) {
+		return posts.map((post) -> new GetPostResponse(post, false));
+	}
+
+	public Page<GetPostResponse> getPostListWithAuthenticated(Page<Post> posts, User user) {
+		return posts.map((post) -> {
+			boolean like = likeService.isLike(user, post);
+			return new GetPostResponse(post, like);
+		});
+	}
+
+	public Page<GetPostResponse> getPostList(Pageable page, UserPrincipal userPrincipal) {
 		Page<Post> posts = postRepository.findAll(page);
-		return posts.map(GetPostResponse::new);
+		if (userPrincipal == null) {
+			return this.getPostListWithUnAuthenticated(posts);
+		}
+		Optional<User> user = userRepository.findById(userPrincipal.getId());
+		if (user.isEmpty()) {
+			return this.getPostListWithUnAuthenticated(posts);
+		}
+		return this.getPostListWithAuthenticated(posts, user.get());
 	}
 
 	public Page<GetPostResponse> getLikePostList(Long userId, Pageable page) {
-
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
 		Page<Post> posts = postRepository.findByLikeUser(user, page);
-		return posts.map(GetPostResponse::new);
+		return posts.map((post) -> new GetPostResponse(post, true));
+	}
+
+	public GetPostResponse getPost(Long postId, UserPrincipal userPrincipal) {
+		Post post = postRepository.findById(postId).orElseThrow(() -> {
+			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+		});
+		if (userPrincipal == null) {
+			return new GetPostResponse(post, false);
+		}
+		Optional<User> user = userRepository.findById(userPrincipal.getId());
+		if (user.isEmpty()) {
+			return new GetPostResponse(post, false);
+		}
+		boolean like = likeService.isLike(user.get(), post);
+		return new GetPostResponse(post, like);
 	}
 
 	@Transactional
@@ -83,15 +117,7 @@ public class PostService {
 	}
 
 	@Transactional
-	public GetPostResponse getPost(Long postId) {
-		Post post = postRepository.findById(postId).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
-		});
-		return new GetPostResponse(post);
-	}
-
-	@Transactional
-	public PostResponse updatePost(Long id, UpdatePostRequest updatePostRequest, HttpServletRequest request,
+	public PostResponse updatePost(Long id, UpdatePostRequest updatePostRequest, Long userId,
 		List<MultipartFile> images) {
 		if (images.size() + updatePostRequest.getExistentImages().size() > 10) {
 			throw new BadRequestException("이미지 개수가 올바르지 않습니다. 다시 확인해주세요!");
@@ -100,7 +126,6 @@ public class PostService {
 		Post post = postRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
 		});
-		Long userId = (Long)request.getAttribute("userId");
 		validateIsAuthor(post.getAuthor().getId(), userId);
 
 		List<Image> updateImages = updatePostImages(updatePostRequest, post);
@@ -120,11 +145,10 @@ public class PostService {
 	}
 
 	@Transactional
-	public void deletePost(Long id, HttpServletRequest request) {
+	public void deletePost(Long id, Long userId) {
 		Post post = postRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
 		});
-		Long userId = (Long)request.getAttribute("userId");
 		validateIsAuthor(post.getAuthor().getId(), userId);
 		postRepository.delete(post);
 	}
