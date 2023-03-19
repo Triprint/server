@@ -47,7 +47,10 @@ public class PostController {
 	public ResponseEntity<Page<GetPostResponse>> getPostList(
 		@PageableDefault(sort = "id", direction = Direction.DESC) Pageable page,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return ResponseEntity.ok(postService.getPostList(page, userPrincipal.getId())); //로그인 X => null
+		if (userPrincipal == null) {
+			return ResponseEntity.ok(postService.getPostList(page, -1L));
+		}
+		return ResponseEntity.ok(postService.getPostList(page, userPrincipal.getId()));
 	}
 
 	@GetMapping("/like")
@@ -70,8 +73,11 @@ public class PostController {
 
 	@GetMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<GetPostResponse> getPost(@PathVariable Long id) {
-		return new ResponseEntity<>(postService.getPost(id), HttpStatus.OK);
+	public ResponseEntity<GetPostResponse> getPost(@CurrentUser UserPrincipal userPrincipal, @PathVariable Long id) {
+		if (userPrincipal == null) {
+			return ResponseEntity.ok(postService.getPost(id, -1L));
+		}
+		return new ResponseEntity<>(postService.getPost(id, userPrincipal.getId()), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")

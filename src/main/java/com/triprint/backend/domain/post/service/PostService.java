@@ -52,7 +52,7 @@ public class PostService {
 		Optional<User> user = userRepository.findById(userId);
 
 		return posts.map((post) -> {
-			if (user.isEmpty()) {
+			if (userId == -1L) {
 				return new GetPostResponse(post, false);
 			}
 			boolean like = likeService.isLike(user.get(), post);
@@ -92,13 +92,18 @@ public class PostService {
 			.build();
 	}
 
-	// TODO: isLike 추가
 	@Transactional
-	public GetPostResponse getPost(Long postId) {
+	public GetPostResponse getPost(Long postId, Long userId) {
 		Post post = postRepository.findById(postId).orElseThrow(() -> {
 			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
 		});
-		return new GetPostResponse(post, true);
+		Optional<User> user = userRepository.findById(userId);
+
+		if (userId == -1L) {
+			return new GetPostResponse(post, false);
+		}
+		boolean like = likeService.isLike(user.get(), post);
+		return new GetPostResponse(post, like);
 	}
 
 	@Transactional
