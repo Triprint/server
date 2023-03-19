@@ -47,7 +47,7 @@ public class PostController {
 	public ResponseEntity<Page<GetPostResponse>> getPostList(
 		@PageableDefault(sort = "id", direction = Direction.DESC) Pageable page,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return ResponseEntity.ok(postService.getPostList(page)); //로그인 X => null
+		return ResponseEntity.ok(postService.getPostList(page, userPrincipal.getId())); //로그인 X => null
 	}
 
 	@GetMapping("/like")

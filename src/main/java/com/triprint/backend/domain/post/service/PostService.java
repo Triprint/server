@@ -2,6 +2,7 @@ package com.triprint.backend.domain.post.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -18,6 +19,7 @@ import com.triprint.backend.domain.hashtag.service.HashtagService;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.image.repository.ImageRepository;
 import com.triprint.backend.domain.image.service.ImageService;
+import com.triprint.backend.domain.like.service.LikeService;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.location.service.TouristAttractionService;
 import com.triprint.backend.domain.post.dto.CreatePostRequest;
@@ -43,18 +45,26 @@ public class PostService {
 	private final ImageService imageService;
 	private final HashtagService hashtagService;
 	private final TouristAttractionService touristAttractionService;
+	private final LikeService likeService;
 
-	public Page<GetPostResponse> getPostList(Pageable page) {
+	public Page<GetPostResponse> getPostList(Pageable page, Long userId) {
 		Page<Post> posts = postRepository.findAll(page);
-		return posts.map(GetPostResponse::new);
+		Optional<User> user = userRepository.findById(userId);
+
+		return posts.map((post) -> {
+			if (user.isEmpty()) {
+				return new GetPostResponse(post, false);
+			}
+			boolean like = likeService.isLike(user.get(), post);
+			return new GetPostResponse(post, like);
+		});
 	}
 
 	public Page<GetPostResponse> getLikePostList(Long userId, Pageable page) {
-
 		User user = userRepository.findById(userId)
 			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
 		Page<Post> posts = postRepository.findByLikeUser(user, page);
-		return posts.map(GetPostResponse::new);
+		return posts.map((post) -> new GetPostResponse(post, true));
 	}
 
 	@Transactional
@@ -82,12 +92,13 @@ public class PostService {
 			.build();
 	}
 
+	// TODO: isLike 추가
 	@Transactional
 	public GetPostResponse getPost(Long postId) {
 		Post post = postRepository.findById(postId).orElseThrow(() -> {
 			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
 		});
-		return new GetPostResponse(post);
+		return new GetPostResponse(post, true);
 	}
 
 	@Transactional

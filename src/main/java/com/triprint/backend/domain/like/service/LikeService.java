@@ -1,5 +1,7 @@
 package com.triprint.backend.domain.like.service;
 
+import java.util.Optional;
+
 import javax.transaction.Transactional;
 
 import org.springframework.stereotype.Service;
@@ -49,5 +51,13 @@ public class LikeService {
 
 		likeRepository.findByUserAndPost(user, post).ifPresent(likeRepository::delete);
 		return new LikeResponse(false);
+	}
+
+	public boolean isLike(User user, Post post) {
+		Optional<Like> like = likeRepository.findByUserAndPost(user, post);
+		if (like.isPresent()) {
+			return true;
+		}
+		return false;
 	}
 }
