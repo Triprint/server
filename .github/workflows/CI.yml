@@ -1,8 +1,6 @@
 name: CI
 
-on:
-  pull_request:
-    branches: [ "dev", "main" ]
+on: pull_request
 
 permissions:
   contents: read
