@@ -24,6 +24,7 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: build
+
       - name: Docker build & push to dev
         run: |
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
