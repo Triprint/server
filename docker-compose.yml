@@ -1,7 +1,7 @@
 version: "3"
 services:
   triprint:
-    image: diiiiiiiiana/triprint:v1
+    image: diiiiiiiiana/triprint:dev
     container_name: triprint
     ports:
       - 8080:8080

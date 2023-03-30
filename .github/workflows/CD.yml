@@ -28,7 +28,7 @@ jobs:
       - name: Docker build & push to dev
         run: |
           docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
-          docker build -f Dockerfile -t ${{secrets.DOCKER_REPOSITORY}}
+          docker build -f Dockerfile -t ${{secrets.DOCKER_REPOSITORY}} ./
           docker push ${{secrets.DOCKER_REPOSITORY}}
 
       - name: Deploy to dev
@@ -39,7 +39,9 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            sudo docker rm -f $(docker ps -qa)
+            sudo cd dev/server
+            sudo git checkout dev
+            sudo git pull
             sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
             docker-compose up -d
-            docker image prune -f
+            docker image prune -af
