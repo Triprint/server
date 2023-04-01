@@ -32,9 +32,7 @@ public class PostGroup {
 	private Long id;
 
 	private String title;
-
-	private String location;
-
+	
 	@ManyToOne
 	@JoinColumn(
 		name = "user_id"

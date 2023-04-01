@@ -1,0 +1,47 @@
+name: CD
+
+on:
+  push:
+    branches: [ "dev" ]
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up JDK 11
+        uses: actions/setup-java@v3
+        with:
+          java-version: 11
+          distribution: temurin
+
+      - name: Build with Gradle
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: build
+
+      - name: Docker build & push to dev
+        run: |
+          docker login -u ${{secrets.DOCKER_USERNAME}} -p ${{secrets.DOCKER_PASSWORD}}
+          docker build -f Dockerfile -t ${{secrets.DOCKER_REPOSITORY}} ./
+          docker push ${{secrets.DOCKER_REPOSITORY}}
+
+      - name: Deploy to dev
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST_DEV }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            sudo cd dev/server
+            sudo git checkout dev
+            sudo git pull
+            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
+            docker-compose up -d
+            docker image prune -af

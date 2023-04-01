@@ -61,7 +61,7 @@ public class PostController {
 	public ResponseEntity<PostResponse> createPost(
 		@Valid @RequestPart(value = "data") CreatePostRequest createPostRequest,
 		@ValidFileFormat(format = {"image/jpeg",
-			"image/png"}) @ValidFileSize(maxSize = 1024) @RequestPart(value = "images") List<MultipartFile> images,
+			"image/png"}) @ValidFileSize(maxSize = 5242880) @RequestPart(value = "images") List<MultipartFile> images,
 		@CurrentUser UserPrincipal userPrincipal) {
 		return new ResponseEntity<>(postService.create(userPrincipal.getId(), createPostRequest, images),
 			HttpStatus.CREATED);
@@ -77,7 +77,8 @@ public class PostController {
 	public ResponseEntity<PostResponse> updatePost(@PathVariable Long id,
 		@RequestPart(value = "data") @Valid UpdatePostRequest postUpdateRequest,
 		@CurrentUser UserPrincipal userPrincipal,
-		@RequestPart(value = "images") List<MultipartFile> images) {
+		@ValidFileFormat(format = {"image/jpeg",
+			"image/png"}) @ValidFileSize(maxSize = 5242880) @RequestPart(value = "images") List<MultipartFile> images) {
 		return new ResponseEntity<>(postService.updatePost(id, postUpdateRequest, userPrincipal.getId(), images),
 			HttpStatus.OK);
 	}
