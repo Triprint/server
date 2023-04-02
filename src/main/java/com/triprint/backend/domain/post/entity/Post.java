@@ -149,4 +149,9 @@ public class Post {
 	public boolean hasTouristAttraction() {
 		return Objects.nonNull(this.touristAttraction);
 	}
+
+	public boolean hasPostGroup() {
+		return Objects.nonNull(this.postGroup);
+	}
+
 }
