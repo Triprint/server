@@ -39,9 +39,10 @@ jobs:
           password: ${{ secrets.PASSWORD }}
           port: 22
           script: |
-            sudo cd dev/server
-            sudo git checkout dev
-            sudo git pull
-            sudo docker pull ${{ secrets.DOCKER_REPOSITORY }}
+            sudo su
+            cd dev/server
+            git checkout dev
+            git pull
+            docker pull ${{ secrets.DOCKER_REPOSITORY }}
             docker-compose up -d
             docker image prune -af
