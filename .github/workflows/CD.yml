@@ -45,4 +45,3 @@ jobs:
             sudo su -c 'docker pull ${{ secrets.DOCKER_REPOSITORY }}'
             sudo su -c 'docker-compose up -d'
             sudo su -c 'docker image prune -af'
-            
