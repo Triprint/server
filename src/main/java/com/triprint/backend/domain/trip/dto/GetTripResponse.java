@@ -1,10 +1,11 @@
-package com.triprint.backend.domain.post.dto;
+package com.triprint.backend.domain.trip.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.triprint.backend.domain.post.entity.Trip;
+import com.triprint.backend.domain.post.dto.PostDto;
+import com.triprint.backend.domain.trip.entity.Trip;
 import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
 
 import lombok.Getter;

@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.post.dto;
+package com.triprint.backend.domain.trip.dto;
 
 import java.util.ArrayList;
 

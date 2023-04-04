@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.post.service;
+package com.triprint.backend.domain.trip.service;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -6,13 +6,13 @@ import org.springframework.transaction.annotation.Transactional;
 import com.triprint.backend.core.exception.ForbiddenException;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.post.dto.CreateOrUpdateTripRequest;
-import com.triprint.backend.domain.post.dto.GetTripResponse;
-import com.triprint.backend.domain.post.dto.TripResponse;
 import com.triprint.backend.domain.post.entity.Post;
-import com.triprint.backend.domain.post.entity.Trip;
 import com.triprint.backend.domain.post.repository.PostRepository;
-import com.triprint.backend.domain.post.repository.TripRepository;
+import com.triprint.backend.domain.trip.dto.CreateOrUpdateTripRequest;
+import com.triprint.backend.domain.trip.dto.GetTripResponse;
+import com.triprint.backend.domain.trip.dto.TripResponse;
+import com.triprint.backend.domain.trip.entity.Trip;
+import com.triprint.backend.domain.trip.repository.TripRepository;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.service.UserService;
 
@@ -81,6 +81,7 @@ public class TripService {
 			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
 		});
 		validateIsAuthor(trip.getUser().getId(), authorId);
+		trip.removePosts();
 		tripRepository.delete(trip);
 	}
 

@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.post.controller;
+package com.triprint.backend.domain.trip.controller;
 
 import javax.validation.Valid;
 
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.post.dto.CreateOrUpdateTripRequest;
-import com.triprint.backend.domain.post.dto.GetTripResponse;
-import com.triprint.backend.domain.post.dto.TripResponse;
-import com.triprint.backend.domain.post.service.TripService;
+import com.triprint.backend.domain.trip.dto.CreateOrUpdateTripRequest;
+import com.triprint.backend.domain.trip.dto.GetTripResponse;
+import com.triprint.backend.domain.trip.dto.TripResponse;
+import com.triprint.backend.domain.trip.service.TripService;
 
 import lombok.RequiredArgsConstructor;
 

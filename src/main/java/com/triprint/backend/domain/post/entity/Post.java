@@ -32,6 +32,7 @@ import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
+import com.triprint.backend.domain.trip.entity.Trip;
 import com.triprint.backend.domain.user.entity.User;
 
 import lombok.Builder;

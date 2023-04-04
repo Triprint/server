@@ -26,7 +26,7 @@ import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.post.entity.Post;
-import com.triprint.backend.domain.post.entity.Trip;
+import com.triprint.backend.domain.trip.entity.Trip;
 import com.triprint.backend.domain.user.status.UserRole;
 
 import lombok.AllArgsConstructor;
