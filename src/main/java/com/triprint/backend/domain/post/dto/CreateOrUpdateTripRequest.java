@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateOrUpdatePostGroupRequest {
+public class CreateOrUpdateTripRequest {
 	private String title;
 	private ArrayList<Long> posts = new ArrayList();
 }

@@ -4,13 +4,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.triprint.backend.domain.post.entity.PostGroup;
+import com.triprint.backend.domain.post.entity.Trip;
 import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
 
 import lombok.Getter;
 
 @Getter
-public class GetPostGroupResponse {
+public class GetTripResponse {
 	private final Long id;
 	private final AuthorInfoResponse author;
 	private final String title;
@@ -18,14 +18,14 @@ public class GetPostGroupResponse {
 	private final Timestamp createdAt;
 	private final Timestamp updatedAt;
 
-	public GetPostGroupResponse(PostGroup posts) {
-		this.id = posts.getId();
-		this.author = new AuthorInfoResponse(posts.getUser());
-		posts.getPosts().forEach((post) -> {
+	public GetTripResponse(Trip trip) {
+		this.id = trip.getId();
+		this.author = new AuthorInfoResponse(trip.getUser());
+		trip.getPosts().forEach((post) -> {
 			this.postList.add(new PostDto(post));
 		});
-		this.title = posts.getTitle();
-		this.createdAt = posts.getCreatedAt();
-		this.updatedAt = posts.getUpdatedAt();
+		this.title = trip.getTitle();
+		this.createdAt = trip.getCreatedAt();
+		this.updatedAt = trip.getUpdatedAt();
 	}
 }

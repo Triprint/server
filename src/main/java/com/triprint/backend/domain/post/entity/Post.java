@@ -69,9 +69,9 @@ public class Post {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "group_id"
+		name = "trip_id"
 	)
-	private PostGroup postGroup;
+	private Trip trip;
 
 	@ManyToOne(
 		fetch = FetchType.LAZY
@@ -150,8 +150,8 @@ public class Post {
 		return Objects.nonNull(this.touristAttraction);
 	}
 
-	public boolean hasPostGroup() {
-		return Objects.nonNull(this.postGroup);
+	public boolean hasTrip() {
+		return Objects.nonNull(this.trip);
 	}
 
 }

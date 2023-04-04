@@ -17,6 +17,7 @@ public class GetPostResponse {
 	private final AuthorInfoResponse author;
 	private final String title;
 	private final String contents;
+	private final Long tripId;
 	private final Integer likes;
 	private final List<String> images;
 	private final List<String> hashtags;
@@ -33,10 +34,12 @@ public class GetPostResponse {
 			.map(postHashtag -> postHashtag.getHashtag().getContents())
 			.collect(
 				Collectors.toList());
+
 		this.id = post.getId();
 		this.author = new AuthorInfoResponse(post.getAuthor());
 		this.title = post.getTitle();
 		this.contents = post.getContents();
+		this.tripId = post.hasTrip() ? post.getTrip().getId() : null;
 		this.touristAttraction = new GetTouristAttractionResponse(post.getTouristAttraction());
 		this.likes = post.getLikes().size();
 		this.isLike = isLike;
