@@ -15,13 +15,14 @@ public class GetTripResponse {
 	private final Long id;
 	private final AuthorInfoResponse author;
 	private final String title;
-	private List<PostDto> postList = new ArrayList<>();
+	private final List<PostDto> postList;
 	private final Timestamp createdAt;
 	private final Timestamp updatedAt;
 
 	public GetTripResponse(Trip trip) {
 		this.id = trip.getId();
 		this.author = new AuthorInfoResponse(trip.getUser());
+		this.postList = new ArrayList<>();
 		trip.getPosts().forEach((post) -> {
 			this.postList.add(new PostDto(post));
 		});
