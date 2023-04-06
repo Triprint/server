@@ -3,7 +3,7 @@
 // (powered by FernFlower decompiler)
 //
 
-package com.triprint.backend.domain.post.entity;
+package com.triprint.backend.domain.trip.entity;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
+import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.user.entity.User;
 
 import lombok.Builder;
@@ -30,7 +31,7 @@ import lombok.Setter;
 @Entity
 @Getter
 @NoArgsConstructor
-public class PostGroup {
+public class Trip {
 	@Id
 	@GeneratedValue(
 		strategy = GenerationType.IDENTITY
@@ -47,7 +48,7 @@ public class PostGroup {
 	private User user;
 
 	@OneToMany(
-		mappedBy = "postGroup"
+		mappedBy = "trip"
 	)
 	private List<Post> posts = new ArrayList<>();
 
@@ -58,14 +59,14 @@ public class PostGroup {
 	private Timestamp updatedAt;
 
 	@Builder
-	public PostGroup(User author, String title) {
+	public Trip(User author, String title) {
 		this.user = author;
 		this.title = title;
 	}
 
 	public void removePosts() {
 		this.posts.forEach((post) -> {
-			post.setPostGroup(null);
+			post.setTrip(null);
 		});
 
 		this.posts = new ArrayList<>();
@@ -73,6 +74,6 @@ public class PostGroup {
 
 	public void addPost(Post post) {
 		this.posts.add(post);
-		post.setPostGroup(this);
+		post.setTrip(this);
 	}
 }

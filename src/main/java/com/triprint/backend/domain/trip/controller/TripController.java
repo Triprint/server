@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.post.controller;
+package com.triprint.backend.domain.trip.controller;
 
 import javax.validation.Valid;
 
@@ -17,10 +17,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.post.dto.CreateOrUpdatePostGroupRequest;
-import com.triprint.backend.domain.post.dto.GetPostGroupResponse;
-import com.triprint.backend.domain.post.dto.PostGroupResponse;
-import com.triprint.backend.domain.post.service.PostGroupService;
+import com.triprint.backend.domain.trip.dto.CreateOrUpdateTripRequest;
+import com.triprint.backend.domain.trip.dto.GetTripResponse;
+import com.triprint.backend.domain.trip.dto.TripResponse;
+import com.triprint.backend.domain.trip.service.TripService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -28,39 +28,39 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 @Validated
 @RequestMapping("/trip")
-public class PostGroupController {
+public class TripController {
 
-	private final PostGroupService postGroupService;
+	private final TripService tripService;
 
 	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<PostGroupResponse> createPostGroup(
-		@Valid @RequestBody CreateOrUpdatePostGroupRequest createOrUpdatePostGroupRequest,
+	public ResponseEntity<TripResponse> createPostGroup(
+		@Valid @RequestBody CreateOrUpdateTripRequest createOrUpdateTripRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return new ResponseEntity<>(postGroupService.create(userPrincipal.getId(), createOrUpdatePostGroupRequest),
+		return new ResponseEntity<>(tripService.create(userPrincipal.getId(), createOrUpdateTripRequest),
 			HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<GetPostGroupResponse> getPost(@CurrentUser UserPrincipal userPrincipal,
+	public ResponseEntity<GetTripResponse> getPost(@CurrentUser UserPrincipal userPrincipal,
 		@PathVariable Long id) {
-		return new ResponseEntity<>(postGroupService.getPostGroup(id, userPrincipal), HttpStatus.OK);
+		return new ResponseEntity<>(tripService.getTrip(id, userPrincipal), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<PostGroupResponse> updatePostGroup(
+	public ResponseEntity<TripResponse> updatePostGroup(
 		@PathVariable Long id,
-		@Valid @RequestBody CreateOrUpdatePostGroupRequest createOrUpdatePostGroupRequest,
+		@Valid @RequestBody CreateOrUpdateTripRequest createOrUpdateTripRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return new ResponseEntity<>(postGroupService.update(id, userPrincipal.getId(), createOrUpdatePostGroupRequest),
+		return new ResponseEntity<>(tripService.update(id, userPrincipal.getId(), createOrUpdateTripRequest),
 			HttpStatus.OK);
 	}
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<Void> deletePost(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
-		postGroupService.delete(id, userPrincipal.getId());
+		tripService.delete(id, userPrincipal.getId());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 }

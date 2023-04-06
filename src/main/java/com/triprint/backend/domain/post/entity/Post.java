@@ -32,6 +32,7 @@ import com.triprint.backend.domain.comment.entity.Comment;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
+import com.triprint.backend.domain.trip.entity.Trip;
 import com.triprint.backend.domain.user.entity.User;
 
 import lombok.Builder;
@@ -69,9 +70,9 @@ public class Post {
 		fetch = FetchType.LAZY
 	)
 	@JoinColumn(
-		name = "group_id"
+		name = "trip_id"
 	)
-	private PostGroup postGroup;
+	private Trip trip;
 
 	@ManyToOne(
 		fetch = FetchType.LAZY
@@ -150,8 +151,8 @@ public class Post {
 		return Objects.nonNull(this.touristAttraction);
 	}
 
-	public boolean hasPostGroup() {
-		return Objects.nonNull(this.postGroup);
+	public boolean hasTrip() {
+		return Objects.nonNull(this.trip);
 	}
 
 }

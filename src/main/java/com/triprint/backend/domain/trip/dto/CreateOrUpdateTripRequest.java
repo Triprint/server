@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.post.dto;
+package com.triprint.backend.domain.trip.dto;
 
 import java.util.ArrayList;
 
@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CreateOrUpdatePostGroupRequest {
+public class CreateOrUpdateTripRequest {
 	private String title;
 	private ArrayList<Long> posts = new ArrayList();
 }
