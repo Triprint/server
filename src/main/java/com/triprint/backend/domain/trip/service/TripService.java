@@ -1,5 +1,7 @@
 package com.triprint.backend.domain.trip.service;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -9,6 +11,7 @@ import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.repository.PostRepository;
 import com.triprint.backend.domain.trip.dto.CreateOrUpdateTripRequest;
+import com.triprint.backend.domain.trip.dto.GetMyTripResponse;
 import com.triprint.backend.domain.trip.dto.GetTripResponse;
 import com.triprint.backend.domain.trip.dto.TripResponse;
 import com.triprint.backend.domain.trip.entity.Trip;
@@ -89,5 +92,12 @@ public class TripService {
 		if (!currentUserId.equals(postAuthor)) {
 			throw new ForbiddenException("작성자가 아니므로 수정할 권한이 없습니다.");
 		}
+	}
+
+	public Page<GetMyTripResponse> getMyTripList(Long userId, Pageable page) {
+		User user = userService.findById(userId);
+		Page<Trip> tripList = tripRepository.findByTripUser(user, page);
+
+		return tripList.map((trip) -> new GetMyTripResponse(trip));
 	}
 }

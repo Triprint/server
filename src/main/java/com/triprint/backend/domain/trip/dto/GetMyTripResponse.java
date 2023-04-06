@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.user.dto;
+package com.triprint.backend.domain.trip.dto;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
