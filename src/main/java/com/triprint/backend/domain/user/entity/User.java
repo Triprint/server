@@ -23,7 +23,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import com.sun.istack.NotNull;
 import com.triprint.backend.domain.auth.security.oauth2.user.AuthProvider;
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
-import com.triprint.backend.domain.comment.entity.Comment;
+import com.triprint.backend.domain.comment.entity.Reply;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.trip.entity.Trip;
@@ -94,7 +94,7 @@ public class User {
 	@OneToMany(
 		mappedBy = "user"
 	)
-	private List<Comment> comments = new ArrayList<>();
+	private List<Reply> replies = new ArrayList<>();
 
 	@ManyToOne(
 		fetch = FetchType.LAZY

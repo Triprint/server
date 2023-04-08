@@ -28,7 +28,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
-import com.triprint.backend.domain.comment.entity.Comment;
+import com.triprint.backend.domain.comment.entity.Reply;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
@@ -93,7 +93,7 @@ public class Post {
 	@OneToMany(
 		mappedBy = "post"
 	)
-	private List<Comment> comments = new ArrayList<>();
+	private List<Reply> replies = new ArrayList<>();
 
 	@OneToMany(
 		mappedBy = "post", orphanRemoval = true
