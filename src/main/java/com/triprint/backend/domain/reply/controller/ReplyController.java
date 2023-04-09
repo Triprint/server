@@ -1,19 +1,26 @@
-package com.triprint.backend.domain.comment.controller;
+package com.triprint.backend.domain.reply.controller;
 
 import javax.validation.Valid;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
-import com.triprint.backend.domain.comment.dto.CreateReplyRequest;
-import com.triprint.backend.domain.comment.service.ReplyService;
+import com.triprint.backend.domain.reply.dto.CreateReplyRequest;
+import com.triprint.backend.domain.reply.dto.GetReplyResponse;
+import com.triprint.backend.domain.reply.service.ReplyService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -26,10 +33,18 @@ public class ReplyController {
 
 	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<Long> createPostGroup(
+	public ResponseEntity<Long> createReply(
 		@Valid @RequestBody CreateReplyRequest createReplyRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
 		return new ResponseEntity<>(replyService.create(userPrincipal.getId(), createReplyRequest),
 			HttpStatus.CREATED);
+	}
+
+	@GetMapping()
+	@PreAuthorize("hasRole('ROLE_USER')")
+	public ResponseEntity<Page<GetReplyResponse>> getReplies(@CurrentUser UserPrincipal userPrincipal,
+		@RequestParam("postId") Long postId,
+		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page) {
+		return ResponseEntity.ok(replyService.getReplies(postId, page));
 	}
 }

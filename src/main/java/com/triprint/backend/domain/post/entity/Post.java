@@ -28,10 +28,10 @@ import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
-import com.triprint.backend.domain.comment.entity.Reply;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
+import com.triprint.backend.domain.reply.entity.Reply;
 import com.triprint.backend.domain.trip.entity.Trip;
 import com.triprint.backend.domain.user.entity.User;
 
