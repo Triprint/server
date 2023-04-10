@@ -63,7 +63,7 @@ public class ReplyController {
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<Void> delete(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
+	public ResponseEntity<Void> deleteReply(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
 		replyService.delete(id, userPrincipal.getId());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
