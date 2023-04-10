@@ -28,15 +28,15 @@ public class ReplyService {
 	private final ReplyRepository replyRepository;
 
 	@Transactional
-	public ReplyResponse create(Long id, ReplyRequest replyRequest) {
+	public ReplyResponse create(Long id, ReplyRequest createReplyRequest) {
 		User author = userRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException("일치하는 User가 존재하지 않습니다.");
 		});
-		ReplyDto replyDto = this.isExist(replyRequest);
+		ReplyDto replyDto = this.isExist(createReplyRequest);
 
 		Reply reply = Reply.builder()
 			.author(author)
-			.contents(replyRequest.getContents())
+			.contents(createReplyRequest.getContents())
 			.post(replyDto.getPost())
 			.subReplyUser(replyDto.getSubReplyUser())
 			.parentReply(replyDto.getParentReply())
@@ -59,16 +59,16 @@ public class ReplyService {
 	}
 
 	@Transactional
-	public ReplyResponse update(Long id, ReplyRequest replyRequest, Long userId) {
+	public ReplyResponse update(Long id, ReplyRequest updateReplyRequest, Long userId) {
 		Reply reply = replyRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException("해당하는 댓글이 존재하지 않습니다.");
 		});
 		validateIsAuthor(reply.getAuthor().getId(), userId);
 
-		ReplyDto replyDto = this.isExist(replyRequest);
+		ReplyDto replyDto = this.isExist(updateReplyRequest);
 
 		reply.setPost(replyDto.getPost());
-		reply.setContents(replyRequest.getContents());
+		reply.setContents(updateReplyRequest.getContents());
 		reply.setParentReply(replyDto.getParentReply());
 		reply.setSubReplyUser(replyDto.getSubReplyUser());
 		replyRepository.save(reply);
