@@ -5,7 +5,7 @@ import org.springframework.lang.Nullable;
 import lombok.Getter;
 
 @Getter
-public class CreateReplyRequest {
+public class ReplyRequest {
 
 	@Nullable
 	private Long subReplyUserId;
