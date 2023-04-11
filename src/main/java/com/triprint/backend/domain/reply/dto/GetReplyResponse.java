@@ -24,7 +24,8 @@ public class GetReplyResponse {
 		this.id = reply.getId();
 		this.contents = reply.getContents();
 		this.parentReplyId = reply.hasParentReply() ? reply.getParentReply().getId() : null;
-		this.subReplyUserName = reply.hasSubReplyUser() ? reply.getSubReplyUser().getUsername() : null;
+		this.subReplyUserName = reply.hasSubReplyUser() ? reply.getSubReplyUser().getUsername() :
+			reply.hasParentReply() ? reply.getParentReply().getAuthor().getUsername() : null;
 		this.isReply = reply.hasSubReply();
 		this.replyCnt = reply.hasSubReply() ? reply.getSubReply().size() : 0;
 		this.createdAt = reply.getCreatedAt();

@@ -21,9 +21,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
+import com.triprint.backend.domain.reply.dto.CreateReplyRequest;
 import com.triprint.backend.domain.reply.dto.GetReplyResponse;
-import com.triprint.backend.domain.reply.dto.ReplyRequest;
 import com.triprint.backend.domain.reply.dto.ReplyResponse;
+import com.triprint.backend.domain.reply.dto.UpdateReplyRequest;
 import com.triprint.backend.domain.reply.service.ReplyService;
 
 import lombok.RequiredArgsConstructor;
@@ -38,9 +39,9 @@ public class ReplyController {
 	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ReplyResponse> createReply(
-		@Valid @RequestBody ReplyRequest replyRequest,
+		@Valid @RequestBody CreateReplyRequest createReplyRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return new ResponseEntity<>(replyService.create(userPrincipal.getId(), replyRequest),
+		return new ResponseEntity<>(replyService.create(userPrincipal.getId(), createReplyRequest),
 			HttpStatus.CREATED);
 	}
 
@@ -55,9 +56,9 @@ public class ReplyController {
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	public ResponseEntity<ReplyResponse> updateReply(@PathVariable Long id,
-		@Valid @RequestBody ReplyRequest replyRequest,
+		@Valid @RequestBody UpdateReplyRequest updateReplyRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
-		return new ResponseEntity<>(replyService.update(id, replyRequest, userPrincipal.getId()),
+		return new ResponseEntity<>(replyService.update(id, updateReplyRequest, userPrincipal.getId()),
 			HttpStatus.OK);
 	}
 

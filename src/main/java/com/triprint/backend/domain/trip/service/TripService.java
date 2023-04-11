@@ -3,6 +3,7 @@ package com.triprint.backend.domain.trip.service;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ForbiddenException;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
@@ -37,7 +38,7 @@ public class TripService {
 
 		createTripRequest.getPosts().forEach((postId) -> {
 			Post post = postRepository.findById(postId).orElseThrow(() -> {
-				throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+				throw new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND);
 			});
 			validateIsAuthor(post.getAuthor().getId(), author.getId());
 			trip.addPost(post);
@@ -49,7 +50,7 @@ public class TripService {
 	@Transactional
 	public GetTripResponse getTrip(Long id, UserPrincipal userPrincipal) {
 		Trip trip = tripRepository.findById(id).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 여행기록이 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.TRIP_NOT_FOUND);
 		});
 
 		return new GetTripResponse(trip);
@@ -58,14 +59,14 @@ public class TripService {
 	@Transactional
 	public TripResponse update(Long id, Long authorId, CreateOrUpdateTripRequest updateTripRequest) {
 		Trip trip = tripRepository.findById(id).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 여행기록이 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.TRIP_NOT_FOUND);
 		});
 		validateIsAuthor(trip.getUser().getId(), authorId);
 
 		trip.removePosts();
 		updateTripRequest.getPosts().forEach((postId) -> {
 			Post post = postRepository.findById(postId).orElseThrow(() -> {
-				throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+				throw new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND);
 			});
 			validateIsAuthor(post.getAuthor().getId(), authorId);
 			trip.addPost(post);
@@ -78,7 +79,7 @@ public class TripService {
 	@Transactional
 	public void delete(Long id, Long authorId) {
 		Trip trip = tripRepository.findById(id).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.TRIP_NOT_FOUND);
 		});
 		validateIsAuthor(trip.getUser().getId(), authorId);
 		trip.removePosts();
