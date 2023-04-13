@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,17 +23,18 @@ import lombok.RequiredArgsConstructor;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/my")
 public class MyProfileController {
 
 	private final MyProfileService myProfileService;
 
-	@GetMapping("/my/profile")
+	@GetMapping("/profile")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileResponse> getMyProfile(@CurrentUser UserPrincipal userPrincipal) {
 		return ResponseEntity.ok(myProfileService.getMyProfile(userPrincipal.getId()));
 	}
 
-	@PutMapping("/my/profile")
+	@PutMapping("/profile")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileResponse> updateMyProfile(HttpServletRequest request,
 		@RequestBody MyProfileRequest myProfileRequest) {
@@ -40,7 +42,7 @@ public class MyProfileController {
 			myProfileService.updateMyProfile((Long)request.getAttribute("userId"), myProfileRequest.getUsername()));
 	}
 
-	@PutMapping("/my/profile-img")
+	@PutMapping("/profile-img")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileImgResponse> updateMyProfileImg(
 		HttpServletRequest request,

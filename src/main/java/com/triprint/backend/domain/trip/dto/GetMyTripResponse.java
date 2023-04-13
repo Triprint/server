@@ -6,27 +6,24 @@ import java.util.List;
 
 import com.triprint.backend.domain.post.dto.PostDto;
 import com.triprint.backend.domain.trip.entity.Trip;
-import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
 
 import lombok.Getter;
 
 @Getter
-public class GetTripResponse {
-	private final Long id;
-	private final AuthorInfoResponse author;
-	private final String title;
-	private final List<PostDto> postList;
-	private final Timestamp createdAt;
-	private final Timestamp updatedAt;
+public class GetMyTripResponse {
+	private Long id;
+	private String title;
+	private List<PostDto> postList;
+	private Timestamp createdAt;
+	private Timestamp updatedAt;
 
-	public GetTripResponse(Trip trip) {
+	public GetMyTripResponse(Trip trip) {
 		this.id = trip.getId();
-		this.author = new AuthorInfoResponse(trip.getUser());
+		this.title = trip.getTitle();
 		this.postList = new ArrayList<>();
 		trip.getPosts().forEach((post) -> {
 			this.postList.add(new PostDto(post));
 		});
-		this.title = trip.getTitle();
 		this.createdAt = trip.getCreatedAt();
 		this.updatedAt = trip.getUpdatedAt();
 	}
