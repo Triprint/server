@@ -46,7 +46,7 @@ public class TripController {
 
 	@PostMapping()
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<TripResponse> createPostGroup(
+	public ResponseEntity<TripResponse> createTrip(
 		@Valid @RequestBody CreateOrUpdateTripRequest createOrUpdateTripRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
 		return new ResponseEntity<>(tripService.create(userPrincipal.getId(), createOrUpdateTripRequest),
@@ -54,14 +54,14 @@ public class TripController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<GetTripResponse> getPost(@CurrentUser UserPrincipal userPrincipal,
+	public ResponseEntity<GetTripResponse> getTrip(@CurrentUser UserPrincipal userPrincipal,
 		@PathVariable Long id) {
 		return new ResponseEntity<>(tripService.getTrip(id, userPrincipal), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<TripResponse> updatePostGroup(
+	public ResponseEntity<TripResponse> updateTrip(
 		@PathVariable Long id,
 		@Valid @RequestBody CreateOrUpdateTripRequest createOrUpdateTripRequest,
 		@CurrentUser UserPrincipal userPrincipal) {
@@ -71,7 +71,7 @@ public class TripController {
 
 	@DeleteMapping("/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	public ResponseEntity<Void> deletePost(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
+	public ResponseEntity<Void> deleteTrip(@PathVariable Long id, @CurrentUser UserPrincipal userPrincipal) {
 		tripService.delete(id, userPrincipal.getId());
 		return new ResponseEntity<>(HttpStatus.OK);
 	}

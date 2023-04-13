@@ -11,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.triprint.backend.core.exception.BadRequestException;
+import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ForbiddenException;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
@@ -71,14 +72,14 @@ public class PostService {
 
 	public Page<GetPostResponse> getLikePostList(Long userId, Pageable page) {
 		User user = userRepository.findById(userId)
-			.orElseThrow(() -> new ResourceNotFoundException("일치하는 user 가 없습니다."));
+			.orElseThrow(() -> new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND));
 		Page<Post> posts = postRepository.findByLikeUser(user, page);
 		return posts.map((post) -> new GetPostResponse(post, true));
 	}
 
 	public GetPostResponse getPost(Long postId, UserPrincipal userPrincipal) {
 		Post post = postRepository.findById(postId).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND);
 		});
 		if (userPrincipal == null) {
 			return new GetPostResponse(post, false);
@@ -124,7 +125,7 @@ public class PostService {
 		}
 
 		Post post = postRepository.findById(id).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND);
 		});
 		validateIsAuthor(post.getAuthor().getId(), userId);
 
@@ -147,7 +148,7 @@ public class PostService {
 	@Transactional
 	public void deletePost(Long id, Long userId) {
 		Post post = postRepository.findById(id).orElseThrow(() -> {
-			throw new ResourceNotFoundException("해당하는 게시물이 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.POST_NOT_FOUND);
 		});
 		validateIsAuthor(post.getAuthor().getId(), userId);
 		postRepository.delete(post);

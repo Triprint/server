@@ -4,6 +4,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.triprint.backend.core.exception.ErrorMessage;
+import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
 import com.triprint.backend.domain.user.entity.User;
@@ -21,7 +23,7 @@ public class MyProfileService {
 	public MyProfileResponse getMyProfile(Long memberId) {
 
 		User user = userRepository.findById(memberId).orElseThrow(() -> {
-			throw new RuntimeException("email 에 해당하는 member 가 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
 		return MyProfileResponse.builder()
@@ -34,7 +36,7 @@ public class MyProfileService {
 
 	public MyProfileResponse updateMyProfile(Long userId, String username) {
 		User user = userRepository.findById(userId).orElseThrow(() -> {
-			throw new RuntimeException("email 에 해당하는 user 가 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
 		try {
@@ -54,7 +56,7 @@ public class MyProfileService {
 	@Transactional
 	public MyProfileImgResponse updateMyProfileImg(Long userId, MultipartFile multipartFile) {
 		User user = userRepository.findById(userId).orElseThrow(() -> {
-			throw new RuntimeException("email 에 해당하는 member 가 존재하지 않습니다.");
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
 		try {

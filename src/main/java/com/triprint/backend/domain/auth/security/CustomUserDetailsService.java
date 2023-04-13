@@ -7,6 +7,7 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.repository.UserRepository;
@@ -31,7 +32,7 @@ public class CustomUserDetailsService implements UserDetailsService {
 	@Transactional
 	public UserPrincipal loadUserById(Long id) {
 		User user = userRepository.findById(id).orElseThrow(
-			() -> new ResourceNotFoundException("해당하는 id가 존재하지 않습니다."));
+			() -> new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND));
 		return UserPrincipal.create(user);
 	}
 }
