@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
+import com.triprint.backend.domain.search.dto.GetLocationResponse;
 import com.triprint.backend.domain.search.service.SearchService;
 
 import lombok.RequiredArgsConstructor;
@@ -27,7 +28,7 @@ public class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping()
-	public ResponseEntity<List<GetLocationRequest>> getLocationList() {
+	public ResponseEntity<List<GetLocationResponse>> getLocationList() {
 		return ResponseEntity.ok(searchService.getLocationList());
 	}
 

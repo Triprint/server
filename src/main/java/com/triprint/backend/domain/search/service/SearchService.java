@@ -16,6 +16,7 @@ import com.triprint.backend.domain.location.repository.DistrictRepository;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
+import com.triprint.backend.domain.search.dto.GetLocationResponse;
 import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -29,13 +30,13 @@ public class SearchService {
 
 	public Page<GetPostResponse> searchBasedOnLocation(Pageable page, GetLocationRequest getLocationRequest) {
 
-		City city = cityRepository.findById(getLocationRequest.getCity().getId()).orElseThrow(() -> {
+		City city = cityRepository.findById(getLocationRequest.getCityId()).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.CITY_NOT_FOUND);
 		});
-		District district = distRepository.findById(getLocationRequest.getDistrict().getId()).orElseThrow(() -> {
+		District district = distRepository.findById(getLocationRequest.getDistrictId()).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.DISTRICT_NOT_FOUND);
 		});
-		
+
 		Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 		if (district == null) {
 			posts = searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
@@ -44,28 +45,32 @@ public class SearchService {
 		return posts.map((post) -> new GetPostResponse(post, false));
 	}
 
-	public List<GetLocationRequest> getLocationList() {
+	public List<GetLocationResponse> getLocationList() {
 		List<City> cities = cityRepository.findAll();
 		return makeLocationList(cities);
 	}
 
-	private List<GetLocationRequest> makeLocationList(List<City> cities) {
-		List<GetLocationRequest> getLocationRequests = new ArrayList<>();
+	private List<GetLocationResponse> makeLocationList(List<City> cities) {
+		List<GetLocationResponse> getLocationResponses = new ArrayList<>();
 
 		cities.forEach((city) -> {
 			List<District> districts = city.getDistrict();
 			districts.forEach((district) -> {
-				GetLocationRequest getLocationRequest = GetLocationRequest.builder()
+				GetLocationResponse getLocationResponse = GetLocationResponse.builder()
 					.city(city)
 					.district(district)
 					.build();
-				getLocationRequests.add(getLocationRequest);
+				getLocationResponses.add(getLocationResponse);
 			});
-			GetLocationRequest getLocationRequest = GetLocationRequest.builder()
+			GetLocationResponse getLocationResponse = GetLocationResponse.builder()
 				.city(city)
 				.build();
-			getLocationRequests.add(getLocationRequest);
+			getLocationResponses.add(getLocationResponse);
 		});
-		return getLocationRequests;
+		return getLocationResponses;
 	}
+
+	// public Page<GetPostResponse> searchBasedOnCurrentLocation(Pageable page,
+	// 	CurrentLocationRequest currentLocationRequest) {
+	// }
 }

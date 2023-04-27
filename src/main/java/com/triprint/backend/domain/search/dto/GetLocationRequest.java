@@ -3,18 +3,13 @@ package com.triprint.backend.domain.search.dto;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 
-import com.triprint.backend.domain.location.entity.City;
-import com.triprint.backend.domain.location.entity.District;
-
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-@Builder
 public class GetLocationRequest {
 	@NonNull
-	private City city;
+	private Long cityId;
 
 	@Nullable
-	private District district;
+	private Long districtId;
 }
