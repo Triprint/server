@@ -27,15 +27,15 @@ public class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping()
-	public ResponseEntity<List<GetLocationRequest>> getKeywordList() {
-		return ResponseEntity.ok(searchService.getKeywordList());
+	public ResponseEntity<List<GetLocationRequest>> getLocationList() {
+		return ResponseEntity.ok(searchService.getLocationList());
 	}
 
 	@GetMapping("/location")
-	public ResponseEntity<Page<GetPostResponse>> keywordBasedSearch(
+	public ResponseEntity<Page<GetPostResponse>> searchBasedOnLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
 		GetLocationRequest getLocationRequest) {
-		return ResponseEntity.ok(searchService.keywordBasedSearch(page, getLocationRequest));
+		return ResponseEntity.ok(searchService.searchBasedOnLocation(page, getLocationRequest));
 	}
 
 	@GetMapping("/my/location")

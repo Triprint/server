@@ -49,6 +49,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 
 	@Override
 	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district) {
+
 		return null;
 	}
 

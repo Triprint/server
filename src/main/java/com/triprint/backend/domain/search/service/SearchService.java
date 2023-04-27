@@ -14,7 +14,7 @@ import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.repository.CityRepository;
 import com.triprint.backend.domain.location.repository.DistrictRepository;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
-import com.triprint.backend.domain.post.repository.PostRepository;
+import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
 
@@ -26,9 +26,8 @@ public class SearchService {
 	private final CityRepository cityRepository;
 	private final DistrictRepository distRepository;
 	private final SearchRepositoryImpl searchRepositoryimpl;
-	private final PostRepository postRepository;
 
-	public Page<GetPostResponse> keywordBasedSearch(Pageable page, GetLocationRequest getLocationRequest) {
+	public Page<GetPostResponse> searchBasedOnLocation(Pageable page, GetLocationRequest getLocationRequest) {
 
 		City city = cityRepository.findById(getLocationRequest.getCity().getId()).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.CITY_NOT_FOUND);
@@ -36,24 +35,21 @@ public class SearchService {
 		District district = distRepository.findById(getLocationRequest.getDistrict().getId()).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.DISTRICT_NOT_FOUND);
 		});
-
-		//TODO: 시군구가 없는 경우 city가 포함된 게시물 Page로 가져오기
-		// 그 외는 city + district로 게시물 Page 가져오기
+		
+		Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 		if (district == null) {
-			searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
+			posts = searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
 		}
-		searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 
-		return null;
-
+		return posts.map((post) -> new GetPostResponse(post, false));
 	}
 
-	public List<GetLocationRequest> getKeywordList() {
+	public List<GetLocationRequest> getLocationList() {
 		List<City> cities = cityRepository.findAll();
-		return makeKeywordList(cities);
+		return makeLocationList(cities);
 	}
 
-	private List<GetLocationRequest> makeKeywordList(List<City> cities) {
+	private List<GetLocationRequest> makeLocationList(List<City> cities) {
 		List<GetLocationRequest> getLocationRequests = new ArrayList<>();
 
 		cities.forEach((city) -> {
