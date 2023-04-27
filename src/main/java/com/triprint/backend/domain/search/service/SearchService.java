@@ -14,9 +14,9 @@ import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.repository.CityRepository;
 import com.triprint.backend.domain.location.repository.DistrictRepository;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
-import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.repository.PostRepository;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
+import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,6 +25,7 @@ import lombok.RequiredArgsConstructor;
 public class SearchService {
 	private final CityRepository cityRepository;
 	private final DistrictRepository distRepository;
+	private final SearchRepositoryImpl searchRepositoryimpl;
 	private final PostRepository postRepository;
 
 	public Page<GetPostResponse> keywordBasedSearch(Pageable page, GetLocationRequest getLocationRequest) {
@@ -36,9 +37,14 @@ public class SearchService {
 			throw new ResourceNotFoundException(ErrorMessage.DISTRICT_NOT_FOUND);
 		});
 
-		//TODO: QueryDSL사용하여 해결해야할 것 같음. (POST와 City는 직접적인 연관관계가 없으므로 아래와 같은 방식은 적용할 수 없음.)
-		Page<Post> posts = postRepository.findByCity(city, page);
-		return posts.map((post) -> new GetPostResponse(post, false));
+		//TODO: 시군구가 없는 경우 city가 포함된 게시물 Page로 가져오기
+		// 그 외는 city + district로 게시물 Page 가져오기
+		if (district == null) {
+			searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
+		}
+		searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
+
+		return null;
 
 	}
 
