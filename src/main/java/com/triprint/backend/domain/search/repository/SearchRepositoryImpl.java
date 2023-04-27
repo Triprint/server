@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.triprint.backend.domain.location.dto.GetLocationRequest;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.repository.CityRepository;
 import com.triprint.backend.domain.location.repository.DistrictRepository;
+import com.triprint.backend.domain.search.dto.GetLocationRequest;
 
 import lombok.RequiredArgsConstructor;
 

@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.location.dto;
+package com.triprint.backend.domain.search.dto;
 
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;

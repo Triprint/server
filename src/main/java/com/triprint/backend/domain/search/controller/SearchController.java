@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.triprint.backend.domain.location.dto.GetLocationRequest;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
+import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
+import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.service.SearchService;
 
 import lombok.RequiredArgsConstructor;
@@ -26,15 +27,22 @@ public class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping()
-	public ResponseEntity<List<GetLocationRequest>> getLocation() {
-		return ResponseEntity.ok(searchService.getCategory());
+	public ResponseEntity<List<GetLocationRequest>> getKeywordList() {
+		return ResponseEntity.ok(searchService.getKeywordList());
 	}
 
 	@GetMapping("/location")
-	public ResponseEntity<Page<GetPostResponse>> getResult(
+	public ResponseEntity<Page<GetPostResponse>> keywordBasedSearch(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
 		GetLocationRequest getLocationRequest) {
-		return ResponseEntity.ok(searchService.getResult(page, getLocationRequest));
+		return ResponseEntity.ok(searchService.keywordBasedSearch(page, getLocationRequest));
+	}
+
+	@GetMapping("/my/location")
+	public ResponseEntity<Page<GetPostResponse>> searchBasedOnCurrentLocation(
+		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
+		CurrentLocationRequest currentLocationRequest) {
+		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
 	}
 
 }
