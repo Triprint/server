@@ -37,10 +37,11 @@ public class SearchService {
 			throw new ResourceNotFoundException(ErrorMessage.DISTRICT_NOT_FOUND);
 		});
 
-		Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 		if (district == null) {
-			posts = searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
+			Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
+			return posts.map((post) -> new GetPostResponse(post, false));
 		}
+		Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 
 		return posts.map((post) -> new GetPostResponse(post, false));
 	}

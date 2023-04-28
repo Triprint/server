@@ -14,6 +14,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
+import org.springframework.lang.NonNull;
+
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,6 +42,7 @@ public class District { //시군구 행정지역
 	@JoinColumn(
 		name = "city_id"
 	)
+	@NonNull
 	private City city;
 
 	@Builder

@@ -2,7 +2,10 @@ package com.triprint.backend.domain.search.repository;
 
 import static com.triprint.backend.domain.post.entity.QPost.*;
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -22,10 +25,12 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 
 	@Override
 	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district) {
-			Page<Post> result = jpaQueryFactory.selectFrom(post)
-				.where(post.touristAttraction.district.city.eq(city))
-				
-		return null;
+		List<Post> result = jpaQueryFactory.selectFrom(post)
+			.where(
+				post.touristAttraction.district.city.eq(city).and(post.touristAttraction.district.eq(district))
+			).fetch();
+
+		return new PageImpl<>(result);
 	}
 
 	@Override
