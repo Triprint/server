@@ -27,7 +27,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district) {
 		List<Post> result = jpaQueryFactory.selectFrom(post)
 			.where(
-				post.touristAttraction.district.city.eq(city).and(post.touristAttraction.district.eq(district))
+				post.touristAttraction.district.city.eq(city), (post.touristAttraction.district.eq(district))
 			).fetch();
 
 		return new PageImpl<>(result);

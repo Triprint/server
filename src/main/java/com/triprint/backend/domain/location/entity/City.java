@@ -17,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class City { //시도 행정지역
+public class City {
 	@Id
 	@GeneratedValue(
 		strategy = GenerationType.IDENTITY
