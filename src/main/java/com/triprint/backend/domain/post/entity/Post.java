@@ -27,6 +27,7 @@ import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import com.querydsl.core.annotations.QueryInit;
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
@@ -88,6 +89,7 @@ public class Post {
 	@JoinColumn(
 		name = "touristAttraction_id", nullable = false
 	)
+	@QueryInit("*.*")
 	private TouristAttraction touristAttraction;
 
 	@OneToMany(

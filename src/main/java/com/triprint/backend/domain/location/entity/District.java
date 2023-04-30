@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @NoArgsConstructor
-public class District { //시군구 행정지역
+public class District {
 	@Id
 	@GeneratedValue(
 		strategy = GenerationType.IDENTITY

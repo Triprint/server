@@ -1,5 +1,7 @@
 package com.triprint.backend.domain.search.repository;
 
+import static com.triprint.backend.domain.location.entity.QDistrict.*;
+import static com.triprint.backend.domain.location.entity.QTouristAttraction.*;
 import static com.triprint.backend.domain.post.entity.QPost.*;
 
 import java.util.List;
@@ -11,8 +13,6 @@ import org.springframework.data.domain.Pageable;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
-import com.triprint.backend.domain.location.repository.CityRepository;
-import com.triprint.backend.domain.location.repository.DistrictRepository;
 import com.triprint.backend.domain.post.entity.Post;
 
 import lombok.RequiredArgsConstructor;
@@ -20,16 +20,14 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SearchRepositoryImpl implements SearchRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
-	private final CityRepository cityRepository;
-	private final DistrictRepository districtRepository;
 
 	@Override
-	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district) {
-		List<Post> result = jpaQueryFactory.selectFrom(post)
-			.where(
-				post.touristAttraction.district.city.eq(city), (post.touristAttraction.district.eq(district))
-			).fetch();
-
+	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district0) {
+		List<Post> result = (List<Post>)jpaQueryFactory.from(post)
+			.join(post.touristAttraction, touristAttraction)
+			.join(touristAttraction.district, district)
+			.where(district.eq(district0), district.city.eq(city))
+			.fetch();
 		return new PageImpl<>(result);
 	}
 
