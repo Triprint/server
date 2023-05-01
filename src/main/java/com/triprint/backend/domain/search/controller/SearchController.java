@@ -33,8 +33,8 @@ public class SearchController {
 
 	@GetMapping("/location")
 	public ResponseEntity<Page<GetPostResponse>> searchBasedOnLocation(
-		GetLocationRequest getLocationRequest,
-		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page
+		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
+		GetLocationRequest getLocationRequest
 	) {
 		return ResponseEntity.ok(searchService.searchBasedOnLocation(page, getLocationRequest));
 	}
