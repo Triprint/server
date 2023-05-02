@@ -53,7 +53,7 @@ public class ReplyService {
 		}
 
 		//Todo: 둘 중 하나가 null => Exception
-		throw new BadRequestException("잘못된 요청입니다.");
+		throw new BadRequestException(ErrorMessage.BAD_REQUEST);
 	}
 
 	public Page<GetReplyResponse> getReplies(Long postId, Pageable page) {
@@ -91,7 +91,7 @@ public class ReplyService {
 
 	private void validateIsAuthor(Long replyAuthor, Long currentUserId) {
 		if (!currentUserId.equals(replyAuthor)) {
-			throw new ForbiddenException("작성자가 아니므로 수정할 권한이 없습니다.");
+			throw new ForbiddenException(ErrorMessage.INVALID_AUTHOR);
 		}
 	}
 
