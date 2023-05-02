@@ -5,9 +5,7 @@ import static com.triprint.backend.domain.location.entity.QTouristAttraction.*;
 import static com.triprint.backend.domain.post.entity.QPost.*;
 import static org.springframework.util.ObjectUtils.*;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
@@ -15,11 +13,11 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import com.querydsl.core.QueryException;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.jpa.impl.JPAQueryFactory;
-import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.core.exception.BadRequestException;
+import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
@@ -46,8 +44,8 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 				.limit(pageable.getPageSize())
 				.fetch();
 			return new PageImpl<>(result);
-		} catch (QueryException queryException) {
-			throw new ResourceNotFoundException("해당하는 검색키워드가 없습니다.");
+		} catch (IllegalArgumentException queryException) {
+			throw new BadRequestException(ErrorMessage.BAD_REQUEST);
 		}
 	}
 
@@ -68,31 +66,8 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		for (Sort.Order order : pageable.getSort()) {
 			Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
 			String property = order.getProperty();
-			Field[] existColumns = Post.class.getDeclaredFields();
-			String[] fieldName = Arrays.stream(existColumns)
-				.map(Object::toString)
-				.toArray(String[]::new);
-
-			// 만약에 Post에 없는 Column이 요청이으로 들어왔을 때?
-			if (Arrays.stream(fieldName).anyMatch(property::equals)) {
-				OrderSpecifier<?> column = QueryDslUtil.getSortedColumn(direction, QPost.post, property);
-				orders.add(column);
-			}
-			// OrderSpecifier<?> column = QueryDslUtil.getSortedColumn(direction, QPost.post, property);
-			// orders.add(column);
-
-			// switch (order.getProperty()) {
-			// 	case "id":
-			// 		OrderSpecifier<?> orderId = QueryDslUtil.getSortedColumn(direction, QPost.post, "id");
-			// 		orders.add(orderId);
-			// 		break;
-			// 	case "createdAt":
-			// 		OrderSpecifier<?> orderCreatedAt = QueryDslUtil.getSortedColumn(direction, QPost.post, "createdAt");
-			// 		orders.add(orderCreatedAt);
-			// 		break;
-			// 	default:
-			// 		break;
-			// }
+			OrderSpecifier<?> column = QueryDslUtil.getSortedColumn(direction, QPost.post, property);
+			orders.add(column);
 		}
 		return orders;
 	}
