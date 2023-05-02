@@ -27,7 +27,7 @@ public class SearchController {
 	private final SearchService searchService;
 
 	@GetMapping()
-	public ResponseEntity<List<GetLocationResponse>> getLocationList() {
+	public ResponseEntity<List<GetLocationResponse>> getLocationList() { // 현재 위치 x,y
 		return ResponseEntity.ok(searchService.getLocationList());
 	}
 
