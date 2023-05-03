@@ -74,6 +74,19 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 
 	@Override
 	public Page<Post> findBySearchBasedOnCityKeywords(Pageable pageable, City city) {
-		return null;
+		try {
+			List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
+			List<Post> result = (List<Post>)jpaQueryFactory.from(post)
+				.join(post.touristAttraction, touristAttraction)
+				.join(touristAttraction.district, district)
+				.where(district.city.eq(city))
+				.orderBy(orders.stream().toArray(OrderSpecifier[]::new))
+				.offset(pageable.getOffset())
+				.limit(pageable.getPageSize())
+				.fetch();
+			return new PageImpl<>(result);
+		} catch (IllegalArgumentException queryException) {
+			throw new BadRequestException(ErrorMessage.BAD_REQUEST);
+		}
 	}
 }
