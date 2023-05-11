@@ -16,13 +16,11 @@ import com.triprint.backend.domain.location.repository.CityRepository;
 import com.triprint.backend.domain.location.repository.DistrictRepository;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.post.entity.Post;
-import com.triprint.backend.domain.post.repository.PostRepository;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
 import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
-import com.triprint.backend.domain.search.util.LocationUtil;
 
 import lombok.RequiredArgsConstructor;
 
@@ -31,7 +29,6 @@ import lombok.RequiredArgsConstructor;
 public class SearchService {
 	private final CityRepository cityRepository;
 	private final DistrictRepository distRepository;
-	private final PostRepository postRepository;
 	private final SearchRepositoryImpl searchRepositoryimpl;
 
 	public Page<GetPostResponse> searchBasedOnLocation(Pageable page, GetLocationRequest getLocationRequest) {
@@ -79,18 +76,31 @@ public class SearchService {
 
 	public Page<CurrentLocationResponse> searchBasedOnCurrentLocation(Pageable page,
 		CurrentLocationRequest currentLocationRequest) {
+		Page<Post> result = searchRepositoryimpl.findByCurrentLocation(page,
+			currentLocationRequest);
+
+		return getLocationResponses(result);
+	}
+
+	private Page<CurrentLocationResponse> getLocationResponses(Page<Post> posts) {
 		List<CurrentLocationResponse> currentLocationResponses = new ArrayList<>();
-		List<Post> postList = postRepository.findAll();
-		for (Post post : postList) {
-			currentLocationResponses.add(CurrentLocationResponse.builder()
-				.diff_Distance(LocationUtil.distance(post.getTouristAttraction().getLatitudeLongitude().getX(),
-					post.getTouristAttraction().getLatitudeLongitude().getY(),
-					Double.parseDouble(currentLocationRequest.getX()),
-					Double.parseDouble(currentLocationRequest.getY()))
-				).build());
-		}
-		int start = (int)page.getOffset();
-		int end = Math.min((start + page.getPageSize()), currentLocationResponses.size());
-		return new PageImpl<>(currentLocationResponses.subList(start, end), page, currentLocationResponses.size());
+
+		posts.forEach((post) -> {
+			GetPostResponse getPostResponse = new GetPostResponse(post, false);
+			CurrentLocationResponse currentLocationResponse = CurrentLocationResponse.builder()
+				.id(getPostResponse.getId())
+				.author(getPostResponse.getAuthor())
+				.contents(getPostResponse.getContents())
+				.title(getPostResponse.getTitle())
+				.touristAttraction(getPostResponse.getTouristAttraction())
+				.hashTags(getPostResponse.getHashtags())
+				.createdAt(getPostResponse.getCreatedAt())
+				.tripId(getPostResponse.getTripId())
+				.images(getPostResponse.getImages())
+				.likes(getPostResponse.getLikes())
+				.build();
+			currentLocationResponses.add(currentLocationResponse);
+		});
+		return new PageImpl<>(currentLocationResponses);
 	}
 }

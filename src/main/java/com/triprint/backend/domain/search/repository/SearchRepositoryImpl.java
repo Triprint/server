@@ -15,6 +15,7 @@ import org.springframework.data.domain.Sort;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.triprint.backend.core.exception.BadRequestException;
 import com.triprint.backend.core.exception.ErrorMessage;
@@ -22,6 +23,7 @@ import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.entity.QPost;
+import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.util.QueryDslUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -55,7 +57,6 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 	 * 2. 에러 터뜨리기 -> 에러가 터지면 나만의 에러로 핸들링하기
 	 *    클래스에 존재하는 칼럼인지 확인하는 메서드가 있는지 확인하기
 	 */
-
 	private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
 
 		if (isEmpty(pageable.getSort())) {
@@ -88,5 +89,25 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		} catch (IllegalArgumentException queryException) {
 			throw new BadRequestException(ErrorMessage.BAD_REQUEST);
 		}
+	}
+
+	@Override
+	public Page<Post> findByCurrentLocation(Pageable page, CurrentLocationRequest currentLocationRequest) {
+		List<Post> content = jpaQueryFactory
+			.selectFrom(post)
+			.join(post.touristAttraction, touristAttraction)
+			.where(Expressions.stringTemplate("ST_Distance_Sphere({0}, {1})",
+				Expressions.stringTemplate("POINT({0}, {1})",
+					currentLocationRequest.getX(),
+					currentLocationRequest.getY()
+				),
+				Expressions.stringTemplate("{0}",
+					post.touristAttraction.latitudeLongitude
+				)
+			).loe("20000"))
+			.limit(page.getPageSize())
+			.offset(page.getOffset())
+			.fetch();
+		return new PageImpl<>(content);
 	}
 }

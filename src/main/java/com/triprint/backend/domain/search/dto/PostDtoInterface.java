@@ -22,14 +22,8 @@ public interface PostDtoInterface {
 	Integer getLikes();
 
 	GetTouristAttractionResponse getTouristAttraction();
-
-	Double getDiff_Distance();
-
+	
 	Timestamp getCreatedAt();
 
 	Timestamp getUpdatedAt();
-
-	Double getX();
-
-	Double getY();
 }

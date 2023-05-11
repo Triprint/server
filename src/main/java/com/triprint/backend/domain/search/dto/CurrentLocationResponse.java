@@ -32,13 +32,7 @@ public class CurrentLocationResponse implements PostDtoInterface {
 
 	public GetTouristAttractionResponse touristAttraction;
 
-	public Double diff_Distance;
-
 	public Timestamp createdAt;
 
 	public Timestamp updatedAt;
-
-	public Double x;
-
-	public Double y;
 }
