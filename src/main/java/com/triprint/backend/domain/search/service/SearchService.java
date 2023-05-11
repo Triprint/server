@@ -20,6 +20,8 @@ import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
+import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
+import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
 
 import lombok.RequiredArgsConstructor;
@@ -102,5 +104,9 @@ public class SearchService {
 			currentLocationResponses.add(currentLocationResponse);
 		});
 		return new PageImpl<>(currentLocationResponses);
+	}
+
+	public PredictiveHashtagResponse predictiveHashtag(PredictiveHashtagRequest predictiveHashtagRequest) {
+
 	}
 }

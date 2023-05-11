@@ -51,12 +51,6 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		}
 	}
 
-	/**
-	 * Order의 칼럼이 없는 경우
-	 * 1. 값 무시 -> 메서드 만들어서
-	 * 2. 에러 터뜨리기 -> 에러가 터지면 나만의 에러로 핸들링하기
-	 *    클래스에 존재하는 칼럼인지 확인하는 메서드가 있는지 확인하기
-	 */
 	private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
 
 		if (isEmpty(pageable.getSort())) {

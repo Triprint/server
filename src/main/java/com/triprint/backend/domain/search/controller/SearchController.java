@@ -17,6 +17,8 @@ import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
+import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
+import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.service.SearchService;
 
 import lombok.RequiredArgsConstructor;
@@ -48,4 +50,9 @@ public class SearchController {
 		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
 	}
 
+	@GetMapping("/auto/hashTag")
+	public ResponseEntity<PredictiveHashtagResponse> predictiveHashtag(
+		PredictiveHashtagRequest predictiveHashtagRequest) {
+		return ResponseEntity.ok(searchService.predictiveHashtag(predictiveHashtagRequest));
+	}
 }
