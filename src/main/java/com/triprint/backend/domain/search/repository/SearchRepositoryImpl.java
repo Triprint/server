@@ -27,6 +27,7 @@ import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.entity.QPost;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
+import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.util.QueryDslUtil;
 
@@ -125,4 +126,22 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		return hashtags;
 	}
 
+	@Override
+	public Page<FindPostsWithHashtagResponse> findByHashtagPost(Pageable page, Long hashtagId) {
+		List<FindPostsWithHashtagResponse> posts = jpaQueryFactory.select(
+				Projections.constructor(FindPostsWithHashtagResponse.class, post.id.as("id"),
+					post.title.as("title"), post.contents.as("contents"), post.images.as("images"),
+					post.postHashtag.as("hashTags"),
+					post.author.as("author"), post.trip.as("tripId"), post.likes.as("likes"),
+					post.touristAttraction.as("touristAttraction"),
+					post.createdAt.as("createdAt"), post.updatedAt.as("updatedAt")))
+			.from(post)
+			.leftJoin(post.postHashtag, postHashtag)
+			.where(postHashtag.hashtag.id.eq(hashtagId))
+			.orderBy(post.createdAt.desc())
+			.limit(page.getPageSize())
+			.offset(page.getOffset())
+			.fetch();
+		return new PageImpl<>(posts);
+	}
 }

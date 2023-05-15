@@ -117,14 +117,15 @@ public class SearchService {
 		return predictiveHashtagResponse;
 	}
 
-	public Page<FindPostsWithHashtagResponse> findPostsWithHashtag(
+	public Page<FindPostsWithHashtagResponse> findPostsWithHashtag(Pageable page,
 		FindPostsWithHashtagRequest findPostsWithHashtagRequest) {
 		Hashtag hashtag = hashtagRepository.findById(findPostsWithHashtagRequest.getId()).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ErrorMessage.CITY_NOT_FOUND);
+			throw new ResourceNotFoundException(ErrorMessage.HASHTAG_NOT_FOUND);
 		});
 
-		List<FindPostsWithHashtagResponse> findPostsWithHashtagResponses = new ArrayList<>();
+		Page<FindPostsWithHashtagResponse> findPostsWithHashtagResponses = searchRepositoryimpl.findByHashtagPost(page,
+			findPostsWithHashtagRequest.getId());
 
-		return new PageImpl<>(findPostsWithHashtagResponses);
+		return findPostsWithHashtagResponses;
 	}
 }

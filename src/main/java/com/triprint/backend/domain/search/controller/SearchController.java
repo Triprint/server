@@ -63,6 +63,6 @@ public class SearchController {
 	public ResponseEntity<Page<FindPostsWithHashtagResponse>> findPostsWithHashtag(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
 		FindPostsWithHashtagRequest findPostsWithHashtagRequest) {
-		return ResponseEntity.ok(searchService.findPostsWithHashtag(findPostsWithHashtagRequest));
+		return ResponseEntity.ok(searchService.findPostsWithHashtag(page, findPostsWithHashtagRequest));
 	}
 }
