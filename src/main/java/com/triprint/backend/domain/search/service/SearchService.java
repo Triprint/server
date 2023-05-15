@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.hashtag.entity.Hashtag;
+import com.triprint.backend.domain.hashtag.repository.HashtagRepository;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.repository.CityRepository;
@@ -18,6 +20,8 @@ import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
+import com.triprint.backend.domain.search.dto.FindPostsWithHashtagRequest;
+import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
@@ -31,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 public class SearchService {
 	private final CityRepository cityRepository;
 	private final DistrictRepository distRepository;
+	private final HashtagRepository hashtagRepository;
 	private final SearchRepositoryImpl searchRepositoryimpl;
 
 	public Page<GetPostResponse> searchBasedOnLocation(Pageable page, GetLocationRequest getLocationRequest) {
@@ -110,5 +115,16 @@ public class SearchService {
 		List<PredictiveHashtagResponse> predictiveHashtagResponse = searchRepositoryimpl.findByHashtag(
 			predictiveHashtagRequest.getKeyword());
 		return predictiveHashtagResponse;
+	}
+
+	public Page<FindPostsWithHashtagResponse> findPostsWithHashtag(
+		FindPostsWithHashtagRequest findPostsWithHashtagRequest) {
+		Hashtag hashtag = hashtagRepository.findById(findPostsWithHashtagRequest.getId()).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.CITY_NOT_FOUND);
+		});
+
+		List<FindPostsWithHashtagResponse> findPostsWithHashtagResponses = new ArrayList<>();
+
+		return new PageImpl<>(findPostsWithHashtagResponses);
 	}
 }
