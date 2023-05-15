@@ -15,6 +15,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
+import com.triprint.backend.domain.search.dto.FindPostsWithHashtagRequest;
+import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
@@ -54,5 +56,13 @@ public class SearchController {
 	public ResponseEntity<List<PredictiveHashtagResponse>> getHashtag(
 		PredictiveHashtagRequest predictiveHashtagRequest) {
 		return ResponseEntity.ok(searchService.predictiveHashtag(predictiveHashtagRequest));
+	}
+
+	//해당 해시태그가 있는 포스트 검색 (Pagination O)
+	@GetMapping("/auto/hashtag")
+	public ResponseEntity<Page<FindPostsWithHashtagResponse>> findPostsWithHashtag(
+		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
+		FindPostsWithHashtagRequest findPostsWithHashtagRequest) {
+		return ResponseEntity.ok(searchService.findPostsWithHashtag(findPostsWithHashtagRequest));
 	}
 }
