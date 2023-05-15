@@ -1,8 +1,10 @@
 package com.triprint.backend.domain.search.repository;
 
+import static com.triprint.backend.domain.hashtag.entity.QHashtag.*;
 import static com.triprint.backend.domain.location.entity.QDistrict.*;
 import static com.triprint.backend.domain.location.entity.QTouristAttraction.*;
 import static com.triprint.backend.domain.post.entity.QPost.*;
+import static com.triprint.backend.domain.post.entity.QPostHashtag.*;
 import static org.springframework.util.ObjectUtils.*;
 
 import java.util.ArrayList;
@@ -15,6 +17,7 @@ import org.springframework.data.domain.Sort;
 
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import com.triprint.backend.core.exception.BadRequestException;
@@ -24,6 +27,7 @@ import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.entity.QPost;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
+import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.util.QueryDslUtil;
 
 import lombok.RequiredArgsConstructor;
@@ -87,7 +91,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 
 	@Override
 	public Page<Post> findByCurrentLocation(Pageable page, CurrentLocationRequest currentLocationRequest) {
-		List<Post> content = jpaQueryFactory
+		List<Post> posts = jpaQueryFactory
 			.selectFrom(post)
 			.join(post.touristAttraction, touristAttraction)
 			.where(Expressions.stringTemplate("ST_Distance_Sphere({0}, {1})",
@@ -102,6 +106,23 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 			.limit(page.getPageSize())
 			.offset(page.getOffset())
 			.fetch();
-		return new PageImpl<>(content);
+		return new PageImpl<>(posts);
 	}
+
+	@Override
+	public List<PredictiveHashtagResponse> findByHashtag(String keyword) {
+
+		List<PredictiveHashtagResponse> hashtags = jpaQueryFactory.select(
+				Projections.constructor(PredictiveHashtagResponse.class, hashtag.id.as("tagId"),
+					hashtag.contents.as("tagName"),
+					postHashtag.post.id.count().as("postCnt")))
+			.from(postHashtag)
+			.leftJoin(postHashtag.hashtag, hashtag)
+			.where(hashtag.contents.contains(keyword))
+			.groupBy(hashtag.id)
+			.orderBy(postHashtag.post.id.count().desc())
+			.fetch();
+		return hashtags;
+	}
+
 }

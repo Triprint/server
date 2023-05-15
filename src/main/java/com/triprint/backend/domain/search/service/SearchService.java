@@ -106,7 +106,9 @@ public class SearchService {
 		return new PageImpl<>(currentLocationResponses);
 	}
 
-	public PredictiveHashtagResponse predictiveHashtag(PredictiveHashtagRequest predictiveHashtagRequest) {
-
+	public List<PredictiveHashtagResponse> predictiveHashtag(PredictiveHashtagRequest predictiveHashtagRequest) {
+		List<PredictiveHashtagResponse> predictiveHashtagResponse = searchRepositoryimpl.findByHashtag(
+			predictiveHashtagRequest.getKeyword());
+		return predictiveHashtagResponse;
 	}
 }

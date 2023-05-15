@@ -1,13 +1,18 @@
 package com.triprint.backend.domain.search.dto;
 
-import java.util.List;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
-import lombok.Builder;
-import lombok.Getter;
-
-@Getter
-@Builder
+@Data
+@NoArgsConstructor
 public class PredictiveHashtagResponse {
-	private List<String> hashTags;
-	private int relatedPostCnt;
+	private Long tagId;
+	private String tagName;
+	private Long postCnt;
+
+	public PredictiveHashtagResponse(Long tagId, String tagName, Long postCnt) {
+		this.tagId = tagId;
+		this.tagName = tagName;
+		this.postCnt = postCnt;
+	}
 }

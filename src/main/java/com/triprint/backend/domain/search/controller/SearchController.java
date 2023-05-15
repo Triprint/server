@@ -50,8 +50,8 @@ public class SearchController {
 		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
 	}
 
-	@GetMapping("/auto/hashTag")
-	public ResponseEntity<PredictiveHashtagResponse> predictiveHashtag(
+	@GetMapping("/auto/hashtag")
+	public ResponseEntity<List<PredictiveHashtagResponse>> getHashtag(
 		PredictiveHashtagRequest predictiveHashtagRequest) {
 		return ResponseEntity.ok(searchService.predictiveHashtag(predictiveHashtagRequest));
 	}
