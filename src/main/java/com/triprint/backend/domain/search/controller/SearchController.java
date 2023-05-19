@@ -9,16 +9,14 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
-import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
-import com.triprint.backend.domain.search.dto.FindPostsWithHashtagRequest;
-import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
+import com.triprint.backend.domain.search.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.service.SearchService;
@@ -38,7 +36,7 @@ public class SearchController {
 	}
 
 	@GetMapping("/location")
-	public ResponseEntity<Page<GetPostResponse>> searchBasedOnLocation(
+	public ResponseEntity<Page<com.triprint.backend.domain.post.dto.GetPostResponse>> searchBasedOnLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
 		GetLocationRequest getLocationRequest
 	) {
@@ -46,7 +44,7 @@ public class SearchController {
 	}
 
 	@GetMapping("/my/location")
-	public ResponseEntity<Page<CurrentLocationResponse>> searchBasedOnCurrentLocation(
+	public ResponseEntity<Page<GetPostResponse>> searchBasedOnCurrentLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
 		CurrentLocationRequest currentLocationRequest) {
 		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
@@ -59,10 +57,10 @@ public class SearchController {
 	}
 
 	//해당 해시태그가 있는 포스트 검색 (Pagination O)
-	@GetMapping("/auto/hashtag")
-	public ResponseEntity<Page<FindPostsWithHashtagResponse>> findPostsWithHashtag(
+	@GetMapping("/auto/hashtag/{id}")
+	public ResponseEntity<Page<GetPostResponse>> findPostsWithHashtag(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
-		FindPostsWithHashtagRequest findPostsWithHashtagRequest) {
-		return ResponseEntity.ok(searchService.findPostsWithHashtag(page, findPostsWithHashtagRequest));
+		@PathVariable Long id) {
+		return ResponseEntity.ok(searchService.findPostsWithHashtag(page, id));
 	}
 }

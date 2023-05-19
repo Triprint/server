@@ -16,14 +16,11 @@ import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.repository.CityRepository;
 import com.triprint.backend.domain.location.repository.DistrictRepository;
-import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
-import com.triprint.backend.domain.search.dto.CurrentLocationResponse;
-import com.triprint.backend.domain.search.dto.FindPostsWithHashtagRequest;
-import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
+import com.triprint.backend.domain.search.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
@@ -38,7 +35,8 @@ public class SearchService {
 	private final HashtagRepository hashtagRepository;
 	private final SearchRepositoryImpl searchRepositoryimpl;
 
-	public Page<GetPostResponse> searchBasedOnLocation(Pageable page, GetLocationRequest getLocationRequest) {
+	public Page<com.triprint.backend.domain.post.dto.GetPostResponse> searchBasedOnLocation(Pageable page,
+		GetLocationRequest getLocationRequest) {
 
 		City city = cityRepository.findById(getLocationRequest.getCityId()).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.CITY_NOT_FOUND);
@@ -49,11 +47,11 @@ public class SearchService {
 
 		if (district == null) {
 			Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
-			return posts.map((post) -> new GetPostResponse(post, false));
+			return posts.map((post) -> new com.triprint.backend.domain.post.dto.GetPostResponse(post, false));
 		}
 		Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 
-		return posts.map((post) -> new GetPostResponse(post, false));
+		return posts.map((post) -> new com.triprint.backend.domain.post.dto.GetPostResponse(post, false));
 	}
 
 	public List<GetLocationResponse> getLocationList() {
@@ -81,7 +79,7 @@ public class SearchService {
 		return getLocationResponses;
 	}
 
-	public Page<CurrentLocationResponse> searchBasedOnCurrentLocation(Pageable page,
+	public Page<GetPostResponse> searchBasedOnCurrentLocation(Pageable page,
 		CurrentLocationRequest currentLocationRequest) {
 		Page<Post> result = searchRepositoryimpl.findByCurrentLocation(page,
 			currentLocationRequest);
@@ -89,12 +87,13 @@ public class SearchService {
 		return getLocationResponses(result);
 	}
 
-	private Page<CurrentLocationResponse> getLocationResponses(Page<Post> posts) {
-		List<CurrentLocationResponse> currentLocationResponses = new ArrayList<>();
+	private Page<GetPostResponse> getLocationResponses(Page<Post> posts) {
+		List<GetPostResponse> getPostResponses = new ArrayList<>();
 
 		posts.forEach((post) -> {
-			GetPostResponse getPostResponse = new GetPostResponse(post, false);
-			CurrentLocationResponse currentLocationResponse = CurrentLocationResponse.builder()
+			com.triprint.backend.domain.post.dto.GetPostResponse getPostResponse = new com.triprint.backend.domain.post.dto.GetPostResponse(
+				post, false);
+			GetPostResponse currentLocationResponse = GetPostResponse.builder()
 				.id(getPostResponse.getId())
 				.author(getPostResponse.getAuthor())
 				.contents(getPostResponse.getContents())
@@ -106,9 +105,9 @@ public class SearchService {
 				.images(getPostResponse.getImages())
 				.likes(getPostResponse.getLikes())
 				.build();
-			currentLocationResponses.add(currentLocationResponse);
+			getPostResponses.add(currentLocationResponse);
 		});
-		return new PageImpl<>(currentLocationResponses);
+		return new PageImpl<>(getPostResponses);
 	}
 
 	public List<PredictiveHashtagResponse> predictiveHashtag(PredictiveHashtagRequest predictiveHashtagRequest) {
@@ -117,15 +116,15 @@ public class SearchService {
 		return predictiveHashtagResponse;
 	}
 
-	public Page<FindPostsWithHashtagResponse> findPostsWithHashtag(Pageable page,
-		FindPostsWithHashtagRequest findPostsWithHashtagRequest) {
-		Hashtag hashtag = hashtagRepository.findById(findPostsWithHashtagRequest.getId()).orElseThrow(() -> {
+	public Page<GetPostResponse> findPostsWithHashtag(Pageable page,
+		Long id) {
+		Hashtag hashtag = hashtagRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.HASHTAG_NOT_FOUND);
 		});
 
-		Page<FindPostsWithHashtagResponse> findPostsWithHashtagResponses = searchRepositoryimpl.findByHashtagPost(page,
-			findPostsWithHashtagRequest.getId());
+		Page<Post> posts = searchRepositoryimpl.findByHashtagPost(page,
+			id);
 
-		return findPostsWithHashtagResponses;
+		return getLocationResponses(posts);
 	}
 }

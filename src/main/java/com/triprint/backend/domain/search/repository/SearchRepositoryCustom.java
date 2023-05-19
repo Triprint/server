@@ -9,7 +9,6 @@ import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
-import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 
 public interface SearchRepositoryCustom {
@@ -21,5 +20,5 @@ public interface SearchRepositoryCustom {
 
 	List<PredictiveHashtagResponse> findByHashtag(String hashtag);
 
-	Page<FindPostsWithHashtagResponse> findByHashtagPost(Pageable page, Long hashtagId);
+	Page<Post> findByHashtagPost(Pageable page, Long hashtagId);
 }

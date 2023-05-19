@@ -27,7 +27,6 @@ import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.entity.QPost;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
-import com.triprint.backend.domain.search.dto.FindPostsWithHashtagResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.util.QueryDslUtil;
 
@@ -126,21 +125,25 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		return hashtags;
 	}
 
+	/**
+	 select *
+	 from post
+	 inner join post_hashtag
+	 on post.id = post_hashtag.post_id
+	 left join hashtag
+	 on post_hashtag.hashtag_id = hashtag.id
+	 where post_hashtag.hashtag_id = 1;
+	 */
 	@Override
-	public Page<FindPostsWithHashtagResponse> findByHashtagPost(Pageable page, Long hashtagId) {
-		List<FindPostsWithHashtagResponse> posts = jpaQueryFactory.select(
-				Projections.constructor(FindPostsWithHashtagResponse.class, post.id.as("id"),
-					post.title.as("title"), post.contents.as("contents"), post.images.as("images"),
-					post.postHashtag.as("hashTags"),
-					post.author.as("author"), post.trip.as("tripId"), post.likes.as("likes"),
-					post.touristAttraction.as("touristAttraction"),
-					post.createdAt.as("createdAt"), post.updatedAt.as("updatedAt")))
-			.from(post)
-			.leftJoin(post.postHashtag, postHashtag)
-			.where(postHashtag.hashtag.id.eq(hashtagId))
-			.orderBy(post.createdAt.desc())
-			.limit(page.getPageSize())
+	public Page<Post> findByHashtagPost(Pageable page, Long hashtagId) {
+		List<OrderSpecifier> orderSpecifiers = getAllOrderSpecifiers(page);
+		List<Post> posts = jpaQueryFactory.selectFrom(post)
+			.innerJoin(post.postHashtag, postHashtag)
+			.leftJoin(postHashtag.hashtag, hashtag)
+			.where(hashtag.id.eq(hashtagId))
+			.orderBy(orderSpecifiers.stream().toArray(OrderSpecifier[]::new))
 			.offset(page.getOffset())
+			.limit(page.getPageSize())
 			.fetch();
 		return new PageImpl<>(posts);
 	}

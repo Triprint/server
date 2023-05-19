@@ -13,7 +13,7 @@ import lombok.Data;
 @Data
 @Builder
 @AllArgsConstructor
-public class CurrentLocationResponse implements PostDtoInterface {
+public class GetPostResponse implements PostDtoInterface {
 	public long id;
 
 	public String title;
