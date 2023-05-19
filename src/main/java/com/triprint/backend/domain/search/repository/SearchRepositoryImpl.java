@@ -141,9 +141,9 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 			.innerJoin(post.postHashtag, postHashtag)
 			.leftJoin(postHashtag.hashtag, hashtag)
 			.where(hashtag.id.eq(hashtagId))
-			.orderBy(orderSpecifiers.stream().toArray(OrderSpecifier[]::new))
 			.offset(page.getOffset())
 			.limit(page.getPageSize())
+			.orderBy(orderSpecifiers.stream().toArray(OrderSpecifier[]::new))
 			.fetch();
 		return new PageImpl<>(posts);
 	}
