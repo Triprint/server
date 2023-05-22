@@ -56,7 +56,6 @@ public class SearchController {
 		return ResponseEntity.ok(searchService.predictiveHashtag(predictiveHashtagRequest));
 	}
 
-	//해당 해시태그가 있는 포스트 검색 (Pagination O)
 	@GetMapping("/auto/hashtag/{id}")
 	public ResponseEntity<Page<GetPostResponse>> findPostsWithHashtag(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,

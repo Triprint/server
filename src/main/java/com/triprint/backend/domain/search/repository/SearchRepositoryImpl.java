@@ -102,7 +102,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 				Expressions.stringTemplate("{0}",
 					post.touristAttraction.latitudeLongitude
 				)
-			).loe("20000"))
+			).loe(String.valueOf(currentLocationRequest.getDistance())))
 			.limit(page.getPageSize())
 			.offset(page.getOffset())
 			.fetch();
