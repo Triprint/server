@@ -12,15 +12,17 @@ import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.hashtag.entity.Hashtag;
 import com.triprint.backend.domain.hashtag.repository.HashtagRepository;
+import com.triprint.backend.domain.location.dto.GetCityResponse;
+import com.triprint.backend.domain.location.dto.GetDistrictResponse;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.location.repository.CityRepository;
 import com.triprint.backend.domain.location.repository.DistrictRepository;
+import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
-import com.triprint.backend.domain.search.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.repository.SearchRepositoryImpl;
@@ -66,13 +68,13 @@ public class SearchService {
 			List<District> districts = city.getDistrict();
 			districts.forEach((district) -> {
 				GetLocationResponse getLocationResponse = GetLocationResponse.builder()
-					.city(city)
-					.district(district)
+					.city(new GetCityResponse(city))
+					.district(new GetDistrictResponse(district))
 					.build();
 				getLocationResponses.add(getLocationResponse);
 			});
 			GetLocationResponse getLocationResponse = GetLocationResponse.builder()
-				.city(city)
+				.city(new GetCityResponse(city))
 				.build();
 			getLocationResponses.add(getLocationResponse);
 		});
@@ -91,21 +93,8 @@ public class SearchService {
 		List<GetPostResponse> getPostResponses = new ArrayList<>();
 
 		posts.forEach((post) -> {
-			com.triprint.backend.domain.post.dto.GetPostResponse getPostResponse = new com.triprint.backend.domain.post.dto.GetPostResponse(
-				post, false);
-			GetPostResponse currentLocationResponse = GetPostResponse.builder()
-				.id(getPostResponse.getId())
-				.author(getPostResponse.getAuthor())
-				.contents(getPostResponse.getContents())
-				.title(getPostResponse.getTitle())
-				.touristAttraction(getPostResponse.getTouristAttraction())
-				.hashTags(getPostResponse.getHashtags())
-				.createdAt(getPostResponse.getCreatedAt())
-				.tripId(getPostResponse.getTripId())
-				.images(getPostResponse.getImages())
-				.likes(getPostResponse.getLikes())
-				.build();
-			getPostResponses.add(currentLocationResponse);
+			GetPostResponse getPostResponse = new GetPostResponse(post, false);
+			getPostResponses.add(getPostResponse);
 		});
 		return new PageImpl<>(getPostResponses);
 	}

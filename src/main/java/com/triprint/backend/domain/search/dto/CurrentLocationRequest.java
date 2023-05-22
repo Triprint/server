@@ -19,5 +19,5 @@ public class CurrentLocationRequest {
 	private String y;
 
 	@Range(min = 0, max = 100)
-	private int distance = 20; //Todo: km로 받는 방식으로 변경
+	private int distance = 20;
 }

@@ -5,17 +5,13 @@ import static com.triprint.backend.domain.location.entity.QDistrict.*;
 import static com.triprint.backend.domain.location.entity.QTouristAttraction.*;
 import static com.triprint.backend.domain.post.entity.QPost.*;
 import static com.triprint.backend.domain.post.entity.QPostHashtag.*;
-import static org.springframework.util.ObjectUtils.*;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 
-import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.Projections;
 import com.querydsl.core.types.dsl.Expressions;
@@ -25,7 +21,6 @@ import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.domain.location.entity.City;
 import com.triprint.backend.domain.location.entity.District;
 import com.triprint.backend.domain.post.entity.Post;
-import com.triprint.backend.domain.post.entity.QPost;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.util.QueryDslUtil;
@@ -38,14 +33,14 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 	private static final int KM = 1000;
 
 	@Override
-	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district0) {
+	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District pDistrict) {
 
 		try {
-			List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
+			List<OrderSpecifier> orders = QueryDslUtil.getAllOrderSpecifiers(pageable);
 			List<Post> result = (List<Post>)jpaQueryFactory.from(post)
 				.join(post.touristAttraction, touristAttraction)
 				.join(touristAttraction.district, district)
-				.where(district.eq(district0), district.city.eq(city))
+				.where(district.eq(pDistrict), district.city.eq(city))
 				.orderBy(orders.stream().toArray(OrderSpecifier[]::new))
 				.offset(pageable.getOffset())
 				.limit(pageable.getPageSize())
@@ -56,26 +51,10 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		}
 	}
 
-	private List<OrderSpecifier> getAllOrderSpecifiers(Pageable pageable) {
-
-		if (isEmpty(pageable.getSort())) {
-			return new ArrayList<>();
-		}
-
-		List<OrderSpecifier> orders = new ArrayList<>();
-		for (Sort.Order order : pageable.getSort()) {
-			Order direction = order.getDirection().isAscending() ? Order.ASC : Order.DESC;
-			String property = order.getProperty();
-			OrderSpecifier<?> column = QueryDslUtil.getSortedColumn(direction, QPost.post, property);
-			orders.add(column);
-		}
-		return orders;
-	}
-
 	@Override
 	public Page<Post> findBySearchBasedOnCityKeywords(Pageable pageable, City city) {
 		try {
-			List<OrderSpecifier> orders = getAllOrderSpecifiers(pageable);
+			List<OrderSpecifier> orders = QueryDslUtil.getAllOrderSpecifiers(pageable);
 			List<Post> result = (List<Post>)jpaQueryFactory.from(post)
 				.join(post.touristAttraction, touristAttraction)
 				.join(touristAttraction.district, district)
@@ -129,7 +108,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 
 	@Override
 	public Page<Post> findByHashtagPost(Pageable page, Long hashtagId) {
-		List<OrderSpecifier> orderSpecifiers = getAllOrderSpecifiers(page);
+		List<OrderSpecifier> orderSpecifiers = QueryDslUtil.getAllOrderSpecifiers(page);
 		List<Post> posts = jpaQueryFactory.selectFrom(post)
 			.innerJoin(post.postHashtag, postHashtag)
 			.leftJoin(postHashtag.hashtag, hashtag)

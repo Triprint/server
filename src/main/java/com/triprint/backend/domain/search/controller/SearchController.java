@@ -15,10 +15,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.triprint.backend.domain.post.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.CurrentLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationRequest;
 import com.triprint.backend.domain.search.dto.GetLocationResponse;
-import com.triprint.backend.domain.search.dto.GetPostResponse;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagRequest;
 import com.triprint.backend.domain.search.dto.PredictiveHashtagResponse;
 import com.triprint.backend.domain.search.service.SearchService;
