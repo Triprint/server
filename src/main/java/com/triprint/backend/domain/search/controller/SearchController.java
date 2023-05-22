@@ -2,6 +2,8 @@ package com.triprint.backend.domain.search.controller;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -46,7 +48,7 @@ public class SearchController {
 	@GetMapping("/my/location")
 	public ResponseEntity<Page<GetPostResponse>> searchBasedOnCurrentLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
-		CurrentLocationRequest currentLocationRequest) {
+		@Valid CurrentLocationRequest currentLocationRequest) {
 		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
 	}
 

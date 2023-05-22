@@ -35,6 +35,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class SearchRepositoryImpl implements SearchRepositoryCustom {
 	private final JPAQueryFactory jpaQueryFactory;
+	private static final int KM = 1000;
 
 	@Override
 	public Page<Post> findBySearchBasedOnCityAndDistrictKeywords(Pageable pageable, City city, District district0) {
@@ -91,6 +92,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 
 	@Override
 	public Page<Post> findByCurrentLocation(Pageable page, CurrentLocationRequest currentLocationRequest) {
+
 		List<Post> posts = jpaQueryFactory
 			.selectFrom(post)
 			.join(post.touristAttraction, touristAttraction)
@@ -102,7 +104,7 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 				Expressions.stringTemplate("{0}",
 					post.touristAttraction.latitudeLongitude
 				)
-			).loe(String.valueOf(currentLocationRequest.getDistance())))
+			).loe(String.valueOf(currentLocationRequest.getDistance() * KM)))
 			.limit(page.getPageSize())
 			.offset(page.getOffset())
 			.fetch();
@@ -125,15 +127,6 @@ public class SearchRepositoryImpl implements SearchRepositoryCustom {
 		return hashtags;
 	}
 
-	/**
-	 select *
-	 from post
-	 inner join post_hashtag
-	 on post.id = post_hashtag.post_id
-	 left join hashtag
-	 on post_hashtag.hashtag_id = hashtag.id
-	 where post_hashtag.hashtag_id = 1;
-	 */
 	@Override
 	public Page<Post> findByHashtagPost(Pageable page, Long hashtagId) {
 		List<OrderSpecifier> orderSpecifiers = getAllOrderSpecifiers(page);
