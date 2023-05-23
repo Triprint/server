@@ -29,6 +29,7 @@ public class CreatePostRequest {
 	private String content;
 
 	private List<String> hashtag = new ArrayList<>();
+
 	@NotNull
 	private CreateTouristAttractionRequest touristAttraction;
 }
