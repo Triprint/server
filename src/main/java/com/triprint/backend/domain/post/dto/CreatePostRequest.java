@@ -28,6 +28,7 @@ public class CreatePostRequest {
 	@Size(max = 500)
 	private String content;
 
+	@Nullable
 	private List<String> hashtag = new ArrayList<>();
 
 	@NotNull
