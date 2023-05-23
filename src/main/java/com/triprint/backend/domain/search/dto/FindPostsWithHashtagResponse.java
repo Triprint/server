@@ -4,13 +4,6 @@ import java.sql.Timestamp;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.validation.constraints.PastOrPresent;
-import javax.validation.constraints.Positive;
-import javax.validation.constraints.PositiveOrZero;
-
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
-
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.location.dto.GetTouristAttractionResponse;
@@ -27,39 +20,16 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class FindPostsWithHashtagResponse {
 
-	@Positive
 	private Long id;
-
-	@Nullable
 	private String title;
-
-	@Nullable
 	private String contents;
-
-	@NonNull
 	private List<String> images;
-
-	@Nullable
 	private List<String> hashTags;
-
-	@NonNull
 	private AuthorInfoResponse author;
-
-	@Positive
-	@Nullable
 	private Long tripId;
-
-	@PositiveOrZero
 	private Integer likes;
-
-	@NonNull
 	private GetTouristAttractionResponse touristAttraction;
-
-	@PastOrPresent
-	@NonNull
 	private Timestamp createdAt;
-
-	@PastOrPresent
 	private Timestamp updatedAt;
 
 	public FindPostsWithHashtagResponse(Long id, String title, String contents, List<Image> images,
