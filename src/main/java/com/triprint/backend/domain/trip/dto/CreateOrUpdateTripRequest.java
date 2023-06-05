@@ -2,8 +2,8 @@ package com.triprint.backend.domain.trip.dto;
 
 import java.util.ArrayList;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import javax.annotation.Nullable;
+import javax.validation.constraints.NotNull;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +16,6 @@ public class CreateOrUpdateTripRequest {
 	@Nullable
 	private String title;
 
-	@NonNull
+	@NotNull
 	private ArrayList<Long> posts = new ArrayList();
 }
