@@ -83,6 +83,7 @@ public class MyProfileService {
 		User followUser = userRepository.findById(currentUserId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
+
 		currentUser.followUser(followUser);
 	}
 }

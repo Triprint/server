@@ -135,6 +135,7 @@ public class User {
 
 	public void followUser(User followUser) {
 		if (!this.children.contains(followUser)) {
+			this.parent = this;
 			this.children.add(followUser);
 		}
 	}
