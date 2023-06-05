@@ -1,9 +1,9 @@
 package com.triprint.backend.domain.reply.dto;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.Positive;
 
 import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
 
 import lombok.Getter;
 

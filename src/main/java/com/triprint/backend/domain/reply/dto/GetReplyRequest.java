@@ -1,14 +1,11 @@
 package com.triprint.backend.domain.reply.dto;
 
-import javax.validation.constraints.Positive;
-
-import org.springframework.lang.NonNull;
+import com.triprint.backend.core.valid.ValidId;
 
 import lombok.Getter;
 
 @Getter
 public class GetReplyRequest {
-	@NonNull
-	@Positive
+	@ValidId
 	private Long postId;
 }
