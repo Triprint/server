@@ -132,5 +132,11 @@ public class User {
 	public void editUsername(String username) {
 		this.username = username;
 	}
+
+	public void followUser(User followUser) {
+		if (!this.children.contains(followUser)) {
+			this.children.add(followUser);
+		}
+	}
 }
 
