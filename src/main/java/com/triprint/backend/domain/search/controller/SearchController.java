@@ -48,7 +48,8 @@ public class SearchController {
 	@GetMapping("/my/location")
 	public ResponseEntity<Page<GetPostResponse>> searchBasedOnCurrentLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
-		@Valid CurrentLocationRequest currentLocationRequest) {
+		@Valid CurrentLocationRequest currentLocationRequest
+	) {
 		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
 	}
 

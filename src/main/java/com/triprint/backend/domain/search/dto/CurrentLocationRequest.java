@@ -1,10 +1,11 @@
 package com.triprint.backend.domain.search.dto;
 
-import javax.validation.constraints.Digits;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.hibernate.validator.constraints.Range;
-import org.springframework.lang.NonNull;
+
+import com.triprint.backend.core.valid.ValidLocation;
+import com.triprint.backend.core.valid.enums.LocationType;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -12,15 +13,12 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CurrentLocationRequest {
-
-	@NonNull
-	@Digits(integer = 3, fraction = 6)
-	@Range(min = -180, max = 180)
+	// 얘는 경도 180
+	@ValidLocation(message = "올바른 x값을 입력해주세요", locationType = LocationType.LONGITUDE)
 	private String x;
 
-	@NonNull
-	@Digits(integer = 2, fraction = 6)
-	@Range(min = -90, max = 90)
+	// 얘는 위도 90
+	@ValidLocation(message = "올바른 y값을 입력해주세요", locationType = LocationType.LATITUDE)
 	private String y;
 
 	@Range(min = 0, max = 100)

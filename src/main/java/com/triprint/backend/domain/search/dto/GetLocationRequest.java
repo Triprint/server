@@ -1,9 +1,7 @@
 package com.triprint.backend.domain.search.dto;
 
-import javax.validation.constraints.Positive;
-
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import com.triprint.backend.core.valid.ValidId;
+import com.triprint.backend.core.valid.ValidIdNullable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -11,11 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetLocationRequest {
-	@NonNull
-	@Positive
+	@ValidId
 	private Long cityId;
 
-	@Nullable
-	@Positive
+	@ValidIdNullable
 	private Long districtId;
 }

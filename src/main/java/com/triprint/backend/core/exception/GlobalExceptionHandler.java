@@ -2,11 +2,16 @@ package com.triprint.backend.core.exception;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.validation.ConstraintViolationException;
 
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindException;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -17,6 +22,23 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @ControllerAdvice
 public class GlobalExceptionHandler {
+
+	@ExceptionHandler(BindException.class)
+	public ResponseEntity<ErrorResponse> handleBindException(BindException ex) {
+		BindingResult bindingResult = ex.getBindingResult();
+		List<String> errorMessages = bindingResult.getFieldErrors()
+			.stream()
+			.map(DefaultMessageSourceResolvable::getDefaultMessage)
+			.collect(Collectors.toList());
+
+		String errorMessage = String.join(", ", errorMessages);
+
+		ErrorResponse response = new ErrorResponse(
+			new Date(),
+			errorMessage);
+
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+	}
 
 	@ExceptionHandler(ServiceException.class)
 	public ResponseEntity<ErrorResponse> handleServiceException(ServiceException ex) {
@@ -31,7 +53,7 @@ public class GlobalExceptionHandler {
 	public ResponseEntity<ErrorResponse> methodValidException(MethodArgumentNotValidException ex) {
 		ValidationErrorException validationErrorException = new ValidationErrorException();
 		ErrorResponse errorResponse = validationErrorException.makeValidationErrorException(ex.getBindingResult());
-		return new ResponseEntity<ErrorResponse>(errorResponse, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(MultipartException.class)
@@ -39,7 +61,7 @@ public class GlobalExceptionHandler {
 		ErrorResponse response = new ErrorResponse(
 			new Date(),
 			ex.getMessage());
-		return new ResponseEntity<ErrorResponse>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(ConstraintViolationException.class)
@@ -48,7 +70,7 @@ public class GlobalExceptionHandler {
 		ErrorResponse response = new ErrorResponse(
 			new Date(),
 			ex.getMessage());
-		return new ResponseEntity<ErrorResponse>(response, HttpStatus.BAD_REQUEST);
+		return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
 	}
 
 	@ExceptionHandler(Exception.class)
@@ -57,7 +79,6 @@ public class GlobalExceptionHandler {
 			new Date(),
 			ex.getMessage());
 
-		return new ResponseEntity<ErrorResponse>(message, HttpStatus.INTERNAL_SERVER_ERROR);
+		return new ResponseEntity<>(message, HttpStatus.INTERNAL_SERVER_ERROR);
 	}
-
 }
