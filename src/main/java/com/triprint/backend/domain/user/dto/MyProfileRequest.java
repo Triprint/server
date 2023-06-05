@@ -1,11 +1,11 @@
 package com.triprint.backend.domain.user.dto;
 
-import org.springframework.lang.NonNull;
+import javax.validation.constraints.NotNull;
 
 import lombok.Getter;
 
 @Getter
 public class MyProfileRequest {
-	@NonNull
+	@NotNull
 	private String username;
 }
