@@ -73,18 +73,5 @@ public class MyProfileService {
 		user.editUsername(username);
 		userRepository.save(user);
 	}
-
-	@Transactional
-	public void followUser(Long currentUserId, Long followUserId) {
-		User currentUser = userRepository.findById(currentUserId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
-		});
-
-		User followUser = userRepository.findById(currentUserId).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
-		});
-
-		currentUser.followUser(followUser);
-	}
 }
 

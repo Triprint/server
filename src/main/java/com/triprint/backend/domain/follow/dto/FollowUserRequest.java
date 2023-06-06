@@ -1,4 +1,4 @@
-package com.triprint.backend.domain.user.dto;
+package com.triprint.backend.domain.follow.dto;
 
 import com.triprint.backend.core.valid.ValidId;
 
