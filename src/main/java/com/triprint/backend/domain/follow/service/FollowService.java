@@ -52,7 +52,8 @@ public class FollowService {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Follow follow = followRepository.findByFollowerAndFollowing(follower, following)
-			.orElseGet(() -> this.createFollow(follower, following));
+		Follow follow = followRepository.findByFollowerAndFollowing(follower, following).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
+		});
 	}
 }
