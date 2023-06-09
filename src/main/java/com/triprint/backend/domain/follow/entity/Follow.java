@@ -36,4 +36,9 @@ public class Follow {
 		following.getFollowers().add(this);
 		follower.getFollowings().add(this);
 	}
+
+	public void unfollow(User follower, User following, Follow follow) {
+		following.getFollowers().remove(follow);
+		follower.getFollowings().remove(follow);
+	}
 }

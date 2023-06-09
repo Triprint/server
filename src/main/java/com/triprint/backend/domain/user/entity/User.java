@@ -99,20 +99,6 @@ public class User {
 	@OneToMany(mappedBy = "following")
 	private List<Follow> followers = new ArrayList<>();
 
-	// @ManyToOne(
-	// 	fetch = FetchType.LAZY
-	// )
-	// @JoinColumn(
-	// 	name = "parent_user_id"
-	// )
-	// public User parent;
-	//
-	// @OneToMany(
-	// 	mappedBy = "parent",
-	// 	cascade = {CascadeType.ALL}
-	// )
-	// public List<User> children;
-
 	@Builder
 	public User(String providerId, String profileImg, String username,
 		String email, UserRole userRole, AuthProvider provider) {

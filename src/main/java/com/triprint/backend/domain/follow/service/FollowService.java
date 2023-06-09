@@ -53,7 +53,10 @@ public class FollowService {
 		});
 
 		Follow follow = followRepository.findByFollowerAndFollowing(follower, following).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
+			throw new ResourceNotFoundException(ErrorMessage.FOLLOW_NOT_FOUND);
 		});
+		
+		follow.unfollow(follower, following, follow);
+		followRepository.delete(follow);
 	}
 }
