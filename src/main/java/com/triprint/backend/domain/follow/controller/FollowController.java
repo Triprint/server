@@ -31,4 +31,13 @@ public class FollowController {
 		followService.followUser(userPrincipal.getId(), followUserRequest.getId());
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
 	}
+
+	@PutMapping("/un")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	ResponseEntity<Object> unfollowUser(@CurrentUser UserPrincipal userPrincipal,
+		@Valid FollowUserRequest followUserRequest) {
+		followService.unfollowUser(userPrincipal.getId(), followUserRequest.getId());
+		return ResponseEntity.ok().build();
+	}
+
 }

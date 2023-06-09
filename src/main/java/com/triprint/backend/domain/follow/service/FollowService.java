@@ -41,4 +41,18 @@ public class FollowService {
 			.build();
 		return followRepository.save(follow);
 	}
+
+	@Transactional
+	public void unfollowUser(Long followingId, Long followerId) {
+		User following = userRepository.findById(followingId).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
+		});
+
+		User follower = userRepository.findById(followerId).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
+		});
+
+		Follow follow = followRepository.findByFollowerAndFollowing(follower, following)
+			.orElseGet(() -> this.createFollow(follower, following));
+	}
 }
