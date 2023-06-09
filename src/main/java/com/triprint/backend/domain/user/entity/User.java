@@ -4,17 +4,13 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -23,6 +19,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import com.sun.istack.NotNull;
 import com.triprint.backend.domain.auth.security.oauth2.user.AuthProvider;
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
+import com.triprint.backend.domain.follow.entity.Follow;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.reply.entity.Reply;
@@ -96,19 +93,25 @@ public class User {
 	)
 	private List<Reply> replies = new ArrayList<>();
 
-	@ManyToOne(
-		fetch = FetchType.LAZY
-	)
-	@JoinColumn(
-		name = "parent_user_id"
-	)
-	public User parent;
+	@OneToMany(mappedBy = "follower")
+	private List<Follow> followings = new ArrayList<>();
 
-	@OneToMany(
-		mappedBy = "parent",
-		cascade = {CascadeType.ALL}
-	)
-	public List<User> children;
+	@OneToMany(mappedBy = "following")
+	private List<Follow> followers = new ArrayList<>();
+
+	// @ManyToOne(
+	// 	fetch = FetchType.LAZY
+	// )
+	// @JoinColumn(
+	// 	name = "parent_user_id"
+	// )
+	// public User parent;
+	//
+	// @OneToMany(
+	// 	mappedBy = "parent",
+	// 	cascade = {CascadeType.ALL}
+	// )
+	// public List<User> children;
 
 	@Builder
 	public User(String providerId, String profileImg, String username,
@@ -133,11 +136,5 @@ public class User {
 		this.username = username;
 	}
 
-	public void followUser(User followUser) {
-		if (!this.children.contains(followUser)) {
-			this.parent = this;
-			this.children.add(followUser);
-		}
-	}
 }
 

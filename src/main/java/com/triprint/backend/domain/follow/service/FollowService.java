@@ -5,6 +5,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.follow.entity.Follow;
+import com.triprint.backend.domain.follow.repository.FollowRepository;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.repository.UserRepository;
 
@@ -14,17 +16,29 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class FollowService {
 	private final UserRepository userRepository;
+	private final FollowRepository followRepository;
 
 	@Transactional
-	public void followUser(Long currentUserId, Long followUserId) {
-		User currentUser = userRepository.findById(currentUserId).orElseThrow(() -> {
+	public void followUser(Long followingId, Long followerId) {
+		User following = userRepository.findById(followingId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		User followUser = userRepository.findById(currentUserId).orElseThrow(() -> {
+		User follower = userRepository.findById(followerId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		currentUser.followUser(followUser);
+		Follow follow = followRepository.findByFollowerAndFollowing(follower, following)
+			.orElseGet(() -> this.createFollow(follower, following));
+	}
+
+	@Transactional
+	public Follow createFollow(User follower, User following) {
+
+		Follow follow = Follow.builder()
+			.follower(follower)
+			.following(following)
+			.build();
+		return followRepository.save(follow);
 	}
 }
