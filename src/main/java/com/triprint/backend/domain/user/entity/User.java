@@ -4,6 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -93,10 +94,10 @@ public class User {
 	)
 	private List<Reply> replies = new ArrayList<>();
 
-	@OneToMany(mappedBy = "follower")
+	@OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
 	private List<Follow> followings = new ArrayList<>();
 
-	@OneToMany(mappedBy = "following")
+	@OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
 	private List<Follow> followers = new ArrayList<>();
 
 	@Builder

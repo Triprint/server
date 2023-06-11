@@ -56,10 +56,10 @@ public class FollowService {
 			throw new ResourceNotFoundException(ErrorMessage.FOLLOW_NOT_FOUND);
 		});
 
-		follow.unfollow(follower, following, follow);
-		followRepository.delete(follow); // TODO: casecade vs List에서 직접 삭제
+		followRepository.delete(follow);
 	}
 
 	public void getFollowers(Long id) {
+
 	}
 }
