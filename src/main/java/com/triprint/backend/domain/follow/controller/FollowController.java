@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -37,6 +38,13 @@ public class FollowController {
 	ResponseEntity<Object> unfollowUser(@CurrentUser UserPrincipal userPrincipal,
 		@Valid FollowUserRequest followUserRequest) {
 		followService.unfollowUser(userPrincipal.getId(), followUserRequest.getId());
+		return ResponseEntity.ok().build();
+	}
+
+	@GetMapping("/follower")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	ResponseEntity<Object> get(@CurrentUser UserPrincipal userPrincipal) {
+		followService.getFollowers(userPrincipal.getId());
 		return ResponseEntity.ok().build();
 	}
 
