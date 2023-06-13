@@ -23,11 +23,11 @@ public class Follow {
 
 	@ManyToOne
 	@JoinColumn(name = "follower_id")
-	private User follower; //팔로우를 받는 사람
+	private User follower; //팔로우를 건 사람
 
 	@ManyToOne
 	@JoinColumn(name = "following_id")
-	private User following; //팔로우를 하는 사람
+	private User following; //팔로우를 받는 사람
 
 	@Builder
 	public Follow(User follower, User following) {

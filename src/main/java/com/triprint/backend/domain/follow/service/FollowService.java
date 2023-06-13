@@ -67,7 +67,7 @@ public class FollowService {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Page<Follow> followers = followRepository.findAllByFollowing(user, page);
+		Page<Follow> followers = followRepository.findAllByFollower(user, page);
 		return followers.map(follow -> new AuthorInfoResponse(follow.getFollowing()));
 	}
 
@@ -76,7 +76,7 @@ public class FollowService {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Page<Follow> followings = followRepository.findAllByFollower(user, page);
+		Page<Follow> followings = followRepository.findAllByFollowing(user, page);
 		return followings.map(follow -> new AuthorInfoResponse(follow.getFollower()));
 	}
 }
