@@ -22,17 +22,17 @@ public class FollowService {
 	private final FollowRepository followRepository;
 
 	@Transactional
-	public void followUser(Long followingId, Long followerId) {
-		User following = userRepository.findById(followingId).orElseThrow(() -> {
+	public void followUser(Long currentUserId, Long followUserId) {
+		User currentUser = userRepository.findById(currentUserId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		User follower = userRepository.findById(followerId).orElseThrow(() -> {
+		User followUser = userRepository.findById(followUserId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Follow follow = followRepository.findByFollowerAndFollowing(follower, following)
-			.orElseGet(() -> this.createFollow(follower, following));
+		Follow follow = followRepository.findByFollowerAndFollowing(currentUser, followUser)
+			.orElseGet(() -> this.createFollow(currentUser, followUser));
 	}
 
 	@Transactional
@@ -46,37 +46,37 @@ public class FollowService {
 	}
 
 	@Transactional
-	public void unfollowUser(Long followingId, Long followerId) {
-		User following = userRepository.findById(followingId).orElseThrow(() -> {
+	public void unfollowUser(Long currentUserId, Long unfollowUserId) {
+		User currentUser = userRepository.findById(currentUserId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		User follower = userRepository.findById(followerId).orElseThrow(() -> {
+		User unfollowUser = userRepository.findById(unfollowUserId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Follow follow = followRepository.findByFollowerAndFollowing(follower, following).orElseThrow(() -> {
+		Follow follow = followRepository.findByFollowerAndFollowing(currentUser, unfollowUser).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.FOLLOW_NOT_FOUND);
 		});
 
 		followRepository.delete(follow);
 	}
 
-	public Page<AuthorInfoResponse> getFollowers(Long userId, Pageable page) {
+	public Page<AuthorInfoResponse> getFollowers(Long userId, Pageable page) { //'나'를 팔로우한 사람들
 		User user = userRepository.findById(userId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Page<Follow> followers = followRepository.findAllByFollower(user, page);
-		return followers.map(follow -> new AuthorInfoResponse(follow.getFollowing()));
+		Page<Follow> followers = followRepository.findAllByFollowing(user, page);
+		return followers.map(follow -> new AuthorInfoResponse(follow.getFollower()));
 	}
 
-	public Page<AuthorInfoResponse> getFollowings(Long userId, Pageable page) {
+	public Page<AuthorInfoResponse> getFollowings(Long userId, Pageable page) { //'나'의 팔로우를 받는 사람들
 		User user = userRepository.findById(userId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Page<Follow> followings = followRepository.findAllByFollowing(user, page);
-		return followings.map(follow -> new AuthorInfoResponse(follow.getFollower()));
+		Page<Follow> followings = followRepository.findAllByFollower(user, page);
+		return followings.map(follow -> new AuthorInfoResponse(follow.getFollowing()));
 	}
 }
