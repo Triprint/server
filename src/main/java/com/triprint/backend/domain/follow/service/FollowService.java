@@ -7,6 +7,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.follow.dto.GetFollowResponse;
 import com.triprint.backend.domain.follow.entity.Follow;
 import com.triprint.backend.domain.follow.repository.FollowRepository;
 import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
@@ -78,5 +79,25 @@ public class FollowService {
 
 		Page<Follow> followings = followRepository.findAllByFollower(user, page);
 		return followings.map(follow -> new AuthorInfoResponse(follow.getFollowing()));
+	}
+
+	public Page<GetFollowResponse> getOtherFollowers(Long currentUserId, Pageable page, Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
+		});
+
+		Page<Follow> followers = followRepository.findAllByFollowing(user, page);
+		return followers.map(
+			follow -> new GetFollowResponse(follow.getFollower(), follow.getFollower().getId() == currentUserId));
+	}
+
+	public Page<GetFollowResponse> getOtherFollowings(Long currentUserId, Pageable page, Long userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
+		});
+
+		Page<Follow> followings = followRepository.findAllByFollower(user, page);
+		return followings.map(
+			follow -> new GetFollowResponse(follow.getFollowing(), follow.getFollowing().getId() == currentUserId));
 	}
 }

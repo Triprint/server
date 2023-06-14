@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.triprint.backend.domain.auth.security.CurrentUser;
 import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.follow.dto.FollowUserRequest;
+import com.triprint.backend.domain.follow.dto.GetFollowResponse;
 import com.triprint.backend.domain.follow.service.FollowService;
 import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
 
@@ -58,5 +60,19 @@ public class FollowController {
 	ResponseEntity<Page<AuthorInfoResponse>> getFollowings(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page) {
 		return ResponseEntity.ok(followService.getFollowings(userPrincipal.getId(), page));
+	}
+
+	@GetMapping("/follower/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	ResponseEntity<Page<GetFollowResponse>> getOtherFollowers(@CurrentUser UserPrincipal userPrincipal,
+		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page, @PathVariable Long id) {
+		return ResponseEntity.ok(followService.getOtherFollowers(userPrincipal.getId(), page, id));
+	}
+
+	@GetMapping("/following/{id}")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	ResponseEntity<Page<GetFollowResponse>> getOtherFollowings(@CurrentUser UserPrincipal userPrincipal,
+		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page, @PathVariable Long id) {
+		return ResponseEntity.ok(followService.getOtherFollowings(userPrincipal.getId(), page, id));
 	}
 }
