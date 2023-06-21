@@ -15,8 +15,8 @@ public class LocationValidator implements ConstraintValidator<ValidLocation, Str
 
 	@Override
 	public boolean isValid(String location, ConstraintValidatorContext context) {
-		String regex = "^[-+]?[0-9]+(?:.[0-9]+)?$";
-		return location.matches(regex) && isValidRange(location);
+		String latitudeAndLongitudeRegularExpression = "^[-+]?[0-9]+(?:.[0-9]+)?$";
+		return location.matches(latitudeAndLongitudeRegularExpression) && isValidRange(location);
 	}
 
 	public boolean isValidRange(String location) {
