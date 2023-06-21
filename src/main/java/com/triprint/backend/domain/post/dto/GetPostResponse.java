@@ -7,14 +7,14 @@ import java.util.stream.Collectors;
 import com.triprint.backend.domain.image.entity.Image;
 import com.triprint.backend.domain.location.dto.GetTouristAttractionResponse;
 import com.triprint.backend.domain.post.entity.Post;
-import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
+import com.triprint.backend.domain.user.dto.UserInfoResponse;
 
 import lombok.Getter;
 
 @Getter
 public class GetPostResponse {
 	private final Long id;
-	private final AuthorInfoResponse author;
+	private final UserInfoResponse author;
 	private final String title;
 	private final String contents;
 	private final Long tripId;
@@ -36,7 +36,7 @@ public class GetPostResponse {
 				Collectors.toList());
 
 		this.id = post.getId();
-		this.author = new AuthorInfoResponse(post.getAuthor());
+		this.author = new UserInfoResponse(post.getAuthor());
 		this.title = post.getTitle();
 		this.contents = post.getContents();
 		this.tripId = post.hasTrip() ? post.getTrip().getId() : null;

@@ -12,7 +12,7 @@ import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.follow.dto.GetFollowResponse;
 import com.triprint.backend.domain.follow.entity.Follow;
 import com.triprint.backend.domain.follow.repository.FollowRepository;
-import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
+import com.triprint.backend.domain.user.dto.UserInfoResponse;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.repository.UserRepository;
 
@@ -60,13 +60,13 @@ public class FollowService {
 		followRepository.delete(follow);
 	}
 
-	public Page<AuthorInfoResponse> getMyFollowers(Long userId, Pageable pageable) { //'나'를 팔로우한 사람들
+	public Page<UserInfoResponse> getMyFollowers(Long userId, Pageable pageable) { //'나'를 팔로우한 사람들
 		User user = userRepository.findById(userId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
 		Page<Follow> followers = followRepository.findAllByFollowing(user, pageable);
-		return followers.map(follow -> new AuthorInfoResponse(follow.getFollower()));
+		return followers.map(follow -> new UserInfoResponse(follow.getFollower()));
 	}
 
 	public Page<GetFollowResponse> getFollowers(Long currentUserId, Long userId, Pageable pageable) {
@@ -85,13 +85,13 @@ public class FollowService {
 		});
 	}
 
-	public Page<AuthorInfoResponse> getMyFollowings(Long userId, Pageable pageable) { //'나'의 팔로우를 받는 사람들
+	public Page<UserInfoResponse> getMyFollowings(Long userId, Pageable pageable) { //'나'의 팔로우를 받는 사람들
 		User user = userRepository.findById(userId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
 		Page<Follow> followings = followRepository.findAllByFollower(user, pageable);
-		return followings.map(follow -> new AuthorInfoResponse(follow.getFollowing()));
+		return followings.map(follow -> new UserInfoResponse(follow.getFollowing()));
 	}
 
 	public Page<GetFollowResponse> getFollowings(Long currentUserId, Long userId, Pageable pageable) {

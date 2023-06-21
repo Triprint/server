@@ -3,14 +3,14 @@ package com.triprint.backend.domain.reply.dto;
 import java.sql.Timestamp;
 
 import com.triprint.backend.domain.reply.entity.Reply;
-import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
+import com.triprint.backend.domain.user.dto.UserInfoResponse;
 
 import lombok.Getter;
 
 @Getter
 public class GetReplyResponse {
 	private final Long id;
-	private final AuthorInfoResponse author;
+	private final UserInfoResponse author;
 	private final String contents;
 	private final Long parentReplyId;
 	private final String subReplyUserName;
@@ -20,7 +20,7 @@ public class GetReplyResponse {
 	private final Timestamp updatedAt;
 
 	public GetReplyResponse(Reply reply) {
-		this.author = new AuthorInfoResponse(reply.getAuthor());
+		this.author = new UserInfoResponse(reply.getAuthor());
 		this.id = reply.getId();
 		this.contents = reply.getContents();
 		this.parentReplyId = reply.hasParentReply() ? reply.getParentReply().getId() : null;

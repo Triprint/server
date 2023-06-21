@@ -21,7 +21,7 @@ import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.follow.dto.FollowUserRequest;
 import com.triprint.backend.domain.follow.dto.GetFollowResponse;
 import com.triprint.backend.domain.follow.service.FollowService;
-import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
+import com.triprint.backend.domain.user.dto.UserInfoResponse;
 
 import lombok.RequiredArgsConstructor;
 
@@ -50,14 +50,14 @@ public class FollowController {
 
 	@GetMapping("/follower")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<Page<AuthorInfoResponse>> getFollowers(@CurrentUser UserPrincipal userPrincipal,
+	ResponseEntity<Page<UserInfoResponse>> getFollowers(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		return ResponseEntity.ok(followService.getMyFollowers(userPrincipal.getId(), pageable));
 	}
 
 	@GetMapping("/following")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<Page<AuthorInfoResponse>> getFollowings(@CurrentUser UserPrincipal userPrincipal,
+	ResponseEntity<Page<UserInfoResponse>> getFollowings(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		return ResponseEntity.ok(followService.getMyFollowings(userPrincipal.getId(), pageable));
 	}

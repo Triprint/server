@@ -10,7 +10,7 @@ import com.triprint.backend.domain.location.dto.GetTouristAttractionResponse;
 import com.triprint.backend.domain.location.entity.TouristAttraction;
 import com.triprint.backend.domain.post.entity.PostHashtag;
 import com.triprint.backend.domain.trip.entity.Trip;
-import com.triprint.backend.domain.user.dto.AuthorInfoResponse;
+import com.triprint.backend.domain.user.dto.UserInfoResponse;
 import com.triprint.backend.domain.user.entity.User;
 
 import lombok.Data;
@@ -25,7 +25,7 @@ public class FindPostsWithHashtagResponse {
 	private String contents;
 	private List<String> images;
 	private List<String> hashTags;
-	private AuthorInfoResponse author;
+	private UserInfoResponse author;
 	private Long tripId;
 	private Integer likes;
 	private GetTouristAttractionResponse touristAttraction;
@@ -43,7 +43,7 @@ public class FindPostsWithHashtagResponse {
 			.map(postHashtag -> postHashtag.getHashtag().getContents())
 			.collect(
 				Collectors.toList());
-		this.author = new AuthorInfoResponse(author);
+		this.author = new UserInfoResponse(author);
 		this.tripId = trip.getId();
 		this.likes = likes.size();
 		this.touristAttraction = new GetTouristAttractionResponse(touristAttraction);
