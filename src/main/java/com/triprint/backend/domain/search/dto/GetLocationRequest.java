@@ -1,7 +1,7 @@
 package com.triprint.backend.domain.search.dto;
 
-import org.springframework.lang.NonNull;
-import org.springframework.lang.Nullable;
+import com.triprint.backend.core.valid.ValidId;
+import com.triprint.backend.core.valid.ValidIdNullable;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -9,9 +9,9 @@ import lombok.Setter;
 @Getter
 @Setter
 public class GetLocationRequest {
-	@NonNull
+	@ValidId
 	private Long cityId;
 
-	@Nullable
+	@ValidIdNullable
 	private Long districtId;
 }

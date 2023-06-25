@@ -3,10 +3,10 @@ package com.triprint.backend.domain.post.dto;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.annotation.Nullable;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import com.sun.istack.Nullable;
 import com.triprint.backend.domain.location.dto.CreateTouristAttractionRequest;
 
 import lombok.AllArgsConstructor;

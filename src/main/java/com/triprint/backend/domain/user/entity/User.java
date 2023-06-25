@@ -9,12 +9,9 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
 import javax.persistence.Enumerated;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.springframework.data.annotation.CreatedDate;
@@ -23,6 +20,7 @@ import org.springframework.data.annotation.LastModifiedDate;
 import com.sun.istack.NotNull;
 import com.triprint.backend.domain.auth.security.oauth2.user.AuthProvider;
 import com.triprint.backend.domain.bookmark.entity.Bookmark;
+import com.triprint.backend.domain.follow.entity.Follow;
 import com.triprint.backend.domain.like.entity.Like;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.reply.entity.Reply;
@@ -96,19 +94,11 @@ public class User {
 	)
 	private List<Reply> replies = new ArrayList<>();
 
-	@ManyToOne(
-		fetch = FetchType.LAZY
-	)
-	@JoinColumn(
-		name = "parent_user_id"
-	)
-	public User parent;
+	@OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+	private List<Follow> followings = new ArrayList<>();
 
-	@OneToMany(
-		mappedBy = "parent",
-		cascade = {CascadeType.ALL}
-	)
-	public List<User> children;
+	@OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
+	private List<Follow> followers = new ArrayList<>();
 
 	@Builder
 	public User(String providerId, String profileImg, String username,
@@ -132,5 +122,6 @@ public class User {
 	public void editUsername(String username) {
 		this.username = username;
 	}
+
 }
 

@@ -38,9 +38,9 @@ public class SearchController {
 	}
 
 	@GetMapping("/location")
-	public ResponseEntity<Page<com.triprint.backend.domain.post.dto.GetPostResponse>> searchBasedOnLocation(
+	public ResponseEntity<Page<GetPostResponse>> searchBasedOnLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
-		GetLocationRequest getLocationRequest
+		@Valid GetLocationRequest getLocationRequest
 	) {
 		return ResponseEntity.ok(searchService.searchBasedOnLocation(page, getLocationRequest));
 	}
@@ -48,13 +48,14 @@ public class SearchController {
 	@GetMapping("/my/location")
 	public ResponseEntity<Page<GetPostResponse>> searchBasedOnCurrentLocation(
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable page,
-		@Valid CurrentLocationRequest currentLocationRequest) {
+		@Valid CurrentLocationRequest currentLocationRequest
+	) {
 		return ResponseEntity.ok(searchService.searchBasedOnCurrentLocation(page, currentLocationRequest));
 	}
 
 	@GetMapping("/auto/hashtag")
 	public ResponseEntity<List<PredictiveHashtagResponse>> getHashtag(
-		PredictiveHashtagRequest predictiveHashtagRequest) {
+		@Valid PredictiveHashtagRequest predictiveHashtagRequest) {
 		return ResponseEntity.ok(searchService.predictiveHashtag(predictiveHashtagRequest));
 	}
 

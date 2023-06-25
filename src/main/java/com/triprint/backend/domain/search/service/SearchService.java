@@ -2,6 +2,7 @@ package com.triprint.backend.domain.search.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -43,14 +44,18 @@ public class SearchService {
 		City city = cityRepository.findById(getLocationRequest.getCityId()).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.CITY_NOT_FOUND);
 		});
-		District district = distRepository.findById(getLocationRequest.getDistrictId()).orElseThrow(() -> {
-			throw new ResourceNotFoundException(ErrorMessage.DISTRICT_NOT_FOUND);
-		});
 
-		if (district == null) {
+		Optional<Long> districtId = Optional.ofNullable(getLocationRequest.getDistrictId());
+
+		if (districtId.isEmpty()) {
 			Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityKeywords(page, city);
 			return posts.map((post) -> new com.triprint.backend.domain.post.dto.GetPostResponse(post, false));
 		}
+
+		District district = distRepository.findById(districtId.get()).orElseThrow(() -> {
+			throw new ResourceNotFoundException(ErrorMessage.DISTRICT_NOT_FOUND);
+		});
+
 		Page<Post> posts = searchRepositoryimpl.findBySearchBasedOnCityAndDistrictKeywords(page, city, district);
 
 		return posts.map((post) -> new com.triprint.backend.domain.post.dto.GetPostResponse(post, false));
@@ -83,10 +88,10 @@ public class SearchService {
 
 	public Page<GetPostResponse> searchBasedOnCurrentLocation(Pageable page,
 		CurrentLocationRequest currentLocationRequest) {
-		Page<Post> result = searchRepositoryimpl.findByCurrentLocation(page,
+		Page<Post> results = searchRepositoryimpl.findByCurrentLocation(page,
 			currentLocationRequest);
 
-		return getLocationResponses(result);
+		return getLocationResponses(results);
 	}
 
 	private Page<GetPostResponse> getLocationResponses(Page<Post> posts) {

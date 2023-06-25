@@ -13,4 +13,6 @@ public class ErrorMessage {
 	public static final String CITY_NOT_FOUND = "해당하는 시*도가 존재하지 않습니다.";
 	public static final String BAD_REQUEST = "잘못된 요청입니다.";
 	public static final String INVALID_AUTHOR = "작성자가 아니므로 수정할 권한이 없습니다.";
+	public static final String FOLLOW_NOT_FOUND = "해당하는 팔로우가 존재하지 않습니다.";
+
 }

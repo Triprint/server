@@ -6,8 +6,11 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class PredictiveHashtagResponse {
+
 	private Long tagId;
+
 	private String tagName;
+
 	private Long postCnt;
 
 	public PredictiveHashtagResponse(Long tagId, String tagName, Long postCnt) {
