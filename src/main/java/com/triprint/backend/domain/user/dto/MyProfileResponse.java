@@ -19,4 +19,6 @@ public class MyProfileResponse {
 	private String username;
 	private String profileImg;
 	private Page<GetMyTripResponse> myTrips;
+	private Page<UserInfoResponse> myFollowers;
+	private Page<UserInfoResponse> myFollowings;
 }

@@ -8,10 +8,12 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.follow.service.FollowService;
 import com.triprint.backend.domain.trip.dto.GetMyTripResponse;
 import com.triprint.backend.domain.trip.service.TripService;
 import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
+import com.triprint.backend.domain.user.dto.UserInfoResponse;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.repository.UserRepository;
 
@@ -24,6 +26,7 @@ public class MyProfileService {
 	private final UserRepository userRepository;
 	private final AwsS3Service awsS3Service;
 	private final TripService tripService;
+	private final FollowService followService;
 
 	public MyProfileResponse getMyProfile(Long userId) {
 
@@ -32,6 +35,8 @@ public class MyProfileService {
 		});
 
 		Page<GetMyTripResponse> trips = tripService.getMyTripList(userId, Pageable.unpaged());
+		Page<UserInfoResponse> myFollowers = followService.getMyFollowers(userId, Pageable.unpaged());
+		Page<UserInfoResponse> myFollowings = followService.getMyFollowings(userId, Pageable.unpaged());
 
 		return MyProfileResponse.builder()
 			.id(userId)
@@ -39,6 +44,8 @@ public class MyProfileService {
 			.username(user.getUsername())
 			.profileImg(user.getProfileImg())
 			.myTrips(trips)
+			.myFollowers(myFollowers)
+			.myFollowings(myFollowings)
 			.build();
 	}
 
