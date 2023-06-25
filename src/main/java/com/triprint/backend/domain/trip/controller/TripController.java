@@ -54,9 +54,8 @@ public class TripController {
 	}
 
 	@GetMapping("/{id}")
-	public ResponseEntity<GetTripResponse> getTrip(@CurrentUser UserPrincipal userPrincipal,
-		@PathVariable Long id) {
-		return new ResponseEntity<>(tripService.getTrip(id, userPrincipal), HttpStatus.OK);
+	public ResponseEntity<GetTripResponse> getTrip(@PathVariable Long id) {
+		return new ResponseEntity<>(tripService.getTrip(id), HttpStatus.OK);
 	}
 
 	@PutMapping("/{id}")
