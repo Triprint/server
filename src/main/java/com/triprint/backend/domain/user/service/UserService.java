@@ -57,7 +57,7 @@ public class UserService {
 		client.send(request, HttpResponse.BodyHandlers.ofString());
 
 		/* 비동기 = `CompletableFuture<HttpResponse<String>>` */
-		client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
+		// client.sendAsync(request, HttpResponse.BodyHandlers.ofString());
 	}
 }
 

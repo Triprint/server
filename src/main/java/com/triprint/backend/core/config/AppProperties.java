@@ -17,7 +17,7 @@ import lombok.Setter;
 public class AppProperties {
 	private final Auth auth = new Auth();
 	private final OAuth2 oauth2 = new OAuth2();
-	private final KakaoAccount leave = new KakaoAccount();
+	private final KakaoAccount kakaoAccount = new KakaoAccount();
 
 	@Getter
 	@Setter
