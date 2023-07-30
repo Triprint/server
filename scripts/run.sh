@@ -16,4 +16,5 @@ java -jar ./app.jar \
   --app.auth.tokenExpiration="$EXPIRATION_TIME" \
   --app.auth.refreshTokenExpiration="$REFRESH_EXPIRATION_TIME" \
   --app.cors.allowedOrigins="$FRONT_URL" \
-  --app.oauth2.authorizedRedirectUris="$FRONT_URL"
+  --app.oauth2.authorizedRedirectUris="$FRONT_URL" \
+  --app.kakaoAccount.serviceAppAdminKey = "$SERVICE_APP_ADMIN_KEY"

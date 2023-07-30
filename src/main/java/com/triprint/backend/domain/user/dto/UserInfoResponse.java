@@ -7,12 +7,14 @@ import lombok.Getter;
 @Getter
 public class UserInfoResponse {
 	private Long id;
+	private String email;
 	private String username;
 	private String profileImg;
 
 	public UserInfoResponse(User author) {
-		this.id = author.getId();
-		this.username = author.getUsername();
-		this.profileImg = author.getProfileImg();
+		id = author.getId();
+		email = author.getEmail();
+		username = author.getUsername();
+		profileImg = author.getProfileImg();
 	}
 }

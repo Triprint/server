@@ -1,9 +1,8 @@
 package com.triprint.backend.domain.user.controller;
 
-import javax.servlet.http.HttpServletRequest;
-
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,6 +17,7 @@ import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileRequest;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
 import com.triprint.backend.domain.user.service.MyProfileService;
+import com.triprint.backend.domain.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -27,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 public class MyProfileController {
 
 	private final MyProfileService myProfileService;
+	private final UserService userService;
 
 	@GetMapping("/profile")
 	@PreAuthorize("hasRole('ROLE_USER')")
@@ -36,19 +37,26 @@ public class MyProfileController {
 
 	@PutMapping("/profile")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<MyProfileResponse> updateMyProfile(HttpServletRequest request,
+	ResponseEntity<MyProfileResponse> updateMyProfile(@CurrentUser UserPrincipal userPrincipal,
 		@RequestBody MyProfileRequest myProfileRequest) {
 		return ResponseEntity.ok(
-			myProfileService.updateMyProfile((Long)request.getAttribute("userId"), myProfileRequest.getUsername()));
+			myProfileService.updateMyProfile(userPrincipal.getId(), myProfileRequest.getUsername()));
 	}
 
 	@PutMapping("/profile-img")
 	@PreAuthorize("hasRole('ROLE_USER')")
 	ResponseEntity<MyProfileImgResponse> updateMyProfileImg(
-		HttpServletRequest request,
+		@CurrentUser UserPrincipal userPrincipal,
 		@RequestPart(value = "file") MultipartFile multipartFile
 	) {
 		return ResponseEntity.ok(
-			myProfileService.updateMyProfileImg((Long)request.getAttribute("userId"), multipartFile));
+			myProfileService.updateMyProfileImg(userPrincipal.getId(), multipartFile));
+	}
+
+	@DeleteMapping("/quit")
+	@PreAuthorize("hasRole('ROLE_USER')")
+	ResponseEntity<Object> quit(@CurrentUser UserPrincipal userPrincipal) throws Exception {
+		userService.quit(userPrincipal.getId());
+		return ResponseEntity.ok().build();
 	}
 }

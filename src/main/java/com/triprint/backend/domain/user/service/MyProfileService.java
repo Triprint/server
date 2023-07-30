@@ -1,7 +1,5 @@
 package com.triprint.backend.domain.user.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
@@ -9,11 +7,9 @@ import org.springframework.web.multipart.MultipartFile;
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
 import com.triprint.backend.domain.follow.service.FollowService;
-import com.triprint.backend.domain.trip.dto.GetMyTripResponse;
 import com.triprint.backend.domain.trip.service.TripService;
 import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
-import com.triprint.backend.domain.user.dto.UserInfoResponse;
 import com.triprint.backend.domain.user.entity.User;
 import com.triprint.backend.domain.user.repository.UserRepository;
 
@@ -34,19 +30,7 @@ public class MyProfileService {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		Page<GetMyTripResponse> trips = tripService.getMyTripList(userId, Pageable.unpaged());
-		Page<UserInfoResponse> myFollowers = followService.getMyFollowers(userId, Pageable.unpaged());
-		Page<UserInfoResponse> myFollowings = followService.getMyFollowings(userId, Pageable.unpaged());
-
-		return MyProfileResponse.builder()
-			.id(userId)
-			.email(user.getEmail())
-			.username(user.getUsername())
-			.profileImg(user.getProfileImg())
-			.myTrips(trips)
-			.myFollowers(myFollowers)
-			.myFollowings(myFollowings)
-			.build();
+		return new MyProfileResponse(user);
 	}
 
 	public MyProfileResponse updateMyProfile(Long userId, String username) {
@@ -60,12 +44,7 @@ public class MyProfileService {
 			throw new RuntimeException("중복되는 닉네임을 입력하셨습니다.");
 		}
 
-		return MyProfileResponse.builder()
-			.id(userId)
-			.email(user.getEmail())
-			.username(user.getUsername())
-			.profileImg(user.getProfileImg())
-			.build();
+		return new MyProfileResponse(user);
 	}
 
 	@Transactional
