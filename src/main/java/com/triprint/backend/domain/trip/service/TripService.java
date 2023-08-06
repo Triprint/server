@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ForbiddenException;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
-import com.triprint.backend.domain.auth.security.UserPrincipal;
 import com.triprint.backend.domain.post.entity.Post;
 import com.triprint.backend.domain.post.repository.PostRepository;
 import com.triprint.backend.domain.trip.dto.CreateOrUpdateTripRequest;
@@ -51,7 +50,7 @@ public class TripService {
 	}
 
 	@Transactional
-	public GetTripResponse getTrip(Long id, UserPrincipal userPrincipal) {
+	public GetTripResponse getTrip(Long id) {
 		Trip trip = tripRepository.findById(id).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.TRIP_NOT_FOUND);
 		});

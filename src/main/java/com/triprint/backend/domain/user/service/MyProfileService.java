@@ -6,6 +6,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.triprint.backend.core.exception.ErrorMessage;
 import com.triprint.backend.core.exception.ResourceNotFoundException;
+import com.triprint.backend.domain.follow.service.FollowService;
+import com.triprint.backend.domain.trip.service.TripService;
 import com.triprint.backend.domain.user.dto.MyProfileImgResponse;
 import com.triprint.backend.domain.user.dto.MyProfileResponse;
 import com.triprint.backend.domain.user.entity.User;
@@ -19,19 +21,16 @@ public class MyProfileService {
 
 	private final UserRepository userRepository;
 	private final AwsS3Service awsS3Service;
+	private final TripService tripService;
+	private final FollowService followService;
 
-	public MyProfileResponse getMyProfile(Long memberId) {
+	public MyProfileResponse getMyProfile(Long userId) {
 
-		User user = userRepository.findById(memberId).orElseThrow(() -> {
+		User user = userRepository.findById(userId).orElseThrow(() -> {
 			throw new ResourceNotFoundException(ErrorMessage.USER_NOT_FOUND);
 		});
 
-		return MyProfileResponse.builder()
-			.id(memberId)
-			.email(user.getEmail())
-			.username(user.getUsername())
-			.profileImg(user.getProfileImg())
-			.build();
+		return new MyProfileResponse(user);
 	}
 
 	public MyProfileResponse updateMyProfile(Long userId, String username) {
@@ -45,12 +44,7 @@ public class MyProfileService {
 			throw new RuntimeException("중복되는 닉네임을 입력하셨습니다.");
 		}
 
-		return MyProfileResponse.builder()
-			.id(userId)
-			.email(user.getEmail())
-			.username(user.getUsername())
-			.profileImg(user.getProfileImg())
-			.build();
+		return new MyProfileResponse(user);
 	}
 
 	@Transactional

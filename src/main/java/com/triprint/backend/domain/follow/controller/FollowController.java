@@ -50,28 +50,28 @@ public class FollowController {
 
 	@GetMapping("/follower")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<Page<UserInfoResponse>> getFollowers(@CurrentUser UserPrincipal userPrincipal,
+	ResponseEntity<Page<UserInfoResponse>> getMyFollowers(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		return ResponseEntity.ok(followService.getMyFollowers(userPrincipal.getId(), pageable));
 	}
 
 	@GetMapping("/following")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<Page<UserInfoResponse>> getFollowings(@CurrentUser UserPrincipal userPrincipal,
+	ResponseEntity<Page<UserInfoResponse>> getMyFollowings(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable) {
 		return ResponseEntity.ok(followService.getMyFollowings(userPrincipal.getId(), pageable));
 	}
 
 	@GetMapping("/follower/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<Page<GetFollowResponse>> getOtherFollowers(@CurrentUser UserPrincipal userPrincipal,
+	ResponseEntity<Page<GetFollowResponse>> getFollowers(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long id) {
 		return ResponseEntity.ok(followService.getFollowers(userPrincipal.getId(), id, pageable));
 	}
 
 	@GetMapping("/following/{id}")
 	@PreAuthorize("hasRole('ROLE_USER')")
-	ResponseEntity<Page<GetFollowResponse>> getOtherFollowings(@CurrentUser UserPrincipal userPrincipal,
+	ResponseEntity<Page<GetFollowResponse>> getFollowings(@CurrentUser UserPrincipal userPrincipal,
 		@PageableDefault(sort = "id", direction = Sort.Direction.DESC) Pageable pageable, @PathVariable Long id) {
 		return ResponseEntity.ok(followService.getFollowings(userPrincipal.getId(), id, pageable));
 	}
