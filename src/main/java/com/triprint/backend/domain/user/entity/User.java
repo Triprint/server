@@ -14,6 +14,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.SQLDelete;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 
@@ -38,6 +39,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@SQLDelete(sql = "UPDATE user SET deleted = true WHERE id = ?")
 public class User {
 	@Id
 	@GeneratedValue(
@@ -50,6 +52,8 @@ public class User {
 	private String password;
 
 	private String email;
+	
+	private boolean deleted = Boolean.FALSE;
 
 	@Enumerated(EnumType.STRING)
 	private UserRole role;
